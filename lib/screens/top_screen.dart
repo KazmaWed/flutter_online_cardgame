@@ -53,6 +53,7 @@ class _TopScreenState extends State<TopScreen> {
   }
 
   void _signin() async {
+    print('_isLoggedIn: $_isLoggedIn, _busy: $_busy');
     if (_busy) return;
     try {
       setState(() => _busy = true);
@@ -60,12 +61,14 @@ class _TopScreenState extends State<TopScreen> {
         FirebaseAuth.instance.signInAnonymously(),
         Future.delayed(AppConstants.authSigninDelay),
       ]);
-      setState(() => _isLoggedIn = FunctionsRepository.isLoggedIn);
     } catch (e) {
       // TODO: Handle error appropriately
       debugPrint('Error signing in: $e');
     } finally {
-      setState(() => _busy = false);
+      setState(() {
+        _isLoggedIn = FunctionsRepository.isLoggedIn;
+        _busy = false;
+      });
     }
   }
 

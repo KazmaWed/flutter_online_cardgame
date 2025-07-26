@@ -82,7 +82,7 @@
   "flutterDemoTitle": "Flutter Demo",
   
   "@_DYNAMIC_TEXT_TEMPLATES": {},
-  "hintTemplate": "1~100のうち{value}くらい「{topic}」なモノを入力",
+  "hintTemplate": "1~100のうち{value}くらい「{topic}」に相応しいヒントを入力",
   "@hintTemplate": {
     "placeholders": {
       "value": {

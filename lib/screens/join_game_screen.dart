@@ -41,20 +41,23 @@ class _JoinGameScreenState extends State<JoinGameScreen> {
       _pinController.text.length == 4 && int.tryParse(_pinController.text) != null;
 
   void _signin() async {
+    print('_isLoggedIn: $_isLoggedIn, _busy: $_busy');
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (_busy) return;
       try {
         setState(() => _busy = true);
         await Future.wait([
-          FirebaseAuth.instance.signInAnonymously(),
           Future.delayed(AppConstants.authSigninDelay),
+          FirebaseAuth.instance.signInAnonymously(),
         ]);
-        setState(() => _isLoggedIn = FunctionsRepository.isLoggedIn);
       } catch (e) {
         // TODO: Handle error appropriately
         debugPrint('Error signing in: $e');
       } finally {
-        setState(() => _busy = false);
+        setState(() {
+          _isLoggedIn = FunctionsRepository.isLoggedIn;
+          _busy = false;
+        });
       }
     });
   }
@@ -110,7 +113,6 @@ class _JoinGameScreenState extends State<JoinGameScreen> {
     }
   }
 
-
   void _handleWebKeyboardEvent(String key) {
     if (_isLoggedIn && !_busy && mounted) {
       if (key == 'Backspace' && _pinController.text.isNotEmpty) {
@@ -131,7 +133,9 @@ class _JoinGameScreenState extends State<JoinGameScreen> {
     _keydownListener = ((web.Event event) {
       final keyEvent = event as web.KeyboardEvent;
       _handleWebKeyboardEvent(keyEvent.key);
-      if (keyEvent.key == 'Backspace' || keyEvent.key == 'Enter' || RegExp(r'^[0-9]$').hasMatch(keyEvent.key)) {
+      if (keyEvent.key == 'Backspace' ||
+          keyEvent.key == 'Enter' ||
+          RegExp(r'^[0-9]$').hasMatch(keyEvent.key)) {
         keyEvent.preventDefault();
       }
     }).toJS;
@@ -140,6 +144,7 @@ class _JoinGameScreenState extends State<JoinGameScreen> {
 
   @override
   void initState() {
+    print('_isLoggedIn: $_isLoggedIn, _busy: $_busy');
     _pinController = TextEditingController(text: widget.pin ?? '');
     _focusNode = FocusNode();
 
@@ -200,16 +205,19 @@ class _JoinGameScreenState extends State<JoinGameScreen> {
                           autofocus: !kIsWeb,
                           enabled: !kIsWeb,
                           keyboardType: TextInputType.number,
-                          onChanged: kIsWeb ? null : (value) {
-                            setState(() => _pinController.text = value);
-                          },
-                          onSubmitted: kIsWeb ? null : (value) {
-                            if (isValidPin) _onPressed();
-                          },
-                          inputFormatters: kIsWeb ? const <TextInputFormatter>[] : [
-                            FullWidthDigitFormatter(),
-                            FilteringTextInputFormatter.digitsOnly,
-                          ],
+                          onChanged: kIsWeb
+                              ? null
+                              : (value) {
+                                  setState(() => _pinController.text = value);
+                                },
+                          onSubmitted: kIsWeb
+                              ? null
+                              : (value) {
+                                  if (isValidPin) _onPressed();
+                                },
+                          inputFormatters: kIsWeb
+                              ? const <TextInputFormatter>[]
+                              : [FullWidthDigitFormatter(), FilteringTextInputFormatter.digitsOnly],
                           defaultPinTheme: PinTheme(
                             width: 40,
                             height: 50,
@@ -239,12 +247,7 @@ class _JoinGameScreenState extends State<JoinGameScreen> {
     if (kIsWeb) {
       return child;
     } else {
-      return KeyboardListener(
-        focusNode: _keyboardFocusNode!,
-        autofocus: false,
-        onKeyEvent: _onKey,
-        child: child,
-      );
+      return KeyboardListener(focusNode: _keyboardFocusNode!, onKeyEvent: _onKey, child: child);
     }
   }
 }

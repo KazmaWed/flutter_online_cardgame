@@ -1,23 +1,16 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_online_cardgame/components/animation_wrap.dart';
 import 'package:flutter_online_cardgame/components/avatar_container.dart';
 import 'package:flutter_online_cardgame/components/rectangler_button.dart';
-// import 'package:flutter_online_cardgame/components/avatar_container.dart';
-
-// import 'package:flutter_online_cardgame/components/animation_wrap.dart';
-// import 'package:flutter_online_cardgame/components/rectangler_button.dart';
 import 'package:flutter_online_cardgame/components/row_card.dart';
 import 'package:flutter_online_cardgame/constants/app_constants.dart';
 import 'package:flutter_online_cardgame/constants/app_dimentions.dart';
-// import 'package:flutter_online_cardgame/constants/app_constants.dart';
-// import 'package:flutter_online_cardgame/constants/app_dimentions.dart';
 import 'package:flutter_online_cardgame/constants/app_fonts.dart';
 import 'package:flutter_online_cardgame/l10n/app_localizations.dart';
 import 'package:flutter_online_cardgame/model/player_info.dart';
 import 'package:flutter_online_cardgame/model/player_state.dart';
 import 'package:flutter_online_cardgame/util/string_util.dart';
-// import 'package:flutter_online_cardgame/model/player.dart';
-// import 'package:flutter_online_cardgame/util/string_util.dart';
 
 class TopicCardWidget extends StatelessWidget {
   final String topic;
@@ -366,7 +359,10 @@ class GameMasterWidget extends StatelessWidget {
               ),
             ),
           ),
-          RectangularBaseButton(onPressed: onTapGameMasterMenu, child: Icon(Icons.person_rounded)),
+          SizedBox(
+            width: 120,
+            child: RectangularRowButton(onPressed: onTapGameMasterMenu, label: 'キック'),
+          ),
         ],
       ),
     );
