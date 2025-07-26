@@ -1,7 +1,9 @@
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -25,10 +27,18 @@ Future<void> main() async {
   } else {
     // Enable Firebase App Check in production
     await FirebaseAppCheck.instance.activate(
-      webProvider: ReCaptchaV3Provider(
-        const String.fromEnvironment('RECAPTCHA_SITE_KEY')
-      ),
+      webProvider: ReCaptchaV3Provider(const String.fromEnvironment('RECAPTCHA_SITE_KEY')),
     );
+
+    // Initialize Firebase Analytics
+    FirebaseAnalytics.instance;
+
+    // Initialize Firebase Crashlytics
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
   }
 
   runApp(const ProviderScope(child: MyApp()));
