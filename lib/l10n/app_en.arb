@@ -1,0 +1,120 @@
+{
+  "@@locale": "en",
+  
+  "@_TOP_SCREEN": {},
+  "appTitle": "Acorn Game",
+  "createNewGame": "Create New Game",
+  "joinGame": "Join Game",
+  "howToPlay": "How to Play",
+  
+  "@_JOIN_GAME_SCREEN": {},
+  "joinGameTitle": "Join Game",
+  "enterCodeInstruction": "Enter 4-digit code",
+  "join": "Join",
+  
+  "@_MATCHING_SCREEN": {},
+  "matchingTitle": "Matching",
+  "password": "Password",
+  "sharePasswordInstruction": "Share the password with other players\nor copy and share the invitation URL",
+  "urlCopiedMessage": "Invitation URL copied",
+  "tapToCopyInviteUrl": "Tap to copy invitation URL",
+  "you": "You",
+  "avatar": "Avatar",
+  "selectAvatar": "Select Avatar",
+  "enterPlayerNameInstruction": "Please set a nice player name",
+  "playerNameLabel": "Player Name",
+  "setTopicInstruction": "Please set a topic for everyone to discuss",
+  "topicLabel": "Topic",
+  "startGame": "Start Game",
+  
+  "@_PLAYING_SCREEN": {},
+  "kickPlayerTitle": "Kick Player",
+  "noPlayersMessage": "No participating players",
+  "cancel": "Cancel",
+  "submit": "Submit",
+  "topic": "Topic",
+  "everyonesAnswers": "Everyone's Answers",
+  "yourNumberIs": "Your number is",
+  "desu": ".",
+  "viewResults": "View Results",
+  
+  "@_RESULT_SCREEN": {},
+  "results": "Results",
+  "correctAnswers": "Correct Answers",
+  "scoreSeparator": "/",
+  "perfectGameMessage": "It was a very good acorn comparison!",
+  "goodGameMessage": "It was a pretty good acorn comparison",
+  "correctAnswersAnnouncement": "Correct Answer Announcement",
+  "startNewGame": "Start New Game",
+  
+  "@_RESULT_SCREEN_COMPONENTS": {},
+  "playerHeader": "Player",
+  "hintHeader": "Hint Given",
+  "numberHeader": "Number",
+  "guessHeader": "Guess",
+  "correctHeader": "Correct",
+  "numberSuffix": "",
+  
+  "@_ERROR_SCREEN": {},
+  "errorTitle": "Error",
+  "unexpectedError": "An unexpected error occurred.",
+  
+  "@_GAME_SCREEN": {},
+  "gameNotFound": "Game not found",
+  "loginFailed": "Login failed",
+  
+  "@_UTILS": {},
+  "defaultName": "Anonymous",
+  "defaultHint": "No hint",
+  
+  "@_REPOSITORY_ERROR_MESSAGES": {},
+  "userNotAuthenticated": "User is not authenticated.",
+  "playerNotFound": "Player data not found for user:",
+  "noGameWithPassword": "No game found with the given password.",
+  "gameWatchFailed": "Failed to watch game by ID:",
+  
+  "@_EXIT_GAME_DIALOG": {},
+  "confirmExitGameTitle": "Exit game?",
+  "confirmExitGameMessage": "The game will continue even if you leave",
+  "exitGame": "Exit",
+  
+  "@_MAIN_APP": {},
+  "flutterDemoTitle": "Flutter Demo",
+  
+  "@_DYNAMIC_TEXT_TEMPLATES": {},
+  "hintTemplate": "Enter something about {value} out of 1-100 for \"{topic}\"",
+  "@hintTemplate": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "topic": {
+        "type": "String"
+      }
+    }
+  },
+  "submitOrderText": "Submitted {order}th",
+  "@submitOrderText": {
+    "placeholders": {
+      "order": {
+        "type": "int"
+      }
+    }
+  },
+  "playerNotFoundError": "Player data not found for user: {playerId}",
+  "@playerNotFoundError": {
+    "placeholders": {
+      "playerId": {
+        "type": "String"
+      }
+    }
+  },
+  "gameWatchError": "Failed to watch game by ID: {error}",
+  "@gameWatchError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  }
+}

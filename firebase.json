@@ -1,0 +1,31 @@
+{
+    "flutter": {
+        "platforms": {
+            "dart": {
+                "lib/firebase_options.dart": {
+                    "projectId": "acornstoacorns",
+                    "configurations": {
+                        "web": "1:924245792413:web:0667f14fc7efe05e8ca674"
+                    }
+                }
+            }
+        }
+    },
+    "hosting": {
+        "public": "build/web",
+        "ignore": [
+            "firebase.json",
+            "**/.*",
+            "**/node_modules/**"
+        ],
+        "rewrites": [
+            {
+                "source": "**",
+                "destination": "/index.html"
+            }
+        ]
+    },
+    "database": {
+        "rules": "database.rules.json"
+    }
+}

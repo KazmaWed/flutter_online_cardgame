@@ -1,0 +1,120 @@
+{
+  "@@locale": "ja",
+  
+  "@_TOP_SCREEN": {},
+  "appTitle": "どんぐりの背比べゲーム",
+  "createNewGame": "ルームを作成",
+  "joinGame": "ルームに参加",
+  "howToPlay": "遊び方を見る",
+  
+  "@_JOIN_GAME_SCREEN": {},
+  "joinGameTitle": "ルームに参加",
+  "enterCodeInstruction": "4桁のコードを入力",
+  "join": "参加",
+  
+  "@_MATCHING_SCREEN": {},
+  "matchingTitle": "マッチング",
+  "password": "パスワード",
+  "sharePasswordInstruction": "他のプレイヤーにパスワードを伝えるか\n招待URLをコピーして共有してください",
+  "urlCopiedMessage": "招待URLをコピーしました",
+  "tapToCopyInviteUrl": "タップで招待URLをコピー",
+  "you": "あなた",
+  "avatar": "アバター",
+  "selectAvatar": "アバターを選択",
+  "enterPlayerNameInstruction": "すてきなプレイヤー名を設定してください",
+  "playerNameLabel": "プレイヤー名",
+  "setTopicInstruction": "みんなで話し合うトピックを設定してください",
+  "topicLabel": "トピック",
+  "startGame": "ゲーム開始",
+  
+  "@_PLAYING_SCREEN": {},
+  "kickPlayerTitle": "プレイヤーをキックする",
+  "noPlayersMessage": "参加中のプレイヤーがいません",
+  "cancel": "取消",
+  "submit": "送信",
+  "topic": "トピック",
+  "everyonesAnswers": "みんなの答え",
+  "yourNumberIs": "あなたの数字は",
+  "desu": "です。",
+  "viewResults": "結果を見る",
+  
+  "@_RESULT_SCREEN": {},
+  "results": "リザルト",
+  "correctAnswers": "正解数",
+  "scoreSeparator": "/",
+  "perfectGameMessage": "とても良いどんぐりの背比べでした！",
+  "goodGameMessage": "まあまあ良いどんぐりの背比べでした",
+  "correctAnswersAnnouncement": "正解発表",
+  "startNewGame": "新しいゲームを開始",
+  
+  "@_RESULT_SCREEN_COMPONENTS": {},
+  "playerHeader": "プレイヤー",
+  "hintHeader": "出したヒント",
+  "numberHeader": "数字",
+  "guessHeader": "予想",
+  "correctHeader": "正解",
+  "numberSuffix": "番",
+  
+  "@_ERROR_SCREEN": {},
+  "errorTitle": "Error",
+  "unexpectedError": "An unexpected error occurred.",
+  
+  "@_GAME_SCREEN": {},
+  "gameNotFound": "ゲームがありません",
+  "loginFailed": "ログインできません",
+  
+  "@_UTILS": {},
+  "defaultName": "ナナシ",
+  "defaultHint": "ヒントなし",
+  
+  "@_REPOSITORY_ERROR_MESSAGES": {},
+  "userNotAuthenticated": "User is not authenticated.",
+  "playerNotFound": "Player data not found for user:",
+  "noGameWithPassword": "No game found with the given password.",
+  "gameWatchFailed": "Failed to watch game by ID:",
+  
+  "@_EXIT_GAME_DIALOG": {},
+  "confirmExitGameTitle": "退出しますか？",
+  "confirmExitGameMessage": "退室してもゲームは継続します",
+  "exitGame": "退出する",
+  
+  "@_MAIN_APP": {},
+  "flutterDemoTitle": "Flutter Demo",
+  
+  "@_DYNAMIC_TEXT_TEMPLATES": {},
+  "hintTemplate": "1~100のうち{value}くらい「{topic}」なモノを入力",
+  "@hintTemplate": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "topic": {
+        "type": "String"
+      }
+    }
+  },
+  "submitOrderText": "{order} 番",
+  "@submitOrderText": {
+    "placeholders": {
+      "order": {
+        "type": "int"
+      }
+    }
+  },
+  "playerNotFoundError": "Player data not found for user: {playerId}",
+  "@playerNotFoundError": {
+    "placeholders": {
+      "playerId": {
+        "type": "String"
+      }
+    }
+  },
+  "gameWatchError": "Failed to watch game by ID: {error}",
+  "@gameWatchError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  }
+}
