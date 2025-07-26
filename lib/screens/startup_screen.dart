@@ -50,7 +50,6 @@ class _StartupScreenState extends State<StartupScreen> {
   }
 
   void _navigateToJoinGame(String? pin) async {
-    await FirebaseAuth.instance.signInAnonymously();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Navigator.of(context).pushAndRemoveUntil(
         FadePageRoute(builder: (context) => JoinGameScreen(pin: pin)),

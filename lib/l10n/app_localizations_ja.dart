@@ -179,7 +179,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String hintTemplate(int value, String topic) {
-    return '1~100のうち$valueくらい「$topic」なモノを入力';
+    return '1~100のうち$valueくらい「$topic」に相応しいヒントを入力';
   }
 
   @override

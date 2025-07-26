@@ -437,7 +437,7 @@ abstract class AppLocalizations {
   /// No description provided for @hintTemplate.
   ///
   /// In ja, this message translates to:
-  /// **'1~100のうち{value}くらい「{topic}」なモノを入力'**
+  /// **'1~100のうち{value}くらい「{topic}」に相応しいヒントを入力'**
   String hintTemplate(int value, String topic);
 
   /// No description provided for @submitOrderText.

@@ -151,7 +151,7 @@ class _PlayingScreenState extends State<PlayingScreen> with GameScreenMixin {
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
         title: Text(l10n.kickPlayerTitle),
         content: SizedBox(
-          width: 320,
+          width: 360,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
