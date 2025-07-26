@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -325,7 +326,15 @@ class FunctionsRepository {
   ///
   /// @param gameId 対象ゲームID
   /// @return ゲーム開始結果や割り当て値等を含むサーバーからのレスポンス
-  static Future<StartGameResponse> startGame({required String gameId}) async {
+  static Future<StartGameResponse> startGame({
+    required String gameId,
+    required String topic,
+    required int playerCount,
+  }) async {
+    FirebaseAnalytics.instance.logEvent(
+      name: 'game_started',
+      parameters: {'topic': topic, 'playerCount': playerCount},
+    );
     return _callFunction(
       'start_game',
       {'gameId': gameId},

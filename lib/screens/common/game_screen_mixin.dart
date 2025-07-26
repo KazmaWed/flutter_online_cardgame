@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_online_cardgame/model/game_config.dart';
@@ -21,8 +22,12 @@ mixin GameScreenMixin {
 
   /// Common error handling for API calls
   void handleApiError(String operation, dynamic error) {
-    // TODO: Implement proper error handling
     debugPrint('Error during $operation: $error');
+    FirebaseCrashlytics.instance.recordError(
+      error,
+      StackTrace.current,
+      reason: 'API Error during $operation',
+    );
   }
 
   /// Common exit game functionality

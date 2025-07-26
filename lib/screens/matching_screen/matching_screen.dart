@@ -89,7 +89,11 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
     if (_busy || !_isStartButtonEnabled) return;
     try {
       setState(() => _busy = true);
-      await FunctionsRepository.startGame(gameId: gameInfo.gameId);
+      await FunctionsRepository.startGame(
+        gameId: gameInfo.gameId,
+        topic: gameConfig.topic,
+        playerCount: activePlayers.length,
+      );
     } catch (e) {
       handleApiError('start game', e);
     } finally {
