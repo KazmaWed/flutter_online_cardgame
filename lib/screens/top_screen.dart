@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:flutter_online_cardgame/components/barrier_container.dart';
 import 'package:flutter_online_cardgame/components/base_scaffold.dart';
@@ -83,9 +84,38 @@ class _TopScreenState extends State<TopScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
+    final linkTextStyle = Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.blue);
+
+    final linkButtonStyle = TextButton.styleFrom(
+      overlayColor: Colors.blue,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppDimentions.paddingSmall),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: AppDimentions.paddingLarge, vertical: 8.0),
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
+    );
+
+    final githubButton = TextButton(
+      onPressed: () async {
+        final uri = Uri.parse('https://github.com/KazmaWed/flutter_online_cardgame');
+        if (await canLaunchUrl(uri)) {
+          await launchUrl(uri);
+        }
+      },
+      style: linkButtonStyle,
+      child: Text('Github', style: linkTextStyle),
+    );
+
+    final licenseButton = TextButton(
+      onPressed: () => showLicensePage(context: context),
+      style: linkButtonStyle,
+      child: Text('ライセンス', style: linkTextStyle),
+    );
+
     return BarrierContainer(
       showBarrier: _busy,
       child: BaseScaffold(
+        bottomNavigationBar: Row(children: [licenseButton, Spacer(), githubButton]),
         body: Container(
           padding: const EdgeInsets.all(16.0),
           alignment: Alignment.center,

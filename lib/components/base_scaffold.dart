@@ -7,17 +7,18 @@ class BaseScaffold extends StatelessWidget {
 
   final Widget? body;
   final PreferredSizeWidget? appBar;
-  final PreferredSizeWidget? bottomNavigationBar;
+  final Widget? bottomNavigationBar;
 
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final appBarHeight = appBar?.preferredSize.height ?? 0;
-    final bottomNavHeight = bottomNavigationBar?.preferredSize.height ?? 0;
-    final availableHeight = mediaQuery.size.height - 
-        appBarHeight - 
-        bottomNavHeight - 
-        mediaQuery.padding.top - 
+    final bottomNavHeight = bottomNavigationBar != null ? kBottomNavigationBarHeight : 0;
+    final availableHeight =
+        mediaQuery.size.height -
+        appBarHeight -
+        bottomNavHeight -
+        mediaQuery.padding.top -
         mediaQuery.padding.bottom;
 
     return Scaffold(
@@ -29,37 +30,38 @@ class BaseScaffold extends StatelessWidget {
               ),
             )
           : null,
-      bottomNavigationBar: bottomNavigationBar != null
-          ? Center(
-              child: SizedBox(width: AppDimentions.screenWidth, child: bottomNavigationBar),
-            )
-          : null,
-      body: Center(
-        child: SizedBox(
-          width: AppDimentions.screenWidth,
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              return SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minHeight: availableHeight,
-                  ),
-                  child: IntrinsicHeight(
-                    child: body != null
-                        ? Center(
-                            child: Container(
-                              alignment: Alignment.center,
-                              child: body,
-                            ),
-                          )
-                        : const SizedBox.shrink(),
-                  ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Center(
+              child: SizedBox(
+                width: AppDimentions.screenWidth,
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    return SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(minHeight: availableHeight),
+                        child: IntrinsicHeight(
+                          child: body != null
+                              ? Center(
+                                  child: Container(alignment: Alignment.center, child: body),
+                                )
+                              : const SizedBox.shrink(),
+                        ),
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
+              ),
+            ),
           ),
-        ),
+          Container(
+            height: bottomNavHeight.toDouble(),
+            padding: const EdgeInsets.symmetric(horizontal: AppDimentions.paddingLarge),
+            child: bottomNavigationBar ?? const SizedBox.shrink(),
+          ),
+        ],
       ),
     );
   }

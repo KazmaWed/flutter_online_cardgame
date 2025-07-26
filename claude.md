@@ -130,3 +130,30 @@ if (isValidPin) {
 - Prevents navigation bugs and state management issues
 
 **ALWAYS ask for explicit confirmation before implementing any automatic navigation or data processing logic.**
+
+## Git Operations Rules
+
+### CRITICAL: No Unauthorized Git Operations
+- **NEVER** execute `git add`, `git commit`, or `git push` without explicit user instruction
+- **ONLY** perform git operations when user explicitly says "commit", "push", or gives clear git instructions
+- File creation and editing are allowed, but NO automatic git operations
+- When work is complete, ASK "Would you like me to commit these changes?" - DO NOT commit automatically
+
+### Examples:
+```bash
+# ❌ FORBIDDEN - automatic git operations after file changes
+git add .
+git commit -m "..."
+git push origin main
+
+# ✅ ALLOWED - only when explicitly instructed
+User: "Commit these changes"
+Assistant: git add . && git commit -m "..."
+```
+
+### Why This Rule Exists:
+- Users must have full control over git history
+- Prevents unwanted commits and pushes
+- Allows users to review changes before committing
+
+**ALWAYS wait for explicit git instructions. NEVER assume user wants automatic commits.**
