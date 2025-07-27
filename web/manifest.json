@@ -1,11 +1,11 @@
 {
-    "name": "flutter_online_cardgame",
-    "short_name": "flutter_online_cardgame",
+    "name": "どんぐりの背比べゲーム",
+    "short_name": "どんぐり",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#FFEED9",
+    "theme_color": "#FFEED9",
+    "description": "話し合いをしながらクリアを目指す「協力型」のゲーム",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
@@ -18,18 +18,6 @@
             "src": "icons/Icon-512.png",
             "sizes": "512x512",
             "type": "image/png"
-        },
-        {
-            "src": "icons/Icon-maskable-192.png",
-            "sizes": "192x192",
-            "type": "image/png",
-            "purpose": "maskable"
-        },
-        {
-            "src": "icons/Icon-maskable-512.png",
-            "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "maskable"
         }
     ]
 }

@@ -1,9 +1,6 @@
 name: flutter_online_cardgame
 description: "A Flutter-based online card game with Firebase backend."
-homepage: https://github.com/KazmaWed/flutter_online_cardgame
-repository: https://github.com/KazmaWed/flutter_online_cardgame
 publish_to: 'none'
-
 version: 1.0.0+1
 
 environment:
