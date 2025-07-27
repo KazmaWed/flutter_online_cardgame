@@ -53,7 +53,6 @@ class _TopScreenState extends State<TopScreen> {
   }
 
   void _signin() async {
-    print('_isLoggedIn: $_isLoggedIn, _busy: $_busy');
     if (_busy) return;
     try {
       setState(() => _busy = true);

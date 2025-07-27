@@ -144,7 +144,6 @@ class _JoinGameScreenState extends State<JoinGameScreen> {
 
   @override
   void initState() {
-    print('_isLoggedIn: $_isLoggedIn, _busy: $_busy');
     _pinController = TextEditingController(text: widget.pin ?? '');
     _focusNode = FocusNode();
 
