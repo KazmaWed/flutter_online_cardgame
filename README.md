@@ -1,16 +1,17 @@
-# flutter_online_cardgame
+# Comparing Acorns to Aconrs Game
 
-A new Flutter project.
+<img width="480" src="assets/images/logo_en.png">
 
-## Getting Started
+- This is a cooperative game where players work together to get high score.
+  → [You can play here📱](https://acornstoacorns.web.app/)
 
-This project is a starting point for a Flutter application.
+## Build
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- You can run this app locally (or any other desired environments).
+  ```
+  fvm flutter run
+  ```
+- This app requires Firebase backend which you can get from [this repository](https://github.com/KazmaWed/flutter_online_cardgame_functions).
+  ```
+  firebase emulators:start       
+  ```
