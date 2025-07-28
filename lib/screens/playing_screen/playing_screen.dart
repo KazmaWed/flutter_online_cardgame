@@ -217,10 +217,14 @@ class _PlayingScreenState extends State<PlayingScreen> with GameScreenMixin {
     bool gameOverEnabled = isMaster && gameState.allSubmitted;
 
     final submittedOrder = gameState.submittedOrderOf(myInfo!);
-    bool submitEnabled = !_busy && submittedOrder == null;
+    bool submitEnabled = !_busy && submittedOrder == null && _controller.text.isNotEmpty;
     bool withdrawEnabled = !_busy && submittedOrder != null;
-    String buttonText(AppLocalizations l10n) =>
-        submittedOrder == null ? l10n.submit : l10n.submitOrderText(submittedOrder);
+    String buttonText = l10n.submit;
+    String instruction = _controller.text.isEmpty
+        ? l10n.hintTemplate(value, gameConfig.topic)
+        : submittedOrder == null
+        ? l10n.submitInstruction(gameState.submittedPlayers.length + 1)
+        : l10n.submitted(submittedOrder);
 
     return BarrierContainer(
       showBarrier: _busy,
@@ -248,11 +252,13 @@ class _PlayingScreenState extends State<PlayingScreen> with GameScreenMixin {
                 value: value,
                 topic: gameConfig.topic,
                 submittedOrder: submittedOrder,
-                buttonText: buttonText(l10n),
+                buttonText: buttonText,
+                instruction: instruction,
                 submitEnabled: submitEnabled,
                 withdrawEnabled: withdrawEnabled,
                 onSubmit: _onSubmit,
                 onWithdraw: _onWithdraw,
+                onClear: () => _onFocusChanged(),
               ),
               if (isMaster)
                 GameMasterWidget(

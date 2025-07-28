@@ -30,38 +30,40 @@ class BaseScaffold extends StatelessWidget {
               ),
             )
           : null,
-      body: Column(
-        children: [
-          Expanded(
-            child: Center(
-              child: SizedBox(
-                width: AppDimentions.screenWidth,
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    return SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(),
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(minHeight: availableHeight),
-                        child: IntrinsicHeight(
-                          child: body != null
-                              ? Center(
-                                  child: Container(alignment: Alignment.center, child: body),
-                                )
-                              : const SizedBox.shrink(),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: Center(
+                child: SizedBox(
+                  width: AppDimentions.screenWidth,
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(minHeight: availableHeight),
+                          child: IntrinsicHeight(
+                            child: body != null
+                                ? Center(
+                                    child: Container(alignment: Alignment.center, child: body),
+                                  )
+                                : const SizedBox.shrink(),
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
-          ),
-          Container(
-            height: bottomNavHeight.toDouble(),
-            padding: const EdgeInsets.symmetric(horizontal: AppDimentions.paddingLarge),
-            child: bottomNavigationBar ?? const SizedBox.shrink(),
-          ),
-        ],
+            Container(
+              height: bottomNavHeight.toDouble(),
+              padding: const EdgeInsets.symmetric(horizontal: AppDimentions.paddingLarge),
+              child: bottomNavigationBar ?? const SizedBox.shrink(),
+            ),
+          ],
+        ),
       ),
     );
   }

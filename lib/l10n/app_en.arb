@@ -37,6 +37,37 @@
   "yourNumberIs": "Your number is",
   "desu": ".",
   "viewResults": "View Results",
+  "submissionStatus": "{sent} of {total} submitted",
+  "@submissionStatus": {
+    "description": "Shows how many players have submitted their hints",
+    "placeholders": {
+      "sent": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "submitInstruction": "{rank, plural, =1{Submit when you think it's the smallest} other{Submit when you think it's the {rank}th smallest}}",
+  "@submitInstruction": {
+    "description": "Instructions for when to submit based on rank",
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
+  "submitted": "Submitted {order}",
+  "@submitted": {
+    "description": "Shows the order in which the player submitted with ordinal suffix",
+    "placeholders": {
+      "order": {
+        "type": "int"
+      }
+    }
+  },
+  "hint": "Hint",
   
   "@_RESULT_SCREEN": {},
   "results": "Results",

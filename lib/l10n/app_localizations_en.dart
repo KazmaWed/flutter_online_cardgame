@@ -98,6 +98,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get viewResults => 'View Results';
 
   @override
+  String submissionStatus(int sent, int total) {
+    return '$sent of $total submitted';
+  }
+
+  @override
+  String submitInstruction(int rank) {
+    String _temp0 = intl.Intl.pluralLogic(
+      rank,
+      locale: localeName,
+      other: 'Submit when you think it\'s the ${rank}th smallest',
+      one: 'Submit when you think it\'s the smallest',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String submitted(int order) {
+    return 'Submitted $order';
+  }
+
+  @override
+  String get hint => 'Hint';
+
+  @override
   String get results => 'Results';
 
   @override

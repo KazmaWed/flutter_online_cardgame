@@ -90,9 +90,17 @@ class _PlayerInfoWidgetState extends State<PlayerInfoWidget> {
     final headerStyle = Theme.of(
       context,
     ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold);
+    final textStyle = Theme.of(context).textTheme.bodyLarge;
     return RowCard(
       children: [
         Text(l10n.everyonesAnswers, style: headerStyle),
+        Text(
+          l10n.submissionStatus(
+            widget.submittedPlayers.length,
+            [...widget.submittedPlayers, ...widget.pendingPlayers].length,
+          ),
+          style: textStyle,
+        ),
         Column(
           spacing: AppDimentions.paddingSmall,
           children: [
@@ -134,11 +142,13 @@ class SubmitWidget extends StatelessWidget {
   final int value;
   final String topic;
   final int? submittedOrder;
+  final String instruction;
   final String buttonText;
   final bool submitEnabled;
   final bool withdrawEnabled;
   final VoidCallback onSubmit;
   final VoidCallback onWithdraw;
+  final VoidCallback onClear;
 
   const SubmitWidget({
     super.key,
@@ -147,12 +157,14 @@ class SubmitWidget extends StatelessWidget {
     required this.topic,
     required this.submittedOrder,
     required this.buttonText,
+    required this.instruction,
     required this.submitEnabled,
     required this.withdrawEnabled,
     required this.controller,
     required this.focusNode,
     required this.onSubmit,
     required this.onWithdraw,
+    required this.onClear,
   });
 
   @override
@@ -163,6 +175,8 @@ class SubmitWidget extends StatelessWidget {
       fontFamily: AppFonts.modhyPopPOne,
       color: Theme.of(context).colorScheme.primary,
     );
+    final descriptionStyle = Theme.of(context).textTheme.bodyLarge;
+
     return RowCard(
       children: [
         Padding(
@@ -178,6 +192,7 @@ class SubmitWidget extends StatelessWidget {
             ],
           ),
         ),
+        Text(instruction, style: descriptionStyle),
         TextField(
           controller: controller,
           readOnly: submittedOrder != null,
@@ -185,7 +200,7 @@ class SubmitWidget extends StatelessWidget {
           enabled: submittedOrder == null,
           maxLength: AppConstants.maxPlayerHintLength,
           decoration: InputDecoration(
-            labelText: l10n.hintTemplate(value, topic),
+            labelText: l10n.hint,
             border: OutlineInputBorder(),
             filled: true,
             fillColor: Theme.of(context).colorScheme.surfaceContainerLowest,
@@ -194,6 +209,7 @@ class SubmitWidget extends StatelessWidget {
                     icon: Icon(Icons.clear_rounded),
                     onPressed: () {
                       controller.clear();
+                      onClear();
                     },
                   )
                 : null,
@@ -201,6 +217,7 @@ class SubmitWidget extends StatelessWidget {
         ),
         Row(
           spacing: AppDimentions.paddingSmall,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               flex: 10,
@@ -210,7 +227,7 @@ class SubmitWidget extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: 100,
+              width: AppDimentions.buttonWidth,
               child: withdrawEnabled
                   ? RectangularRowButton(
                       onPressed: withdrawEnabled ? onWithdraw : null,
@@ -346,7 +363,9 @@ class GameMasterWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppDimentions.paddingMedium),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppDimentions.paddingMedium + AppDimentions.paddingMicro,
+      ),
       child: Row(
         spacing: AppDimentions.paddingSmall,
         children: [
@@ -360,8 +379,8 @@ class GameMasterWidget extends StatelessWidget {
             ),
           ),
           SizedBox(
-            width: 120,
-            child: RectangularRowButton(onPressed: onTapGameMasterMenu, label: 'キック'),
+            width: AppDimentions.buttonWidth,
+            child: RectangularTextButton(onPressed: onTapGameMasterMenu, label: 'キック'),
           ),
         ],
       ),

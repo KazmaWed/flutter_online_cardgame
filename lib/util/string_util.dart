@@ -32,3 +32,28 @@ extension StringExtension on String {
     return newUri.toString();
   }
 }
+
+extension IntExtension on int {
+  /// Returns the ordinal suffix for English numbers (1st, 2nd, 3rd, 4th, etc.)
+  String get ordinalSuffix {
+    // Handle special cases for 11th, 12th, 13th
+    if (this >= 11 && this <= 13) {
+      return 'th';
+    }
+    
+    // Handle regular cases based on last digit
+    switch (this % 10) {
+      case 1:
+        return 'st';
+      case 2:
+        return 'nd';
+      case 3:
+        return 'rd';
+      default:
+        return 'th';
+    }
+  }
+  
+  /// Returns the number with ordinal suffix (1st, 2nd, 3rd, etc.)
+  String get ordinal => '$this$ordinalSuffix';
+}

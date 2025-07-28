@@ -37,6 +37,37 @@
   "yourNumberIs": "あなたの数字は",
   "desu": "です。",
   "viewResults": "結果を見る",
+  "submissionStatus": "{sent}人中{total}人送信済み",
+  "@submissionStatus": {
+    "description": "Shows how many players have submitted their hints",
+    "placeholders": {
+      "sent": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "submitInstruction": "{rank, plural, =1{1番小さいと思ったら送信！} other{{rank}番目に小さいと思ったら送信}}",
+  "@submitInstruction": {
+    "description": "Instructions for when to submit based on rank",
+    "placeholders": {
+      "rank": {
+        "type": "int"
+      }
+    }
+  },
+  "submitted": "{order}番目に送信済み",
+  "@submitted": {
+    "description": "Shows the order in which the player submitted",
+    "placeholders": {
+      "order": {
+        "type": "int"
+      }
+    }
+  },
+  "hint": "ヒント",
   
   "@_RESULT_SCREEN": {},
   "results": "リザルト",

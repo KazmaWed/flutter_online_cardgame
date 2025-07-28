@@ -97,6 +97,30 @@ class AppLocalizationsJa extends AppLocalizations {
   String get viewResults => '結果を見る';
 
   @override
+  String submissionStatus(int sent, int total) {
+    return '$sent人中$total人送信済み';
+  }
+
+  @override
+  String submitInstruction(int rank) {
+    String _temp0 = intl.Intl.pluralLogic(
+      rank,
+      locale: localeName,
+      other: '$rank番目に小さいと思ったら送信',
+      one: '1番小さいと思ったら送信！',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String submitted(int order) {
+    return '$order番目に送信済み';
+  }
+
+  @override
+  String get hint => 'ヒント';
+
+  @override
   String get results => 'リザルト';
 
   @override

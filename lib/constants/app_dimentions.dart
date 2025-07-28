@@ -12,6 +12,7 @@ class AppDimentions {
   static const double paddingMedium = 12.0;
   static const double paddingLarge = 16.0;
 
+  static const double buttonWidth = 100.0; // ボタンの幅
   static const double buttonHeight = 48.0;
 
   static const double hintCardHeightHigh = 110.0; // カードの高さ

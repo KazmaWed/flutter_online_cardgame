@@ -272,6 +272,30 @@ abstract class AppLocalizations {
   /// **'結果を見る'**
   String get viewResults;
 
+  /// Shows how many players have submitted their hints
+  ///
+  /// In ja, this message translates to:
+  /// **'{sent}人中{total}人送信済み'**
+  String submissionStatus(int sent, int total);
+
+  /// Instructions for when to submit based on rank
+  ///
+  /// In ja, this message translates to:
+  /// **'{rank, plural, =1{1番小さいと思ったら送信！} other{{rank}番目に小さいと思ったら送信}}'**
+  String submitInstruction(int rank);
+
+  /// Shows the order in which the player submitted
+  ///
+  /// In ja, this message translates to:
+  /// **'{order}番目に送信済み'**
+  String submitted(int order);
+
+  /// No description provided for @hint.
+  ///
+  /// In ja, this message translates to:
+  /// **'ヒント'**
+  String get hint;
+
   /// No description provided for @results.
   ///
   /// In ja, this message translates to:
