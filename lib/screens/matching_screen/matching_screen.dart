@@ -7,7 +7,7 @@ import 'package:flutter_online_cardgame/l10n/app_localizations.dart';
 import 'package:flutter_online_cardgame/model/game_config.dart';
 import 'package:flutter_online_cardgame/model/game_info.dart';
 import 'package:flutter_online_cardgame/model/game_state.dart';
-import 'package:flutter_online_cardgame/repository/functions_repository.dart';
+import 'package:flutter_online_cardgame/repository/firebase_repository.dart';
 import 'package:flutter_online_cardgame/screens/common/game_screen_mixin.dart';
 import 'package:flutter_online_cardgame/screens/matching_screen/matching_screen_components.dart';
 import 'package:flutter_online_cardgame/screens/top_screen.dart';
@@ -44,7 +44,7 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
     if (_busy) return;
     try {
       setState(() => _busy = true);
-      await FunctionsRepository.updateName(name: name, gameId: gameInfo.gameId);
+      await FirebaseRepository.updateName(name: name, gameId: gameInfo.gameId);
     } catch (e) {
       handleApiError('update player name', e);
     } finally {
@@ -65,7 +65,7 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
       setState(() => _busy = true);
       final match = RegExp(r'avatar(\d{2})\.jpg$').firstMatch(avatarFileName);
       final avatarIndex = match != null ? int.parse(match.group(1)!) : 0;
-      await FunctionsRepository.updateAvatar(avatar: avatarIndex, gameId: gameInfo.gameId);
+      await FirebaseRepository.updateAvatar(avatar: avatarIndex, gameId: gameInfo.gameId);
     } catch (e) {
       handleApiError('update player avatar', e);
     } finally {
@@ -77,7 +77,7 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
     if (_busy) return;
     try {
       setState(() => _busy = true);
-      await FunctionsRepository.updateTopic(gameId: gameInfo.gameId, topic: topic);
+      await FirebaseRepository.updateTopic(gameId: gameInfo.gameId, topic: topic);
     } catch (e) {
       handleApiError('update topic', e);
     } finally {
@@ -89,7 +89,7 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
     if (_busy || !_isStartButtonEnabled) return;
     try {
       setState(() => _busy = true);
-      await FunctionsRepository.startGame(
+      await FirebaseRepository.startGame(
         gameId: gameInfo.gameId,
         topic: gameConfig.topic,
         playerCount: activePlayers.length,

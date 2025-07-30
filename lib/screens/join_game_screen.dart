@@ -14,7 +14,7 @@ import 'package:flutter_online_cardgame/components/rectangler_button.dart';
 import 'package:flutter_online_cardgame/constants/app_dimentions.dart';
 import 'package:flutter_online_cardgame/l10n/app_localizations.dart';
 import 'package:flutter_online_cardgame/model/game_info.dart';
-import 'package:flutter_online_cardgame/repository/functions_repository.dart';
+import 'package:flutter_online_cardgame/repository/firebase_repository.dart';
 import 'package:flutter_online_cardgame/screens/game_screen/game_initialize_screen.dart';
 import 'package:flutter_online_cardgame/util/fade_page_route.dart';
 import 'package:flutter_online_cardgame/util/full_width_digit_formatter.dart';
@@ -33,7 +33,7 @@ class _JoinGameScreenState extends State<JoinGameScreen> {
   late final FocusNode _focusNode;
   FocusNode? _keyboardFocusNode;
 
-  bool _isLoggedIn = FunctionsRepository.isLoggedIn;
+  bool _isLoggedIn = FirebaseRepository.isLoggedIn;
   bool _busy = false;
   web.EventListener? _keydownListener;
 
@@ -55,7 +55,7 @@ class _JoinGameScreenState extends State<JoinGameScreen> {
         debugPrint('Error signing in: $e');
       } finally {
         setState(() {
-          _isLoggedIn = FunctionsRepository.isLoggedIn;
+          _isLoggedIn = FirebaseRepository.isLoggedIn;
           _busy = false;
         });
       }
@@ -68,7 +68,7 @@ class _JoinGameScreenState extends State<JoinGameScreen> {
       setState(() => _busy = true);
 
       final pin = _pinController.text;
-      final enterGameResponce = await FunctionsRepository.enterGame(password: pin);
+      final enterGameResponce = await FirebaseRepository.enterGame(password: pin);
       final gameInfo = GameInfo(
         gameId: enterGameResponce.gameId,
         password: enterGameResponce.password,

@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:flutter_online_cardgame/repository/functions_repository.dart';
+import 'package:flutter_online_cardgame/repository/firebase_repository.dart';
 
 // import 'package:flutter_online_cardgame/repository/firebase_repository.dart';
 
@@ -73,8 +73,8 @@ class HeartbeatNotifier extends StateNotifier<bool> {
     _sub = Stream.periodic(_interval).listen((_) async {
       if (DateTime.now().difference(lastConnected) > heartbeatInterval) {
         try {
-          if (!FunctionsRepository.shouldHeartbeat) return;
-          FunctionsRepository.heartbeat(gameId: gameId);
+          if (!FirebaseRepository.shouldHeartbeat) return;
+          FirebaseRepository.heartbeat(gameId: gameId);
           lastConnected = DateTime.now();
         } catch (e) {
           log('Error during heartbeat: $e', name: 'HeartbeatNotifier', error: e);
