@@ -1,4 +1,3 @@
-import 'dart:js_interop';
 import 'package:web/web.dart' as web;
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,17 +30,14 @@ class JoinGameScreen extends StatefulWidget {
 class _JoinGameScreenState extends State<JoinGameScreen> {
   late final TextEditingController _pinController;
   late final FocusNode _focusNode;
-  FocusNode? _keyboardFocusNode;
 
   bool _isLoggedIn = FirebaseRepository.isLoggedIn;
   bool _busy = false;
-  web.EventListener? _keydownListener;
 
   bool get isValidPin =>
       _pinController.text.length == 4 && int.tryParse(_pinController.text) != null;
 
   void _signin() async {
-    print('_isLoggedIn: $_isLoggedIn, _busy: $_busy');
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (_busy) return;
       try {
@@ -86,22 +82,6 @@ class _JoinGameScreenState extends State<JoinGameScreen> {
     }
   }
 
-  bool _onKey(KeyEvent event) {
-    if (event is KeyDownEvent && _isLoggedIn && !_busy) {
-      final key = event.logicalKey;
-      if (key == LogicalKeyboardKey.backspace && _pinController.text.isNotEmpty) {
-        setState(() {
-          _pinController.text = _pinController.text.substring(0, _pinController.text.length - 1);
-        });
-        return true;
-      } else if (key == LogicalKeyboardKey.enter && isValidPin) {
-        _onPressed();
-        return true;
-      }
-    }
-    return false;
-  }
-
   void _resetUrl() {
     final uri = Uri.base;
     if (uri.queryParameters.isNotEmpty) {
@@ -113,45 +93,10 @@ class _JoinGameScreenState extends State<JoinGameScreen> {
     }
   }
 
-  void _handleWebKeyboardEvent(String key) {
-    if (_isLoggedIn && !_busy && mounted) {
-      if (key == 'Backspace' && _pinController.text.isNotEmpty) {
-        setState(() {
-          _pinController.text = _pinController.text.substring(0, _pinController.text.length - 1);
-        });
-      } else if (key == 'Enter' && isValidPin) {
-        _onPressed();
-      } else if (RegExp(r'^[0-9]$').hasMatch(key) && _pinController.text.length < 4) {
-        setState(() {
-          _pinController.text += key;
-        });
-      }
-    }
-  }
-
-  void _setupGlobalKeyListener() {
-    _keydownListener = ((web.Event event) {
-      final keyEvent = event as web.KeyboardEvent;
-      _handleWebKeyboardEvent(keyEvent.key);
-      if (keyEvent.key == 'Backspace' ||
-          keyEvent.key == 'Enter' ||
-          RegExp(r'^[0-9]$').hasMatch(keyEvent.key)) {
-        keyEvent.preventDefault();
-      }
-    }).toJS;
-    web.document.addEventListener('keydown', _keydownListener!);
-  }
-
   @override
   void initState() {
     _pinController = TextEditingController(text: widget.pin ?? '');
     _focusNode = FocusNode();
-
-    if (kIsWeb) {
-      _setupGlobalKeyListener();
-    } else {
-      _keyboardFocusNode = FocusNode();
-    }
 
     if (!_isLoggedIn) _signin();
     _resetUrl();
@@ -160,11 +105,6 @@ class _JoinGameScreenState extends State<JoinGameScreen> {
 
   @override
   void dispose() {
-    if (kIsWeb && _keydownListener != null) {
-      web.document.removeEventListener('keydown', _keydownListener!);
-    } else if (_keyboardFocusNode != null) {
-      _keyboardFocusNode?.dispose();
-    }
     _pinController.dispose();
     _focusNode.dispose();
     super.dispose();
@@ -202,21 +142,17 @@ class _JoinGameScreenState extends State<JoinGameScreen> {
                           controller: _pinController,
                           focusNode: _focusNode,
                           autofocus: !kIsWeb,
-                          enabled: !kIsWeb,
                           keyboardType: TextInputType.number,
-                          onChanged: kIsWeb
-                              ? null
-                              : (value) {
-                                  setState(() => _pinController.text = value);
-                                },
-                          onSubmitted: kIsWeb
-                              ? null
-                              : (value) {
-                                  if (isValidPin) _onPressed();
-                                },
-                          inputFormatters: kIsWeb
-                              ? const <TextInputFormatter>[]
-                              : [FullWidthDigitFormatter(), FilteringTextInputFormatter.digitsOnly],
+                          onChanged: (value) {
+                            setState(() => _pinController.text = value);
+                          },
+                          onSubmitted: (value) {
+                            if (isValidPin) _onPressed();
+                          },
+                          inputFormatters: [
+                            FullWidthDigitFormatter(),
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
                           defaultPinTheme: PinTheme(
                             width: 40,
                             height: 50,
@@ -243,10 +179,6 @@ class _JoinGameScreenState extends State<JoinGameScreen> {
       ),
     );
 
-    if (kIsWeb) {
-      return child;
-    } else {
-      return KeyboardListener(focusNode: _keyboardFocusNode!, onKeyEvent: _onKey, child: child);
-    }
+    return child;
   }
 }
