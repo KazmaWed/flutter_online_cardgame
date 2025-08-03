@@ -26,10 +26,10 @@ import 'package:flutter_online_cardgame/model/functions_responses/heartbeat_resp
 import 'package:flutter_online_cardgame/model/functions_responses/reset_game_response.dart';
 import 'package:flutter_online_cardgame/model/game_state.dart';
 
-class FunctionsRepository {
-  FunctionsRepository._internal();
-  static final FunctionsRepository _instance = FunctionsRepository._internal();
-  factory FunctionsRepository() => _instance;
+class FirebaseRepository {
+  FirebaseRepository._internal();
+  static final FirebaseRepository _instance = FirebaseRepository._internal();
+  factory FirebaseRepository() => _instance;
 
   static bool get isLoggedIn => FirebaseAuth.instance.currentUser != null;
 
@@ -53,7 +53,7 @@ class FunctionsRepository {
     bool updateLastConnected = false,
     VoidCallback? onComplete,
   }) async {
-    log('$functionName: start', name: 'FunctionsRepository');
+    log('$functionName: start', name: 'FirebaseRepository');
 
     try {
       final HttpsCallable callable = FirebaseFunctions.instance.httpsCallable(functionName);
@@ -63,10 +63,10 @@ class FunctionsRepository {
       if (updateLastConnected) {
         lastConnected = DateTime.now();
       }
-      log('$functionName: end (response: $responseData)', name: 'FunctionsRepository');
+      log('$functionName: end (response: $responseData)', name: 'FirebaseRepository');
       return fromJson(responseData);
     } catch (e) {
-      log('$functionName: fail ($e)', name: 'FunctionsRepository');
+      log('$functionName: fail ($e)', name: 'FirebaseRepository');
       rethrow;
     } finally {
       onComplete?.call();

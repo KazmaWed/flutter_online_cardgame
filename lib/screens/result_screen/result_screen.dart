@@ -8,7 +8,7 @@ import 'package:flutter_online_cardgame/l10n/app_localizations.dart';
 import 'package:flutter_online_cardgame/model/game_info.dart';
 import 'package:flutter_online_cardgame/model/game_result.dart';
 import 'package:flutter_online_cardgame/model/game_state.dart';
-import 'package:flutter_online_cardgame/repository/functions_repository.dart';
+import 'package:flutter_online_cardgame/repository/firebase_repository.dart';
 import 'package:flutter_online_cardgame/screens/common/progress_screen.dart';
 import 'package:flutter_online_cardgame/screens/common/error_screen.dart';
 import 'package:flutter_online_cardgame/screens/result_screen/result_screen_components.dart';
@@ -40,7 +40,7 @@ class _ResultScreenState extends State<ResultScreen> {
 
   Future<void> _loadGameConfig() async {
     try {
-      final response = await FunctionsRepository.getGameConfig(gameId: widget.gameInfo.gameId);
+      final response = await FirebaseRepository.getGameConfig(gameId: widget.gameInfo.gameId);
       if (mounted) {
         setState(() {
           _gameConfigResponse = response;
@@ -62,7 +62,7 @@ class _ResultScreenState extends State<ResultScreen> {
 
     try {
       setState(() => _busy = true);
-      await FunctionsRepository.resetGame(gameId: widget.gameInfo.gameId);
+      await FirebaseRepository.resetGame(gameId: widget.gameInfo.gameId);
     } catch (e) {
       // TODO: Handle error appropriately
       debugPrint('Error restarting game: $e');
@@ -92,7 +92,7 @@ class _ResultScreenState extends State<ResultScreen> {
       await Navigator.of(context).popAndRemove(FadePageRoute(builder: (context) => TopScreen()));
     }
     try {
-      await FunctionsRepository.exitGame(gameId: widget.gameInfo.gameId);
+      await FirebaseRepository.exitGame(gameId: widget.gameInfo.gameId);
     } catch (e) {
       debugPrint('Error exiting game: $e');
     }
@@ -121,10 +121,10 @@ class _ResultScreenState extends State<ResultScreen> {
     final values = response.values;
     final gameConfig = response.config;
     final gameMaster = gameConfig.gameMaster(widget.gameState.activePlayers);
-    final isMaster = gameMaster?.id == FunctionsRepository.user.uid;
+    final isMaster = gameMaster?.id == FirebaseRepository.user.uid;
 
     final result = GameResult.create(
-      playerId: FunctionsRepository.user.uid,
+      playerId: FirebaseRepository.user.uid,
       gameState: widget.gameState,
       gameConfig: gameConfig,
       values: values,

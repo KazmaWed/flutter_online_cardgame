@@ -81,7 +81,7 @@ class _MyScreenState extends State<MyScreen> with GameScreenMixin {
 ### API Error Handling
 ```dart
 try {
-  await FunctionsRepository.someMethod(gameId: gameInfo.gameId);
+  await FirebaseRepository.someMethod(gameId: gameInfo.gameId);
 } catch (e) {
   handleApiError('operation name', e);
 }

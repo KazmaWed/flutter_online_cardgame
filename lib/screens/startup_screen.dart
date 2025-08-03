@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_online_cardgame/model/functions_responses/init_player_response.dart';
-import 'package:flutter_online_cardgame/repository/functions_repository.dart';
+import 'package:flutter_online_cardgame/repository/firebase_repository.dart';
 import 'package:flutter_online_cardgame/screens/common/progress_screen.dart';
 import 'package:flutter_online_cardgame/screens/common/error_screen.dart';
 import 'package:flutter_online_cardgame/screens/game_screen/game_initialize_screen.dart';
@@ -19,7 +19,7 @@ class StartupScreen extends StatefulWidget {
 
 class _StartupScreenState extends State<StartupScreen> {
   Future<InitPlayerResponse> _initPlayer() async {
-    return FunctionsRepository.initPlayer();
+    return FirebaseRepository.initPlayer();
   }
 
   void _navigateToTop() {
@@ -33,8 +33,8 @@ class _StartupScreenState extends State<StartupScreen> {
 
   void _navigateToGame(String gameId) async {
     try {
-      final response = await FunctionsRepository.getGameInfo(gameId: gameId);
-      await FunctionsRepository.enterGame(password: response.password);
+      final response = await FirebaseRepository.getGameInfo(gameId: gameId);
+      await FirebaseRepository.enterGame(password: response.password);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
         Navigator.of(context).pushAndRemoveUntil(
@@ -70,7 +70,7 @@ class _StartupScreenState extends State<StartupScreen> {
     }
 
     // When auth account is not logged in
-    if (!FunctionsRepository.isLoggedIn) {
+    if (!FirebaseRepository.isLoggedIn) {
       _navigateToTop();
     }
 

@@ -9,7 +9,7 @@ import 'package:flutter_online_cardgame/model/game_config.dart';
 import 'package:flutter_online_cardgame/model/game_info.dart';
 import 'package:flutter_online_cardgame/model/game_state.dart';
 import 'package:flutter_online_cardgame/model/player_info.dart';
-import 'package:flutter_online_cardgame/repository/functions_repository.dart';
+import 'package:flutter_online_cardgame/repository/firebase_repository.dart';
 import 'package:flutter_online_cardgame/screens/common/game_screen_mixin.dart';
 import 'package:flutter_online_cardgame/screens/common/progress_screen.dart';
 import 'package:flutter_online_cardgame/screens/playing_screen/playing_screen_components.dart';
@@ -46,7 +46,7 @@ class _PlayingScreenState extends State<PlayingScreen> with GameScreenMixin {
 
   Future<void> _loadGameConfig() async {
     try {
-      final response = await FunctionsRepository.getGameConfig(gameId: gameInfo.gameId);
+      final response = await FirebaseRepository.getGameConfig(gameId: gameInfo.gameId);
       if (mounted) {
         setState(() {
           _gameConfig = response.config;
@@ -60,7 +60,7 @@ class _PlayingScreenState extends State<PlayingScreen> with GameScreenMixin {
 
   void _onFocusChanged() {
     try {
-      FunctionsRepository.updateHint(hint: _controller.text, gameId: gameInfo.gameId);
+      FirebaseRepository.updateHint(hint: _controller.text, gameId: gameInfo.gameId);
     } catch (e) {
       handleApiError('update hint', e);
     }
@@ -70,7 +70,7 @@ class _PlayingScreenState extends State<PlayingScreen> with GameScreenMixin {
     if (_busy) return;
     setState(() => _busy = true);
     try {
-      await FunctionsRepository.submit(gameId: gameInfo.gameId);
+      await FirebaseRepository.submit(gameId: gameInfo.gameId);
     } catch (e) {
       handleApiError('submit', e);
     } finally {
@@ -82,7 +82,7 @@ class _PlayingScreenState extends State<PlayingScreen> with GameScreenMixin {
     if (_busy) return;
     setState(() => _busy = true);
     try {
-      await FunctionsRepository.withdraw(gameId: gameInfo.gameId);
+      await FirebaseRepository.withdraw(gameId: gameInfo.gameId);
     } catch (e) {
       handleApiError('withdraw', e);
     } finally {
@@ -135,7 +135,7 @@ class _PlayingScreenState extends State<PlayingScreen> with GameScreenMixin {
       if (!busy) {
         busy = true;
         try {
-          await FunctionsRepository.kickPlayer(gameId: gameInfo.gameId, playerId: playerInfo.id);
+          await FirebaseRepository.kickPlayer(gameId: gameInfo.gameId, playerId: playerInfo.id);
         } catch (e) {
           handleApiError('kick player', e);
         } finally {

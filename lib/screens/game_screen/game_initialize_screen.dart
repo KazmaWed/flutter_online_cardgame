@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_online_cardgame/components/base_scaffold.dart';
 import 'package:flutter_online_cardgame/model/game_info.dart';
-import 'package:flutter_online_cardgame/repository/functions_repository.dart';
+import 'package:flutter_online_cardgame/repository/firebase_repository.dart';
 import 'package:flutter_online_cardgame/screens/common/progress_screen.dart';
 import 'package:flutter_online_cardgame/screens/common/error_screen.dart';
 import 'package:flutter_online_cardgame/screens/game_screen/game_screen.dart';
@@ -32,7 +32,7 @@ class GameInitializeScreen extends StatelessWidget {
 
     return BaseScaffold(
       body: FutureBuilder(
-        future: FunctionsRepository.getGameConfig(gameId: gameInfo.gameId),
+        future: FirebaseRepository.getGameConfig(gameId: gameInfo.gameId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return ProgressScreen();

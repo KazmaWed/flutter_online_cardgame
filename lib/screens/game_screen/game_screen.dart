@@ -4,12 +4,18 @@ import 'package:flutter_online_cardgame/components/app_cycle_notifier_widget.dar
 import 'package:flutter_online_cardgame/model/game_info.dart';
 import 'package:flutter_online_cardgame/model/game_phase.dart';
 import 'package:flutter_online_cardgame/model/game_state.dart';
-import 'package:flutter_online_cardgame/repository/functions_repository.dart';
+import 'package:flutter_online_cardgame/repository/firebase_repository.dart';
 import 'package:flutter_online_cardgame/screens/common/progress_screen.dart';
 import 'package:flutter_online_cardgame/screens/common/error_screen.dart';
 import 'package:flutter_online_cardgame/screens/matching_screen/matching_screen.dart';
 import 'package:flutter_online_cardgame/screens/playing_screen/playing_screen.dart';
 import 'package:flutter_online_cardgame/screens/result_screen/result_screen.dart';
+
+class _ScreenKeys {
+  static const ValueKey<String> matching = ValueKey('matching_screen');
+  static const ValueKey<String> playing = ValueKey('playing_screen');
+  static const ValueKey<String> result = ValueKey('result_screen');
+}
 
 class GameScreen extends StatelessWidget {
   final GameInfo gameInfo;
@@ -27,10 +33,10 @@ class GameScreen extends StatelessWidget {
       gameId: gameInfo.gameId,
       child: Scaffold(
         body: StreamBuilder(
-          stream: FunctionsRepository.watchGameState(gameInfo.gameId),
+          stream: FirebaseRepository.watchGameState(gameInfo.gameId),
           builder: (context, snapshot) {
             // ゲーム終了中は接続しない
-            if (FunctionsRepository.exitingGame) return const ProgressScreen();
+            if (FirebaseRepository.exitingGame) return const ProgressScreen();
 
             if (snapshot.connectionState == ConnectionState.waiting) return const ProgressScreen();
             if (snapshot.hasError) {
@@ -47,14 +53,26 @@ class GameScreen extends StatelessWidget {
             switch (gameState.phase) {
               case GamePhase.matching:
                 resultGameState = null;
-                child = MatchingScreen(gameInfo: gameInfo, gameState: gameState);
+                child = MatchingScreen(
+                  key: _ScreenKeys.matching,
+                  gameInfo: gameInfo,
+                  gameState: gameState,
+                );
               case GamePhase.playing:
-                child = PlayingScreen(gameInfo: gameInfo, gameState: gameState);
+                child = PlayingScreen(
+                  key: _ScreenKeys.playing,
+                  gameInfo: gameInfo,
+                  gameState: gameState,
+                );
               case GamePhase.finished:
                 final shouldUpdate = currentPhase != gameState.phase;
                 if (shouldUpdate) {
                   resultGameState ??= gameState;
-                  child = ResultScreen(gameInfo: gameInfo, gameState: resultGameState!);
+                  child = ResultScreen(
+                    key: _ScreenKeys.result,
+                    gameInfo: gameInfo,
+                    gameState: resultGameState!,
+                  );
                 }
                 break;
             }

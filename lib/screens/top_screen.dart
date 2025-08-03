@@ -8,7 +8,7 @@ import 'package:flutter_online_cardgame/components/rectangler_button.dart';
 import 'package:flutter_online_cardgame/constants/app_constants.dart';
 import 'package:flutter_online_cardgame/constants/app_dimentions.dart';
 import 'package:flutter_online_cardgame/l10n/app_localizations.dart';
-import 'package:flutter_online_cardgame/repository/functions_repository.dart';
+import 'package:flutter_online_cardgame/repository/firebase_repository.dart';
 import 'package:flutter_online_cardgame/screens/game_screen/game_initialize_screen.dart';
 import 'package:flutter_online_cardgame/screens/instruction_screen/instruction_screen.dart';
 import 'package:flutter_online_cardgame/screens/join_game_screen.dart';
@@ -25,14 +25,14 @@ class TopScreen extends StatefulWidget {
 class _TopScreenState extends State<TopScreen> {
   final TextEditingController _controller = TextEditingController();
 
-  bool _isLoggedIn = FunctionsRepository.isLoggedIn;
+  bool _isLoggedIn = FirebaseRepository.isLoggedIn;
   bool _busy = false;
 
   void _createGame() async {
     if (_busy) return;
     try {
       setState(() => _busy = true);
-      final gameInfo = await FunctionsRepository.createGame();
+      final gameInfo = await FirebaseRepository.createGame();
       if (!mounted) return;
       Navigator.of(
         context,
@@ -65,7 +65,7 @@ class _TopScreenState extends State<TopScreen> {
       debugPrint('Error signing in: $e');
     } finally {
       setState(() {
-        _isLoggedIn = FunctionsRepository.isLoggedIn;
+        _isLoggedIn = FirebaseRepository.isLoggedIn;
         _busy = false;
       });
     }

@@ -6,10 +6,10 @@ import 'package:flutter_online_cardgame/model/game_info.dart';
 import 'package:flutter_online_cardgame/model/game_state.dart';
 import 'package:flutter_online_cardgame/model/player_info.dart';
 import 'package:flutter_online_cardgame/model/player_state.dart';
-import 'package:flutter_online_cardgame/repository/functions_repository.dart';
+import 'package:flutter_online_cardgame/repository/firebase_repository.dart';
 
 mixin GameScreenMixin {
-  String get uid => FunctionsRepository.user.uid;
+  String get uid => FirebaseRepository.user.uid;
 
   GameInfo get gameInfo;
   GameState get gameState;
@@ -33,7 +33,7 @@ mixin GameScreenMixin {
   /// Common exit game functionality
   Future<void> exitGame() async {
     try {
-      await FunctionsRepository.exitGame(gameId: gameInfo.gameId);
+      await FirebaseRepository.exitGame(gameId: gameInfo.gameId);
     } catch (e) {
       handleApiError('exit game', e);
     }
@@ -42,7 +42,7 @@ mixin GameScreenMixin {
   /// Common end game functionality (admin only)
   Future<void> endGame() async {
     try {
-      await FunctionsRepository.endGame(gameId: gameInfo.gameId);
+      await FirebaseRepository.endGame(gameId: gameInfo.gameId);
     } catch (e) {
       handleApiError('end game', e);
     }
@@ -51,7 +51,7 @@ mixin GameScreenMixin {
   /// Common reset game functionality (admin only)
   Future<void> resetGame() async {
     try {
-      await FunctionsRepository.resetGame(gameId: gameInfo.gameId);
+      await FirebaseRepository.resetGame(gameId: gameInfo.gameId);
     } catch (e) {
       handleApiError('reset game', e);
     }
