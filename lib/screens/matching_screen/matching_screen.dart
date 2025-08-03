@@ -158,7 +158,7 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
             GameInfoWidget(gameInfo: gameInfo, playerId: uid),
             PlayerListWidget(gameState: gameState, playerId: uid),
             PlayerSettingWidget(
-              initialValue: myInfo?.name ?? '',
+              playerName: myInfo?.name ?? '',
               avatarFileName: myInfo?.avatarFileName ?? AppImages.avatar(0),
               onUpdated: _onPlayerNameUpdated,
               onTapAvatar: _onTapAvatar,
@@ -166,7 +166,7 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
             ),
             if (isMaster)
               GameMasterWidget(
-                initialValue: gameConfig.topic,
+                topic: gameConfig.topic,
                 onUpdated: _onTopicUpdated,
                 onStartPressed: _isStartButtonEnabled ? _onStartPressed : null,
                 focusNode: _topicFocusNode,

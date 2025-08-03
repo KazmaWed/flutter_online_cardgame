@@ -189,14 +189,14 @@ class PlayerCard extends StatelessWidget {
 class PlayerSettingWidget extends StatefulWidget {
   const PlayerSettingWidget({
     super.key,
-    required this.initialValue,
+    required this.playerName,
     required this.avatarFileName,
     required this.onUpdated,
     required this.onTapAvatar,
     required this.focusNode,
   });
 
-  final String initialValue;
+  final String playerName;
   final String avatarFileName;
   final Function(String) onUpdated;
   final VoidCallback onTapAvatar;
@@ -212,8 +212,17 @@ class _PlayerSettingWidgetState extends State<PlayerSettingWidget> {
   @override
   void initState() {
     super.initState();
-    _textController.text = widget.initialValue;
+    _textController.text = widget.playerName;
     widget.focusNode.addListener(_onFocusChange);
+  }
+
+  @override
+  void didUpdateWidget(PlayerSettingWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // プレイヤー名が変更された時のみテキストを更新（入力中でない場合）
+    if (oldWidget.playerName != widget.playerName && !widget.focusNode.hasFocus) {
+      _textController.text = widget.playerName;
+    }
   }
 
   @override
@@ -352,12 +361,12 @@ class AvatarSelectDialog extends StatelessWidget {
 class GameMasterWidget extends StatefulWidget {
   const GameMasterWidget({
     super.key,
-    required this.initialValue,
+    required this.topic,
     required this.onUpdated,
     required this.onStartPressed,
     required this.focusNode,
   });
-  final String initialValue;
+  final String topic;
   final Function(String) onUpdated;
   final VoidCallback? onStartPressed;
   final FocusNode focusNode;
@@ -395,8 +404,16 @@ class _GameMasterWidgetState extends State<GameMasterWidget> {
   @override
   void initState() {
     super.initState();
-    _textController.text = widget.initialValue;
+    _textController.text = widget.topic;
     widget.focusNode.addListener(_onFocusChange);
+  }
+
+  @override
+  void didUpdateWidget(GameMasterWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.topic != widget.topic && !widget.focusNode.hasFocus) {
+      _textController.text = widget.topic;
+    }
   }
 
   @override
