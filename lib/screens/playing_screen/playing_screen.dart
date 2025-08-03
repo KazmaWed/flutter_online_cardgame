@@ -195,8 +195,10 @@ class _PlayingScreenState extends State<PlayingScreen> with GameScreenMixin {
   @override
   void didUpdateWidget(PlayingScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.gameState != widget.gameState) {
-      _controller.text = gameState.playerState[uid]?.hint ?? '';
+    final oldHint = oldWidget.gameState.playerState[uid]?.hint ?? '';
+    final newHint = widget.gameState.playerState[uid]?.hint ?? '';
+    if (oldHint != newHint && !_focusNode.hasFocus) {
+      _controller.text = newHint;
     }
   }
 
