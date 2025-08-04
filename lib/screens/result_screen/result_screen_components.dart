@@ -147,14 +147,15 @@ class PlayerResultsWidget extends StatefulWidget {
   State<PlayerResultsWidget> createState() => _PlayerResultsWidgetState();
 }
 
-class _PlayerResultsWidgetState extends State<PlayerResultsWidget> with SingleTickerProviderStateMixin {
+class _PlayerResultsWidgetState extends State<PlayerResultsWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late List<Animation<double>> _cardAnimations;
 
   @override
   void initState() {
     super.initState();
-    
+
     _animationController = AnimationController(
       duration: AppConstants.scoreAnimationDuration,
       vsync: this,
@@ -165,14 +166,13 @@ class _PlayerResultsWidgetState extends State<PlayerResultsWidget> with SingleTi
     _cardAnimations = List.generate(cardCount, (index) {
       final startTime = (index / cardCount) * 0.8; // Start animations in first 80% of duration
       final endTime = startTime + 0.3; // Each card animation takes 30% of total duration
-      
-      return Tween<double>(
-        begin: 0.0,
-        end: 1.0,
-      ).animate(CurvedAnimation(
-        parent: _animationController,
-        curve: Interval(startTime, endTime.clamp(0.0, 1.0), curve: Curves.easeOut),
-      ));
+
+      return Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(
+          parent: _animationController,
+          curve: Interval(startTime, endTime.clamp(0.0, 1.0), curve: Curves.easeOut),
+        ),
+      );
     });
 
     // Start animation after a delay to sync with score animation
@@ -192,7 +192,9 @@ class _PlayerResultsWidgetState extends State<PlayerResultsWidget> with SingleTi
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final headerStyle = Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold);
+    final headerStyle = Theme.of(
+      context,
+    ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold);
 
     return RowCard(
       children: [
@@ -210,7 +212,7 @@ class _PlayerResultsWidgetState extends State<PlayerResultsWidget> with SingleTi
               ...widget.result.playerResults.asMap().entries.expand((entry) {
                 final index = entry.key;
                 final player = entry.value;
-                
+
                 return [
                   AnimatedBuilder(
                     animation: _cardAnimations[index],
@@ -274,45 +276,100 @@ class PlayerResultCard extends StatelessWidget {
       color: Theme.of(context).colorScheme.surfaceContainerLowest,
       child: Padding(
         padding: const EdgeInsets.all(AppDimentions.paddingSmall),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          spacing: AppDimentions.paddingSmall,
-          children: [
-            SizedBox(
-              width: nameColumnWidth,
-              child: Row(
+        child: Builder(
+          builder: (context) {
+            // MediaQueryを使用して画面幅を取得
+            final screenWidth = MediaQuery.of(context).size.width;
+            final isNarrow = screenWidth < AppDimentions.screenWidthNarrow;
+
+            if (isNarrow) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 1行目: 名前、値、順位、アイコン
+                  Row(
+                    spacing: AppDimentions.paddingSmall,
+                    children: [
+                      AvatarContainer(
+                        size: AppDimentions.avatarSizeXS,
+                        fileName: player.avatarFileName,
+                      ),
+                      Text(player.name.toNameString(), style: style),
+                    ],
+                  ),
+                  // 2行目: ヒント
+                  Row(
+                    spacing: AppDimentions.paddingSmall,
+                    children: [
+                      Expanded(child: Text(player.hint.toHintString(), style: style)),
+                      Container(
+                        alignment: Alignment.center,
+                        width: AppDimentions.resultColumnValue,
+                        child: Text(player.value.toString(), style: largeStyle),
+                      ),
+                      Container(
+                        alignment: Alignment.centerRight,
+                        width: AppDimentions.resultColumnOrder,
+                        child: Text(l10n.submitOrderText(player.submitted), style: indexStyle),
+                      ),
+                      Container(
+                        alignment: Alignment.centerRight,
+                        width: AppDimentions.resultColumnOrder,
+                        child: Text(l10n.submitOrderText(player.index), style: indexStyle),
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        width: AppDimentions.resultColumnIcon,
+                        child: icon,
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            } else {
+              // 通常レイアウト: 1行
+              return Row(
+                mainAxisSize: MainAxisSize.max,
                 spacing: AppDimentions.paddingSmall,
                 children: [
-                  AvatarContainer(
-                    size: AppDimentions.avatarSizeXS,
-                    fileName: player.avatarFileName,
+                  SizedBox(
+                    width: nameColumnWidth,
+                    child: Row(
+                      spacing: AppDimentions.paddingSmall,
+                      children: [
+                        AvatarContainer(
+                          size: AppDimentions.avatarSizeXS,
+                          fileName: player.avatarFileName,
+                        ),
+                        Text(player.name.toNameString(), style: style),
+                      ],
+                    ),
                   ),
-                  Text(player.name.toNameString(), style: style),
+                  Expanded(flex: 3, child: Text(player.hint.toHintString(), style: style)),
+                  Container(
+                    alignment: Alignment.center,
+                    width: AppDimentions.resultColumnValue,
+                    child: Text(player.value.toString(), style: largeStyle),
+                  ),
+                  Container(
+                    alignment: Alignment.centerRight,
+                    width: AppDimentions.resultColumnOrder,
+                    child: Text(l10n.submitOrderText(player.submitted), style: indexStyle),
+                  ),
+                  Container(
+                    alignment: Alignment.centerRight,
+                    width: AppDimentions.resultColumnOrder,
+                    child: Text(l10n.submitOrderText(player.index), style: indexStyle),
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    width: AppDimentions.resultColumnIcon,
+                    child: icon,
+                  ),
                 ],
-              ),
-            ),
-            Expanded(flex: 3, child: Text(player.hint.toHintString(), style: style)),
-            Container(
-              alignment: Alignment.center,
-              width: AppDimentions.resultColumnValue,
-              child: Text(player.value.toString(), style: largeStyle),
-            ),
-            Container(
-              alignment: Alignment.centerRight,
-              width: AppDimentions.resultColumnOrder,
-              child: Text(l10n.submitOrderText(player.submitted), style: indexStyle),
-            ),
-            Container(
-              alignment: Alignment.centerRight,
-              width: AppDimentions.resultColumnOrder,
-              child: Text(l10n.submitOrderText(player.index), style: indexStyle),
-            ),
-            Container(
-              alignment: Alignment.center,
-              width: AppDimentions.resultColumnIcon,
-              child: icon,
-            ),
-          ],
+              );
+            }
+          },
         ),
       ),
     );
@@ -335,6 +392,11 @@ class PlayerResultHeader extends StatelessWidget {
         AppDimentions.paddingSmall * 2 +
         AppDimentions.avatarSizeXS;
 
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isNarrow = screenWidth < AppDimentions.screenWidthNarrow;
+
+    final text = isNarrow ? "${l10n.hintHeader}/${l10n.playerHeader}" : l10n.hintHeader;
+
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: AppDimentions.paddingSmall,
@@ -344,11 +406,12 @@ class PlayerResultHeader extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         spacing: AppDimentions.paddingSmall,
         children: [
-          SizedBox(
-            width: nameColumnWidth,
-            child: Text(l10n.playerHeader, style: style),
-          ),
-          Expanded(flex: 3, child: Text(l10n.hintHeader, style: style)),
+          if (!isNarrow)
+            SizedBox(
+              width: nameColumnWidth,
+              child: Text(l10n.playerHeader, style: style),
+            ),
+          Expanded(flex: 3, child: Text(text, style: style)),
           Container(
             alignment: Alignment.center,
             width: AppDimentions.resultColumnValue,
