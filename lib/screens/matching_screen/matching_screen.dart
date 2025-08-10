@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_online_cardgame/components/barrier_container.dart';
 
 import 'package:flutter_online_cardgame/components/base_scaffold.dart';
-import 'package:flutter_online_cardgame/constants/app_images.dart';
+import 'package:flutter_online_cardgame/constants/app_assets.dart';
 import 'package:flutter_online_cardgame/l10n/app_localizations.dart';
 import 'package:flutter_online_cardgame/model/game_config.dart';
 import 'package:flutter_online_cardgame/model/game_info.dart';

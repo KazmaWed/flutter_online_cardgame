@@ -10,6 +10,7 @@ import 'package:flutter_online_cardgame/constants/app_fonts.dart';
 import 'package:flutter_online_cardgame/l10n/app_localizations.dart';
 import 'package:flutter_online_cardgame/model/player_info.dart';
 import 'package:flutter_online_cardgame/model/player_state.dart';
+import 'package:flutter_online_cardgame/util/multi_byte_length_formatter.dart';
 import 'package:flutter_online_cardgame/util/string_util.dart';
 
 class TopicCardWidget extends StatelessWidget {
@@ -194,11 +195,13 @@ class SubmitWidget extends StatelessWidget {
         ),
         Text(instruction, style: descriptionStyle),
         TextField(
+          maxLength: AppConstants.maxPlayerHintLength,
           controller: controller,
           readOnly: submittedOrder != null,
           focusNode: focusNode,
           enabled: submittedOrder == null,
-          maxLength: AppConstants.maxPlayerHintLength,
+          inputFormatters: [MultiByteLengthFormatter(AppConstants.maxPlayerHintLength)],
+          buildCounter: MultiByteLengthFormatter.createCounterBuilder(controller, AppConstants.maxPlayerHintLength),
           decoration: InputDecoration(
             labelText: l10n.hint,
             border: OutlineInputBorder(),

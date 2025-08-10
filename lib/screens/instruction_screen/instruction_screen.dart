@@ -6,7 +6,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import 'package:flutter_online_cardgame/constants/app_dimentions.dart';
 import 'package:flutter_online_cardgame/components/base_scaffold.dart';
-import 'package:flutter_online_cardgame/constants/app_images.dart';
+import 'package:flutter_online_cardgame/constants/app_assets.dart';
 import 'package:flutter_online_cardgame/l10n/app_localizations.dart';
 import 'package:flutter_online_cardgame/model/instruction_data.dart';
 import 'package:flutter_online_cardgame/screens/instruction_screen/instruction_screen_components.dart';

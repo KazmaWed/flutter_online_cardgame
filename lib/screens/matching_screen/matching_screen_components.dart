@@ -10,13 +10,14 @@ import 'package:flutter_online_cardgame/components/rectangler_button.dart';
 import 'package:flutter_online_cardgame/components/row_card.dart';
 import 'package:flutter_online_cardgame/constants/app_constants.dart';
 import 'package:flutter_online_cardgame/constants/app_dimentions.dart';
-import 'package:flutter_online_cardgame/constants/app_images.dart';
+import 'package:flutter_online_cardgame/constants/app_assets.dart';
 import 'package:flutter_online_cardgame/l10n/app_localizations.dart';
 import 'package:flutter_online_cardgame/model/game_info.dart';
 import 'package:flutter_online_cardgame/model/game_state.dart';
 import 'package:flutter_online_cardgame/model/player_info.dart';
 import 'package:flutter_online_cardgame/model/topic_data.dart';
 import 'package:flutter_online_cardgame/screens/common/error_screen.dart';
+import 'package:flutter_online_cardgame/util/multi_byte_length_formatter.dart';
 import 'package:flutter_online_cardgame/util/string_util.dart';
 
 class GameInfoWidget extends StatelessWidget {
@@ -278,6 +279,8 @@ class _PlayerSettingWidgetState extends State<PlayerSettingWidget> {
                           maxLength: AppConstants.maxPlayerNameLength,
                           controller: _textController,
                           focusNode: widget.focusNode,
+                          inputFormatters: [MultiByteLengthFormatter(AppConstants.maxPlayerNameLength)],
+                          buildCounter: MultiByteLengthFormatter.createCounterBuilder(_textController, AppConstants.maxPlayerNameLength),
                           decoration: InputDecoration(
                             labelText: l10n.playerNameLabel,
                             border: const OutlineInputBorder(),
@@ -440,9 +443,11 @@ class _GameMasterWidgetState extends State<GameMasterWidget> {
           children: [
             Expanded(
               child: TextField(
+                maxLength: AppConstants.maxTopicLength,
                 controller: _textController,
                 focusNode: widget.focusNode,
-                maxLength: AppConstants.maxTopicLength,
+                inputFormatters: [MultiByteLengthFormatter(AppConstants.maxTopicLength)],
+                buildCounter: MultiByteLengthFormatter.createCounterBuilder(_textController, AppConstants.maxTopicLength),
                 decoration: InputDecoration(
                   labelText: l10n.topicLabel,
                   border: OutlineInputBorder(),
@@ -483,18 +488,41 @@ class _TopicRecommendationDialogState extends State<TopicRecommendationDialog> {
   @override
   void initState() {
     super.initState();
-    _loadTopics();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_topicData == null && _isLoading) {
+      _loadTopics();
+    }
   }
 
   Future<void> _loadTopics() async {
     try {
-      final String jsonString = await rootBundle.loadString(AppAssets.topicsJson);
+      String topicsFile = AppAssets.topicsJson(context);
+      debugPrint('Loading topics from: $topicsFile');
+      
+      String jsonString;
+      try {
+        jsonString = await rootBundle.loadString(topicsFile);
+        debugPrint('Successfully loaded topics file');
+      } catch (e) {
+        debugPrint('Failed to load $topicsFile, using fallback: $e');
+        // Fallback to Japanese topics
+        topicsFile = AppAssets.topicsJsonFallback;
+        jsonString = await rootBundle.loadString(topicsFile);
+        debugPrint('Successfully loaded fallback topics file');
+      }
+
       final Map<String, dynamic> jsonData = json.decode(jsonString);
       setState(() {
         _topicData = TopicData.fromJson(jsonData);
         _isLoading = false;
       });
+      debugPrint('Successfully parsed topics data');
     } catch (e) {
+      debugPrint('Error loading topics: $e');
       setState(() => _isLoading = false);
     }
   }

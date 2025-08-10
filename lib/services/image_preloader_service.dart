@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_online_cardgame/constants/app_images.dart';
+import 'package:flutter_online_cardgame/constants/app_assets.dart';
 
 class ImagePreloaderService {
   static bool _isPreloaded = false;
