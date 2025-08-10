@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_online_cardgame/constants/app_images.dart';
+import 'package:flutter_online_cardgame/constants/app_assets.dart';
 import 'package:flutter_online_cardgame/components/rectangler_button.dart';
 import 'package:flutter_online_cardgame/constants/app_dimentions.dart';
 import 'package:flutter_online_cardgame/l10n/app_localizations.dart';

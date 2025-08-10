@@ -28,7 +28,16 @@ class AppAssets {
     return localeCode == 'en' ? 'assets/instructions_en.json' : 'assets/instructions_jp.json';
   }
 
+  // Topics JSON Files
+  static String topicsJson(BuildContext context) {
+    final locale = Localizations.localeOf(context);
+    final localeCode = locale.languageCode;
+    return localeCode == 'en' 
+        ? 'assets/topics_en.json'
+        : 'assets/topics_jp.json';
+  }
+
   // Fallback paths
   static String get instructionJsonFallback => 'assets/instructions_jp.json';
-  static String get topicsJson => 'assets/topics.json';
+  static String get topicsJsonFallback => 'assets/topics_jp.json';
 }

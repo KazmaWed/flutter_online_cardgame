@@ -1,4 +1,4 @@
-import 'package:flutter_online_cardgame/constants/app_images.dart';
+import 'package:flutter_online_cardgame/constants/app_assets.dart';
 import 'package:flutter_online_cardgame/model/player_state.dart';
 
 class PlayerInfo {

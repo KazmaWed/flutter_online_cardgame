@@ -1,0 +1,32 @@
+{
+    "Standard": [
+        "Big things",
+        "Cute animals",
+        "Admired heroes/heroines",
+        "Food you want to eat at celebrations",
+        "What you'd do if you won the lottery",
+        "Essential items for daily life",
+        "Things you often buy at 7-Eleven",
+        "Places you want to visit someday",
+        "Beautiful things"
+    ],
+    "Romance": [
+        "Where you want to go on a first date",
+        "Traits of people who seem popular",
+        "Words you'd love to hear from your crush",
+        "Pleasant surprises from your partner",
+        "Signs that make you suspect cheating",
+        "Moments when love grows cold"
+    ],
+    "Funny": [
+        "Smelly things",
+        "People you can't look away from",
+        "Unbelievable stories",
+        "Events that make you panic",
+        "Pranks that aren't funny",
+        "Times you can't concentrate at all",
+        "Things you desperately want",
+        "Weird things found at friend's house",
+        "Your personal quirks"
+    ]
+}
