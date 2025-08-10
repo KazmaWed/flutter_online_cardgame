@@ -122,6 +122,12 @@ abstract class AppLocalizations {
   /// **'遊び方を見る'**
   String get howToPlay;
 
+  /// No description provided for @start.
+  ///
+  /// In ja, this message translates to:
+  /// **'はじめる'**
+  String get start;
+
   /// No description provided for @joinGameTitle.
   ///
   /// In ja, this message translates to:
@@ -200,6 +206,24 @@ abstract class AppLocalizations {
   /// **'プレイヤー名'**
   String get playerNameLabel;
 
+  /// No description provided for @participants.
+  ///
+  /// In ja, this message translates to:
+  /// **'参加者'**
+  String get participants;
+
+  /// No description provided for @recommendedTopics.
+  ///
+  /// In ja, this message translates to:
+  /// **'おすすめトピック'**
+  String get recommendedTopics;
+
+  /// No description provided for @notSet.
+  ///
+  /// In ja, this message translates to:
+  /// **'未設定'**
+  String get notSet;
+
   /// No description provided for @setTopicInstruction.
   ///
   /// In ja, this message translates to:
@@ -229,6 +253,18 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'参加中のプレイヤーがいません'**
   String get noPlayersMessage;
+
+  /// No description provided for @kick.
+  ///
+  /// In ja, this message translates to:
+  /// **'キック'**
+  String get kick;
+
+  /// No description provided for @chooseFromRecommendations.
+  ///
+  /// In ja, this message translates to:
+  /// **'おすすめ\nから選ぶ'**
+  String get chooseFromRecommendations;
 
   /// No description provided for @cancel.
   ///

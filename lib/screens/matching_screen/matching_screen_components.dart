@@ -116,7 +116,7 @@ class PlayerListWidget extends StatelessWidget {
           spacing: AppDimentions.paddingMedium,
           children: [
             Text(
-              '参加者',
+              AppLocalizations.of(context)!.participants,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             Wrap(
@@ -458,7 +458,7 @@ class _GameMasterWidgetState extends State<GameMasterWidget> {
             ),
             SizedBox(
               width: 120,
-              child: RectangularTextButton(label: 'おすすめ\nから選ぶ', onPressed: _onTapRecommendation),
+              child: RectangularTextButton(label: AppLocalizations.of(context)!.chooseFromRecommendations, onPressed: _onTapRecommendation),
             ),
           ],
         ),
@@ -510,7 +510,7 @@ class _TopicRecommendationDialogState extends State<TopicRecommendationDialog> {
           child: Column(
             children: [
               Text(
-                'おすすめトピック',
+                AppLocalizations.of(context)!.recommendedTopics,
                 style: Theme.of(
                   context,
                 ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -596,7 +596,7 @@ class GuestWidget extends StatelessWidget {
         : Theme.of(
             context,
           ).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.secondary);
-    final topicFixed = topic.isNotEmpty ? topic : '未設定';
+    final topicFixed = topic.isNotEmpty ? topic : AppLocalizations.of(context)!.notSet;
     return RowCard(
       children: [
         Text(

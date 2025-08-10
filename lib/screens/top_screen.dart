@@ -138,7 +138,7 @@ class _TopScreenState extends State<TopScreen> {
                           onHowToPlay: _instruction,
                         )
                       : Center(
-                          child: RectangularTextButton(label: 'はじめる', onPressed: _signin),
+                          child: RectangularTextButton(label: AppLocalizations.of(context)!.start, onPressed: _signin),
                         ),
                 ),
               ],

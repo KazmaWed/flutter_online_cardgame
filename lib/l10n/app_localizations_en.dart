@@ -21,6 +21,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get howToPlay => 'How to Play';
 
   @override
+  String get start => 'Start';
+
+  @override
   String get joinGameTitle => 'Join Game';
 
   @override
@@ -61,6 +64,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get playerNameLabel => 'Player Name';
 
   @override
+  String get participants => 'Participants';
+
+  @override
+  String get recommendedTopics => 'Recommended Topics';
+
+  @override
+  String get notSet => 'Not Set';
+
+  @override
   String get setTopicInstruction => 'Set a topic to discuss';
 
   @override
@@ -74,6 +86,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noPlayersMessage => 'No participating players';
+
+  @override
+  String get kick => 'Kick';
+
+  @override
+  String get chooseFromRecommendations => 'Choose from\nRecommendations';
 
   @override
   String get cancel => 'Cancel';
@@ -193,7 +211,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirmExitGameTitle => 'Exit game?';
 
   @override
-  String get confirmExitGameMessage => 'The game will continue even if you leave';
+  String get confirmExitGameMessage =>
+      'The game will continue even if you leave';
 
   @override
   String get exitGame => 'Exit';

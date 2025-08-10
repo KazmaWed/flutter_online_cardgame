@@ -380,7 +380,7 @@ class GameMasterWidget extends StatelessWidget {
           ),
           SizedBox(
             width: AppDimentions.buttonWidth,
-            child: RectangularTextButton(onPressed: onTapGameMasterMenu, label: 'キック'),
+            child: RectangularTextButton(onPressed: onTapGameMasterMenu, label: AppLocalizations.of(context)!.kick),
           ),
         ],
       ),

@@ -13,6 +13,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_online_cardgame/constants/app_fonts.dart';
 import 'package:flutter_online_cardgame/firebase_options.dart';
 import 'package:flutter_online_cardgame/l10n/app_localizations.dart';
+import 'package:flutter_online_cardgame/providers/locale_provider.dart';
 import 'package:flutter_online_cardgame/screens/startup_screen.dart';
 
 Future<void> main() async {
@@ -44,14 +45,17 @@ Future<void> main() async {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final locale = ref.watch(localeProvider);
+    
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
       debugShowCheckedModeBanner: false,
+      locale: locale,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -60,7 +64,7 @@ class MyApp extends StatelessWidget {
       ],
       supportedLocales: const [
         Locale('ja'),
-        // Locale('en'),
+        Locale('en'),
       ],
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.brown).copyWith(surface: Colors.white),
