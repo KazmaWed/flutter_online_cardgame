@@ -105,13 +105,13 @@ class _TopScreenState extends State<TopScreen> {
         }
       },
       style: linkButtonStyle,
-      child: Text('Github', style: linkTextStyle),
+      child: Text(AppLocalizations.of(context)!.github, style: linkTextStyle),
     );
 
     final licenseButton = TextButton(
       onPressed: () => showLicensePage(context: context),
       style: linkButtonStyle,
-      child: Text('ライセンス', style: linkTextStyle),
+      child: Text(AppLocalizations.of(context)!.license, style: linkTextStyle),
     );
 
     return BarrierContainer(

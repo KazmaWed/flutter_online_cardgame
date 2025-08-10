@@ -202,6 +202,35 @@ class AppLocalizationsJa extends AppLocalizations {
   String get flutterDemoTitle => 'Flutter Demo';
 
   @override
+  String get dataLoadFailed => 'データの読み込みに失敗しました';
+
+  @override
+  String get cancelButton => 'キャンセル';
+
+  @override
+  String get github => 'Github';
+
+  @override
+  String get license => 'ライセンス';
+
+  @override
+  String get howToPlayTitle => '遊び方';
+
+  @override
+  String get instructionLoadFailed => '説明を読み込めませんでした';
+
+  @override
+  String get reload => 'リロード';
+
+  @override
+  String get notSubmitted => '未送信';
+
+  @override
+  String playerId(String playerId) {
+    return 'ID: $playerId';
+  }
+
+  @override
   String hintTemplate(int value, String topic) {
     return '1~100のうち$valueくらい「$topic」に相応しいヒントを入力';
   }

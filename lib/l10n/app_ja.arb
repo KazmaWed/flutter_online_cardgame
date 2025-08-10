@@ -112,6 +112,24 @@
   "@_MAIN_APP": {},
   "flutterDemoTitle": "Flutter Demo",
   
+  "@_UI_LABELS": {},
+  "dataLoadFailed": "データの読み込みに失敗しました",
+  "cancelButton": "キャンセル",
+  "github": "Github",
+  "license": "ライセンス",
+  "howToPlayTitle": "遊び方",
+  "instructionLoadFailed": "説明を読み込めませんでした",
+  "reload": "リロード",
+  "notSubmitted": "未送信",
+  "playerId": "ID: {playerId}",
+  "@playerId": {
+    "placeholders": {
+      "playerId": {
+        "type": "String"
+      }
+    }
+  },
+
   "@_DYNAMIC_TEXT_TEMPLATES": {},
   "hintTemplate": "1~100のうち{value}くらい「{topic}」に相応しいヒントを入力",
   "@hintTemplate": {

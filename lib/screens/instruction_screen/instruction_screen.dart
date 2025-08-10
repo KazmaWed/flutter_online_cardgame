@@ -2,10 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_online_cardgame/constants/app_dimentions.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import 'package:flutter_online_cardgame/constants/app_dimentions.dart';
 import 'package:flutter_online_cardgame/components/base_scaffold.dart';
+import 'package:flutter_online_cardgame/l10n/app_localizations.dart';
 import 'package:flutter_online_cardgame/model/instruction_data.dart';
 import 'package:flutter_online_cardgame/screens/instruction_screen/instruction_screen_components.dart';
 
@@ -79,11 +80,11 @@ class _InstructionScreenState extends State<InstructionScreen> {
   @override
   Widget build(BuildContext context) {
     return BaseScaffold(
-      appBar: AppBar(title: const Text('遊び方'), centerTitle: true),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.howToPlayTitle), centerTitle: true),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _instructionData == null
-          ? const Center(child: Text('説明を読み込めませんでした'))
+          ? Center(child: Text(AppLocalizations.of(context)!.instructionLoadFailed))
           : SingleChildScrollView(
               child: Center(
                 child: Column(

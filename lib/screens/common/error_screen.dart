@@ -34,7 +34,7 @@ class ErrorScreen extends StatelessWidget {
                   if (kIsWeb) web.window.location.reload();
                 },
                 icon: Icon(Icons.refresh, size: Theme.of(context).textTheme.bodyLarge!.fontSize!),
-                label: Text('リロード', style: Theme.of(context).textTheme.bodyLarge),
+                label: Text(AppLocalizations.of(context)!.reload, style: Theme.of(context).textTheme.bodyLarge),
                 style: TextButton.styleFrom(
                   padding: EdgeInsets.all(AppDimentions.paddingLarge),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),

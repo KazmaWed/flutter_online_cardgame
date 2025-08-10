@@ -167,7 +167,7 @@ class _PlayingScreenState extends State<PlayingScreen> with GameScreenMixin {
                           size: AppDimentions.avatarSizeXS,
                         ),
                         title: Text(player.name.toNameString()),
-                        subtitle: Text('ID: ${player.id}'),
+                        subtitle: Text(AppLocalizations.of(context)!.playerId(player.id)),
                         onTap: () => onTapPlayer(player),
                       ),
                     ),

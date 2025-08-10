@@ -519,7 +519,7 @@ class _TopicRecommendationDialogState extends State<TopicRecommendationDialog> {
                 child: _isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : _topicData == null
-                    ? const Center(child: Text('データの読み込みに失敗しました'))
+                    ? Center(child: Text(AppLocalizations.of(context)!.dataLoadFailed))
                     : ListView(children: _buildTopicList()),
               ),
               const SizedBox(height: AppDimentions.paddingMedium),
@@ -528,7 +528,7 @@ class _TopicRecommendationDialogState extends State<TopicRecommendationDialog> {
                 children: [
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('キャンセル'),
+                    child: Text(AppLocalizations.of(context)!.cancelButton),
                   ),
                 ],
               ),

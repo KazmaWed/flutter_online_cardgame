@@ -458,6 +458,60 @@ abstract class AppLocalizations {
   /// **'Flutter Demo'**
   String get flutterDemoTitle;
 
+  /// No description provided for @dataLoadFailed.
+  ///
+  /// In ja, this message translates to:
+  /// **'データの読み込みに失敗しました'**
+  String get dataLoadFailed;
+
+  /// No description provided for @cancelButton.
+  ///
+  /// In ja, this message translates to:
+  /// **'キャンセル'**
+  String get cancelButton;
+
+  /// No description provided for @github.
+  ///
+  /// In ja, this message translates to:
+  /// **'Github'**
+  String get github;
+
+  /// No description provided for @license.
+  ///
+  /// In ja, this message translates to:
+  /// **'ライセンス'**
+  String get license;
+
+  /// No description provided for @howToPlayTitle.
+  ///
+  /// In ja, this message translates to:
+  /// **'遊び方'**
+  String get howToPlayTitle;
+
+  /// No description provided for @instructionLoadFailed.
+  ///
+  /// In ja, this message translates to:
+  /// **'説明を読み込めませんでした'**
+  String get instructionLoadFailed;
+
+  /// No description provided for @reload.
+  ///
+  /// In ja, this message translates to:
+  /// **'リロード'**
+  String get reload;
+
+  /// No description provided for @notSubmitted.
+  ///
+  /// In ja, this message translates to:
+  /// **'未送信'**
+  String get notSubmitted;
+
+  /// No description provided for @playerId.
+  ///
+  /// In ja, this message translates to:
+  /// **'ID: {playerId}'**
+  String playerId(String playerId);
+
   /// No description provided for @hintTemplate.
   ///
   /// In ja, this message translates to:

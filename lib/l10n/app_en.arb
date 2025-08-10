@@ -2,7 +2,7 @@
   "@@locale": "en",
   
   "@_TOP_SCREEN": {},
-  "appTitle": "Acorn Game",
+  "appTitle": "Comparing Acorns To Acorns Game",
   "createNewGame": "Create New Game",
   "joinGame": "Join Game",
   "howToPlay": "How to Play",
@@ -23,7 +23,7 @@
   "selectAvatar": "Select Avatar",
   "enterPlayerNameInstruction": "Please set a nice player name",
   "playerNameLabel": "Player Name",
-  "setTopicInstruction": "Please set a topic for everyone to discuss",
+  "setTopicInstruction": "Set a topic to discuss",
   "topicLabel": "Topic",
   "startGame": "Start Game",
   
@@ -112,6 +112,24 @@
   "@_MAIN_APP": {},
   "flutterDemoTitle": "Flutter Demo",
   
+  "@_UI_LABELS": {},
+  "dataLoadFailed": "Failed to load data",
+  "cancelButton": "Cancel",
+  "github": "Github",
+  "license": "License",
+  "howToPlayTitle": "How to Play",
+  "instructionLoadFailed": "Failed to load instructions",
+  "reload": "Reload",
+  "notSubmitted": "Not submitted",
+  "playerId": "ID: {playerId}",
+  "@playerId": {
+    "placeholders": {
+      "playerId": {
+        "type": "String"
+      }
+    }
+  },
+
   "@_DYNAMIC_TEXT_TEMPLATES": {},
   "hintTemplate": "Enter something about {value} out of 1-100 for \"{topic}\"",
   "@hintTemplate": {

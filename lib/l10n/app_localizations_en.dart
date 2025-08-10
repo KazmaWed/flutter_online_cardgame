@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'Acorn Game';
+  String get appTitle => 'Comparing Acorns To Acorns Game';
 
   @override
   String get createNewGame => 'Create New Game';
@@ -61,8 +61,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get playerNameLabel => 'Player Name';
 
   @override
-  String get setTopicInstruction =>
-      'Please set a topic for everyone to discuss';
+  String get setTopicInstruction => 'Set a topic to discuss';
 
   @override
   String get topicLabel => 'Topic';
@@ -194,14 +193,42 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirmExitGameTitle => 'Exit game?';
 
   @override
-  String get confirmExitGameMessage =>
-      'The game will continue even if you leave';
+  String get confirmExitGameMessage => 'The game will continue even if you leave';
 
   @override
   String get exitGame => 'Exit';
 
   @override
   String get flutterDemoTitle => 'Flutter Demo';
+
+  @override
+  String get dataLoadFailed => 'Failed to load data';
+
+  @override
+  String get cancelButton => 'Cancel';
+
+  @override
+  String get github => 'Github';
+
+  @override
+  String get license => 'License';
+
+  @override
+  String get howToPlayTitle => 'How to Play';
+
+  @override
+  String get instructionLoadFailed => 'Failed to load instructions';
+
+  @override
+  String get reload => 'Reload';
+
+  @override
+  String get notSubmitted => 'Not submitted';
+
+  @override
+  String playerId(String playerId) {
+    return 'ID: $playerId';
+  }
 
   @override
   String hintTemplate(int value, String topic) {
