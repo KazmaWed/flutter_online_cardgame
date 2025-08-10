@@ -16,7 +16,7 @@ class GameTitleWidget extends StatelessWidget {
       child: Container(
         width: AppDimentions.screenWidth,
         padding: const EdgeInsets.all(AppDimentions.paddingLarge),
-        child: Image.asset(AppImages.logo, fit: BoxFit.cover),
+        child: Image.asset(AppAssets.logoForLocale(context), fit: BoxFit.cover),
       ),
     );
   }

@@ -159,7 +159,7 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
             PlayerListWidget(gameState: gameState, playerId: uid),
             PlayerSettingWidget(
               playerName: myInfo?.name ?? '',
-              avatarFileName: myInfo?.avatarFileName ?? AppImages.avatar(0),
+              avatarFileName: myInfo?.avatarFileName ?? AppAssets.avatar(0),
               onUpdated: _onPlayerNameUpdated,
               onTapAvatar: _onTapAvatar,
               focusNode: _playerFocusNode,

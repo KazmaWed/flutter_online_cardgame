@@ -30,7 +30,7 @@ class PlayerInfo {
         ')';
   }
 
-  String get avatarFileName => AppImages.avatar(avatar);
+  String get avatarFileName => AppAssets.avatar(avatar);
 }
 
 extension PlayerInfoIterableExtension on Iterable<PlayerInfo> {

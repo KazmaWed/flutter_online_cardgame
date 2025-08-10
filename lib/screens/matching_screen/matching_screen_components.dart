@@ -10,6 +10,7 @@ import 'package:flutter_online_cardgame/components/rectangler_button.dart';
 import 'package:flutter_online_cardgame/components/row_card.dart';
 import 'package:flutter_online_cardgame/constants/app_constants.dart';
 import 'package:flutter_online_cardgame/constants/app_dimentions.dart';
+import 'package:flutter_online_cardgame/constants/app_images.dart';
 import 'package:flutter_online_cardgame/l10n/app_localizations.dart';
 import 'package:flutter_online_cardgame/model/game_info.dart';
 import 'package:flutter_online_cardgame/model/game_state.dart';
@@ -312,7 +313,7 @@ class AvatarSelectDialog extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final avatarList = List.generate(
       12,
-      (i) => 'assets/images/avatar${i.toString().padLeft(2, '0')}.jpg',
+      (i) => AppAssets.avatar(i),
     );
     return Dialog(
       backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
@@ -487,7 +488,7 @@ class _TopicRecommendationDialogState extends State<TopicRecommendationDialog> {
 
   Future<void> _loadTopics() async {
     try {
-      final String jsonString = await rootBundle.loadString('assets/topics.json');
+      final String jsonString = await rootBundle.loadString(AppAssets.topicsJson);
       final Map<String, dynamic> jsonData = json.decode(jsonString);
       setState(() {
         _topicData = TopicData.fromJson(jsonData);
