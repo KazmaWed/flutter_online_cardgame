@@ -262,7 +262,7 @@ class PlayerHintCard extends StatelessWidget {
     final width = 166.0;
     final radius = pad + AppDimentions.avatarSizeS / 2;
 
-    final indexText = index == null ? '\u672a\u9001\u4fe1' : l10n.submitOrderText(index!);
+    final indexText = index == null ? l10n.notSubmitted : l10n.submitOrderText(index!);
 
     final nameStyle = Theme.of(context).textTheme.bodyMedium;
     final meStyle = Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -380,7 +380,7 @@ class GameMasterWidget extends StatelessWidget {
           ),
           SizedBox(
             width: AppDimentions.buttonWidth,
-            child: RectangularTextButton(onPressed: onTapGameMasterMenu, label: 'キック'),
+            child: RectangularTextButton(onPressed: onTapGameMasterMenu, label: AppLocalizations.of(context)!.kick),
           ),
         ],
       ),

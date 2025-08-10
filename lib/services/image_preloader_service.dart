@@ -11,14 +11,16 @@ class ImagePreloaderService {
 
     final List<Future<void>> preloadFutures = [];
 
-    preloadFutures.add(precacheImage(AssetImage(AppImages.logo), context));
+    // Preload the locale-specific logo
+    preloadFutures.add(precacheImage(AssetImage(AppAssets.logoForLocale(context)), context));
 
     for (int i = 0; i < 12; i++) {
-      preloadFutures.add(precacheImage(AssetImage(AppImages.avatar(i)), context));
+      preloadFutures.add(precacheImage(AssetImage(AppAssets.avatar(i)), context));
     }
 
+    // Preload instruction images using AppAssets
     for (int i = 0; i < 4; i++) {
-      final instructionImage = 'assets/images/instruction${i.toString().padLeft(2, '0')}.png';
+      final instructionImage = AppAssets.instructionImage(i, context);
       preloadFutures.add(precacheImage(AssetImage(instructionImage), context));
     }
 
@@ -34,7 +36,7 @@ class ImagePreloaderService {
     final List<Future<void>> preloadFutures = [];
 
     for (int i = 0; i < 12; i++) {
-      preloadFutures.add(precacheImage(AssetImage(AppImages.avatar(i)), context));
+      preloadFutures.add(precacheImage(AssetImage(AppAssets.avatar(i)), context));
     }
 
     try {
@@ -47,8 +49,9 @@ class ImagePreloaderService {
   static Future<void> preloadInstructionImages(BuildContext context) async {
     final List<Future<void>> preloadFutures = [];
 
+    // Preload instruction images using AppAssets
     for (int i = 0; i < 4; i++) {
-      final instructionImage = 'assets/images/instruction${i.toString().padLeft(2, '0')}.png';
+      final instructionImage = AppAssets.instructionImage(i, context);
       preloadFutures.add(precacheImage(AssetImage(instructionImage), context));
     }
 

@@ -21,6 +21,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get howToPlay => '遊び方を見る';
 
   @override
+  String get start => 'はじめる';
+
+  @override
   String get joinGameTitle => 'ルームに参加';
 
   @override
@@ -61,6 +64,15 @@ class AppLocalizationsJa extends AppLocalizations {
   String get playerNameLabel => 'プレイヤー名';
 
   @override
+  String get participants => '参加者';
+
+  @override
+  String get recommendedTopics => 'おすすめトピック';
+
+  @override
+  String get notSet => '未設定';
+
+  @override
   String get setTopicInstruction => 'みんなで話し合うトピックを設定してください';
 
   @override
@@ -74,6 +86,12 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get noPlayersMessage => '参加中のプレイヤーがいません';
+
+  @override
+  String get kick => 'キック';
+
+  @override
+  String get chooseFromRecommendations => 'おすすめ\nから選ぶ';
 
   @override
   String get cancel => '取消';
@@ -200,6 +218,35 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get flutterDemoTitle => 'Flutter Demo';
+
+  @override
+  String get dataLoadFailed => 'データの読み込みに失敗しました';
+
+  @override
+  String get cancelButton => 'キャンセル';
+
+  @override
+  String get github => 'Github';
+
+  @override
+  String get license => 'ライセンス';
+
+  @override
+  String get howToPlayTitle => '遊び方';
+
+  @override
+  String get instructionLoadFailed => '説明を読み込めませんでした';
+
+  @override
+  String get reload => 'リロード';
+
+  @override
+  String get notSubmitted => '未送信';
+
+  @override
+  String playerId(String playerId) {
+    return 'ID: $playerId';
+  }
 
   @override
   String hintTemplate(int value, String topic) {

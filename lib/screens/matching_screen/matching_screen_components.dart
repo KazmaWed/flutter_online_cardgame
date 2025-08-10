@@ -10,6 +10,7 @@ import 'package:flutter_online_cardgame/components/rectangler_button.dart';
 import 'package:flutter_online_cardgame/components/row_card.dart';
 import 'package:flutter_online_cardgame/constants/app_constants.dart';
 import 'package:flutter_online_cardgame/constants/app_dimentions.dart';
+import 'package:flutter_online_cardgame/constants/app_images.dart';
 import 'package:flutter_online_cardgame/l10n/app_localizations.dart';
 import 'package:flutter_online_cardgame/model/game_info.dart';
 import 'package:flutter_online_cardgame/model/game_state.dart';
@@ -116,7 +117,7 @@ class PlayerListWidget extends StatelessWidget {
           spacing: AppDimentions.paddingMedium,
           children: [
             Text(
-              '参加者',
+              AppLocalizations.of(context)!.participants,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             Wrap(
@@ -312,7 +313,7 @@ class AvatarSelectDialog extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final avatarList = List.generate(
       12,
-      (i) => 'assets/images/avatar${i.toString().padLeft(2, '0')}.jpg',
+      (i) => AppAssets.avatar(i),
     );
     return Dialog(
       backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
@@ -458,7 +459,7 @@ class _GameMasterWidgetState extends State<GameMasterWidget> {
             ),
             SizedBox(
               width: 120,
-              child: RectangularTextButton(label: 'おすすめ\nから選ぶ', onPressed: _onTapRecommendation),
+              child: RectangularTextButton(label: AppLocalizations.of(context)!.chooseFromRecommendations, onPressed: _onTapRecommendation),
             ),
           ],
         ),
@@ -487,7 +488,7 @@ class _TopicRecommendationDialogState extends State<TopicRecommendationDialog> {
 
   Future<void> _loadTopics() async {
     try {
-      final String jsonString = await rootBundle.loadString('assets/topics.json');
+      final String jsonString = await rootBundle.loadString(AppAssets.topicsJson);
       final Map<String, dynamic> jsonData = json.decode(jsonString);
       setState(() {
         _topicData = TopicData.fromJson(jsonData);
@@ -510,7 +511,7 @@ class _TopicRecommendationDialogState extends State<TopicRecommendationDialog> {
           child: Column(
             children: [
               Text(
-                'おすすめトピック',
+                AppLocalizations.of(context)!.recommendedTopics,
                 style: Theme.of(
                   context,
                 ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -519,7 +520,7 @@ class _TopicRecommendationDialogState extends State<TopicRecommendationDialog> {
                 child: _isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : _topicData == null
-                    ? const Center(child: Text('データの読み込みに失敗しました'))
+                    ? Center(child: Text(AppLocalizations.of(context)!.dataLoadFailed))
                     : ListView(children: _buildTopicList()),
               ),
               const SizedBox(height: AppDimentions.paddingMedium),
@@ -528,7 +529,7 @@ class _TopicRecommendationDialogState extends State<TopicRecommendationDialog> {
                 children: [
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('キャンセル'),
+                    child: Text(AppLocalizations.of(context)!.cancelButton),
                   ),
                 ],
               ),
@@ -596,7 +597,7 @@ class GuestWidget extends StatelessWidget {
         : Theme.of(
             context,
           ).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.secondary);
-    final topicFixed = topic.isNotEmpty ? topic : '未設定';
+    final topicFixed = topic.isNotEmpty ? topic : AppLocalizations.of(context)!.notSet;
     return RowCard(
       children: [
         Text(

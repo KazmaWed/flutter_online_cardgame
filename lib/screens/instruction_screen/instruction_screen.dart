@@ -2,10 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_online_cardgame/constants/app_dimentions.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import 'package:flutter_online_cardgame/constants/app_dimentions.dart';
 import 'package:flutter_online_cardgame/components/base_scaffold.dart';
+import 'package:flutter_online_cardgame/constants/app_images.dart';
+import 'package:flutter_online_cardgame/l10n/app_localizations.dart';
 import 'package:flutter_online_cardgame/model/instruction_data.dart';
 import 'package:flutter_online_cardgame/screens/instruction_screen/instruction_screen_components.dart';
 
@@ -26,7 +28,14 @@ class _InstructionScreenState extends State<InstructionScreen> {
   void initState() {
     super.initState();
     _pageController = PageController();
-    _loadInstructions();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_instructionData == null && _isLoading) {
+      _loadInstructions();
+    }
   }
 
   @override
@@ -37,7 +46,16 @@ class _InstructionScreenState extends State<InstructionScreen> {
 
   Future<void> _loadInstructions() async {
     try {
-      final String jsonString = await rootBundle.loadString('assets/instructions.json');
+      String instructionFile = AppAssets.instructionJson(context);
+
+      String jsonString;
+      try {
+        jsonString = await rootBundle.loadString(instructionFile);
+      } catch (e) {
+        instructionFile = AppAssets.instructionJsonFallback;
+        jsonString = await rootBundle.loadString(instructionFile);
+      }
+
       final List<dynamic> jsonData = json.decode(jsonString);
       final instructionData = InstructionData.fromJson(jsonData);
 
@@ -46,9 +64,8 @@ class _InstructionScreenState extends State<InstructionScreen> {
         _isLoading = false;
       });
     } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
+      debugPrint('Error loading instructions: $e');
+      setState(() => _isLoading = false);
     }
   }
 
@@ -79,11 +96,11 @@ class _InstructionScreenState extends State<InstructionScreen> {
   @override
   Widget build(BuildContext context) {
     return BaseScaffold(
-      appBar: AppBar(title: const Text('遊び方'), centerTitle: true),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.howToPlayTitle), centerTitle: true),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _instructionData == null
-          ? const Center(child: Text('説明を読み込めませんでした'))
+          ? Center(child: Text(AppLocalizations.of(context)!.instructionLoadFailed))
           : SingleChildScrollView(
               child: Center(
                 child: Column(

@@ -1,0 +1,22 @@
+[
+    {
+        "title": "About This Game",
+        "image": "assets/images/instruction00_en.png",
+        "description": "Comparing Acorns To Acorns is a \"cooperative\" game where players aim to clear the game through discussion.\nEach participant should prepare one device and enjoy the game in an environment where everyone can talk or communicate.\nRecommended for 4 or more players, with a maximum of 12 participants."
+    },
+    {
+        "title": "How to Play 1",
+        "image": "assets/images/instruction01_en.png",
+        "description": "A \"topic\" is announced before the game starts. When the game begins, each participant is dealt their own \"number\". You must not say your number out loud during the game.\nThe numbers dealt range from 1 to 100."
+    },
+    {
+        "title": "How to Play 2", 
+        "image": "assets/images/instruction02_en.png",
+        "description": "Now the real game begins.\nEach participant gives \"hints\" that are appropriate for their number, expressed according to the \"topic\".\nFor example, if the topic is \"big things\" and your number is 100, give a hint like \"universe\" - think of the biggest things you can."
+    },
+    {
+        "title": "How to Play 3",
+        "image": "assets/images/instruction03_en.png", 
+        "description": "Once all hints are given, it's time for discussion.\nPlayers should \"submit\" in order from those who think their number is smallest. The game ends when everyone has submitted in order.\nIf the submission order matches the actual number order, you clear the game!"
+    }
+]
