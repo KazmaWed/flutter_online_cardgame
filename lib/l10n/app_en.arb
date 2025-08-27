@@ -56,6 +56,15 @@
     }
   },
   "submitInstruction": "{rank, plural, =1{Submit when you think it's the smallest} other{Submit when you think it's the {rank}th smallest}}",
+  "submitInstructionWithOrdinal": "Submit when you think it's the {ordinal} smallest",
+  "@submitInstructionWithOrdinal": {
+    "description": "Instructions for when to submit with ordinal number",
+    "placeholders": {
+      "ordinal": {
+        "type": "Object"
+      }
+    }
+  },
   "@submitInstruction": {
     "description": "Instructions for when to submit based on rank",
     "placeholders": {

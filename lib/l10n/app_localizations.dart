@@ -317,8 +317,14 @@ abstract class AppLocalizations {
   /// Instructions for when to submit based on rank
   ///
   /// In ja, this message translates to:
-  /// **'{rank, plural, =1{1番小さいと思ったら送信！} other{{rank}番目に小さいと思ったら送信}}'**
+  /// **'{rank, plural, =1{1番小さいと思ったら送信} other{{rank}番目に小さいと思ったら送信}}'**
   String submitInstruction(int rank);
+
+  /// No description provided for @submitInstructionWithOrdinal.
+  ///
+  /// In ja, this message translates to:
+  /// **'{ordinal}小さいと思ったら送信'**
+  String submitInstructionWithOrdinal(Object ordinal);
 
   /// Shows the order in which the player submitted
   ///

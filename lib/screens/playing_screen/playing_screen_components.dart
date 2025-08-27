@@ -147,7 +147,7 @@ class SubmitWidget extends StatelessWidget {
   final String buttonText;
   final bool submitEnabled;
   final bool withdrawEnabled;
-  final VoidCallback onSubmit;
+  final VoidCallback onPressSubmit;
   final VoidCallback onWithdraw;
   final VoidCallback onClear;
 
@@ -163,7 +163,7 @@ class SubmitWidget extends StatelessWidget {
     required this.withdrawEnabled,
     required this.controller,
     required this.focusNode,
-    required this.onSubmit,
+    required this.onPressSubmit,
     required this.onWithdraw,
     required this.onClear,
   });
@@ -201,7 +201,10 @@ class SubmitWidget extends StatelessWidget {
           focusNode: focusNode,
           enabled: submittedOrder == null,
           inputFormatters: [MultiByteLengthFormatter(AppConstants.maxPlayerHintLength)],
-          buildCounter: MultiByteLengthFormatter.createCounterBuilder(controller, AppConstants.maxPlayerHintLength),
+          buildCounter: MultiByteLengthFormatter.createCounterBuilder(
+            controller,
+            AppConstants.maxPlayerHintLength,
+          ),
           decoration: InputDecoration(
             labelText: l10n.hint,
             border: OutlineInputBorder(),
@@ -225,7 +228,7 @@ class SubmitWidget extends StatelessWidget {
             Expanded(
               flex: 10,
               child: RectangularRowButton(
-                onPressed: submitEnabled ? onSubmit : null,
+                onPressed: submitEnabled ? onPressSubmit : null,
                 label: buttonText,
               ),
             ),
@@ -383,7 +386,10 @@ class GameMasterWidget extends StatelessWidget {
           ),
           SizedBox(
             width: AppDimentions.buttonWidth,
-            child: RectangularTextButton(onPressed: onTapGameMasterMenu, label: AppLocalizations.of(context)!.kick),
+            child: RectangularTextButton(
+              onPressed: onTapGameMasterMenu,
+              label: AppLocalizations.of(context)!.kick,
+            ),
           ),
         ],
       ),

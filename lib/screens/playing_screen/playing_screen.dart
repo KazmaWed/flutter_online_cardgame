@@ -58,11 +58,57 @@ class _PlayingScreenState extends State<PlayingScreen> with GameScreenMixin {
     }
   }
 
+  String _getOrdinal(int number, AppLocalizations l10n) {
+    if (l10n.localeName == 'ja') {
+      return '$number番目に';
+    }
+    
+    // English ordinals
+    if (number >= 11 && number <= 13) {
+      return '${number}th';
+    }
+    switch (number % 10) {
+      case 1:
+        return '${number}st';
+      case 2:
+        return '${number}nd';
+      case 3:
+        return '${number}rd';
+      default:
+        return '${number}th';
+    }
+  }
+
   void _onFocusChanged() {
     try {
       FirebaseRepository.updateHint(hint: _controller.text, gameId: gameInfo.gameId);
     } catch (e) {
       handleApiError('update hint', e);
+    }
+  }
+
+  void _onPressSubmit() async {
+    final l10n = AppLocalizations.of(context)!;
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
+        title: Text(l10n.submit),
+        content: Text(
+          gameState.submittedPlayers.length + 1 == 1
+              ? l10n.submitInstruction(1)
+              : l10n.submitInstructionWithOrdinal(_getOrdinal(gameState.submittedPlayers.length + 1, l10n))
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text(l10n.cancel)),
+          TextButton(onPressed: () => Navigator.of(context).pop(true), child: Text(l10n.submit)),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      _onSubmit();
     }
   }
 
@@ -258,7 +304,7 @@ class _PlayingScreenState extends State<PlayingScreen> with GameScreenMixin {
                 instruction: instruction,
                 submitEnabled: submitEnabled,
                 withdrawEnabled: withdrawEnabled,
-                onSubmit: _onSubmit,
+                onPressSubmit: _onPressSubmit,
                 onWithdraw: _onWithdraw,
                 onClear: () => _onFocusChanged(),
               ),

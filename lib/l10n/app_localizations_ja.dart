@@ -125,9 +125,14 @@ class AppLocalizationsJa extends AppLocalizations {
       rank,
       locale: localeName,
       other: '$rank番目に小さいと思ったら送信',
-      one: '1番小さいと思ったら送信！',
+      one: '1番小さいと思ったら送信',
     );
     return '$_temp0';
+  }
+
+  @override
+  String submitInstructionWithOrdinal(Object ordinal) {
+    return '$ordinal小さいと思ったら送信';
   }
 
   @override

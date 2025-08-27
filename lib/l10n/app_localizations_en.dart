@@ -131,6 +131,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String submitInstructionWithOrdinal(Object ordinal) {
+    return 'Submit when you think it\'s the $ordinal smallest';
+  }
+
+  @override
   String submitted(int order) {
     return 'Submitted $order';
   }
