@@ -49,6 +49,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get tapToCopyInviteUrl => 'タップで招待URLをコピー';
 
   @override
+  String get copyInviteTooltipDescription =>
+      'ここをタップすると招待URLをコピーしてほかのプレイヤーに共有できます。';
+
+  @override
   String get you => 'あなた';
 
   @override

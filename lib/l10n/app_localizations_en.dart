@@ -49,6 +49,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tapToCopyInviteUrl => 'Tap to copy invitation URL';
 
   @override
+  String get copyInviteTooltipDescription =>
+      'Tap here to copy the invitation URL and share it with other players.';
+
+  @override
   String get you => 'You';
 
   @override

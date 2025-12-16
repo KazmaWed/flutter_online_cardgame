@@ -176,6 +176,12 @@ abstract class AppLocalizations {
   /// **'タップで招待URLをコピー'**
   String get tapToCopyInviteUrl;
 
+  /// No description provided for @copyInviteTooltipDescription.
+  ///
+  /// In ja, this message translates to:
+  /// **'ここをタップすると招待URLをコピーしてほかのプレイヤーに共有できます。'**
+  String get copyInviteTooltipDescription;
+
   /// No description provided for @you.
   ///
   /// In ja, this message translates to:

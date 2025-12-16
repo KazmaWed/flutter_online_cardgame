@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pinput/pinput.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:web/web.dart' as web;
 
 import 'package:flutter_online_cardgame/components/avatar_container.dart';
@@ -23,12 +24,27 @@ import 'package:flutter_online_cardgame/util/string_util.dart';
 class GameInfoWidget extends StatelessWidget {
   final GameInfo gameInfo;
   final String playerId;
-  const GameInfoWidget({super.key, required this.gameInfo, required this.playerId});
+  final GlobalKey tooltipKey;
+  const GameInfoWidget({
+    super.key,
+    required this.gameInfo,
+    required this.playerId,
+    this.tooltipKey = const GlobalObjectKey('GameInfoWidgetTooltipKey'),
+  });
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final pinController = TextEditingController(text: gameInfo.password);
+
+    // Copy invite URL to clipboard
+    Future<void> copyInviteUrl() async {
+      final url = web.window.location.href.withPin(pinController.text);
+      await Clipboard.setData(ClipboardData(text: url));
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.urlCopiedMessage)));
+      ShowcaseView.get().next();
+    }
 
     return RowCard(
       children: [
@@ -42,56 +58,54 @@ class GameInfoWidget extends StatelessWidget {
               style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             Text(l10n.sharePasswordInstruction),
-            Container(
-              width: 210,
-              height: 100,
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
-              clipBehavior: Clip.antiAlias,
-              child: Stack(
-                children: [
-                  Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      spacing: AppDimentions.paddingSmall,
-                      children: [
-                        Pinput(
-                          controller: pinController,
-                          length: 4,
-                          enabled: false,
-                          defaultPinTheme: PinTheme(
-                            width: 40,
-                            height: 50,
-                            textStyle: const TextStyle(fontSize: 20),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Theme.of(context).colorScheme.primary),
-                              borderRadius: BorderRadius.circular(4),
-                              color: Theme.of(context).colorScheme.surfaceContainerLowest,
+            Showcase(
+              key: tooltipKey,
+              description: l10n.copyInviteTooltipDescription,
+              overlayOpacity: 0.3,
+              disposeOnTap: true,
+              onTargetClick: copyInviteUrl,
+              onToolTipClick: copyInviteUrl,
+              onBarrierClick: () => ShowcaseView.get().next(),
+              child: Container(
+                width: 210,
+                height: 100,
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+                clipBehavior: Clip.antiAlias,
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        spacing: AppDimentions.paddingSmall,
+                        children: [
+                          Pinput(
+                            controller: pinController,
+                            length: 4,
+                            enabled: false,
+                            defaultPinTheme: PinTheme(
+                              width: 40,
+                              height: 50,
+                              textStyle: const TextStyle(fontSize: 20),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Theme.of(context).colorScheme.primary),
+                                borderRadius: BorderRadius.circular(4),
+                                color: Theme.of(context).colorScheme.surfaceContainerLowest,
+                              ),
                             ),
                           ),
-                        ),
-
-                        Text(
-                          l10n.tapToCopyInviteUrl,
-                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontWeight: FontWeight.bold,
+                          Text(
+                            l10n.tapToCopyInviteUrl,
+                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  InkWell(
-                    borderRadius: BorderRadius.circular(8),
-                    onTap: () async {
-                      final url = web.window.location.href.withPin(pinController.text);
-                      await Clipboard.setData(ClipboardData(text: url));
-                      if (!context.mounted) return;
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(l10n.urlCopiedMessage)));
-                    },
-                  ),
-                ],
+                    InkWell(borderRadius: BorderRadius.circular(8), onTap: copyInviteUrl),
+                  ],
+                ),
               ),
             ),
           ],
@@ -279,8 +293,13 @@ class _PlayerSettingWidgetState extends State<PlayerSettingWidget> {
                           maxLength: AppConstants.maxPlayerNameLength,
                           controller: _textController,
                           focusNode: widget.focusNode,
-                          inputFormatters: [MultiByteLengthFormatter(AppConstants.maxPlayerNameLength)],
-                          buildCounter: MultiByteLengthFormatter.createCounterBuilder(_textController, AppConstants.maxPlayerNameLength),
+                          inputFormatters: [
+                            MultiByteLengthFormatter(AppConstants.maxPlayerNameLength),
+                          ],
+                          buildCounter: MultiByteLengthFormatter.createCounterBuilder(
+                            _textController,
+                            AppConstants.maxPlayerNameLength,
+                          ),
                           decoration: InputDecoration(
                             labelText: l10n.playerNameLabel,
                             border: const OutlineInputBorder(),
@@ -314,10 +333,7 @@ class AvatarSelectDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final avatarList = List.generate(
-      12,
-      (i) => AppAssets.avatar(i),
-    );
+    final avatarList = List.generate(12, (i) => AppAssets.avatar(i));
     return Dialog(
       backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
       child: Padding(
@@ -447,7 +463,10 @@ class _GameMasterWidgetState extends State<GameMasterWidget> {
                 controller: _textController,
                 focusNode: widget.focusNode,
                 inputFormatters: [MultiByteLengthFormatter(AppConstants.maxTopicLength)],
-                buildCounter: MultiByteLengthFormatter.createCounterBuilder(_textController, AppConstants.maxTopicLength),
+                buildCounter: MultiByteLengthFormatter.createCounterBuilder(
+                  _textController,
+                  AppConstants.maxTopicLength,
+                ),
                 decoration: InputDecoration(
                   labelText: l10n.topicLabel,
                   border: OutlineInputBorder(),
@@ -464,7 +483,10 @@ class _GameMasterWidgetState extends State<GameMasterWidget> {
             ),
             SizedBox(
               width: 120,
-              child: RectangularTextButton(label: AppLocalizations.of(context)!.chooseFromRecommendations, onPressed: _onTapRecommendation),
+              child: RectangularTextButton(
+                label: AppLocalizations.of(context)!.chooseFromRecommendations,
+                onPressed: _onTapRecommendation,
+              ),
             ),
           ],
         ),
@@ -502,7 +524,7 @@ class _TopicRecommendationDialogState extends State<TopicRecommendationDialog> {
     try {
       String topicsFile = AppAssets.topicsJson(context);
       debugPrint('Loading topics from: $topicsFile');
-      
+
       String jsonString;
       try {
         jsonString = await rootBundle.loadString(topicsFile);

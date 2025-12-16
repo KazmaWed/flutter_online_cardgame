@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_online_cardgame/components/barrier_container.dart';
-
 import 'package:flutter_online_cardgame/components/base_scaffold.dart';
+import 'package:flutter_online_cardgame/components/matching_tooltip_wrapper.dart';
 import 'package:flutter_online_cardgame/constants/app_assets.dart';
 import 'package:flutter_online_cardgame/l10n/app_localizations.dart';
 import 'package:flutter_online_cardgame/model/game_config.dart';
@@ -29,6 +29,7 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
   final FocusNode _topicFocusNode = FocusNode();
 
   bool _busy = false;
+  final List<GlobalKey> _tooltipKeys = [GlobalKey(), GlobalKey(), GlobalKey()];
 
   @override
   GameInfo get gameInfo => widget.gameInfo;
@@ -142,38 +143,45 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    return TooltipWrapper(
+      showcaseKeys: [_tooltipKeys[0]],
+      child: Builder(
+        builder: (context) {
+          final l10n = AppLocalizations.of(context)!;
 
-    return BarrierContainer(
-      showBarrier: _busy,
-      child: BaseScaffold(
-        appBar: AppBar(
-          title: Text(l10n.matchingTitle),
-          leading: IconButton(onPressed: _onBackPressed, icon: Icon(Icons.arrow_back)),
-        ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            GameInfoWidget(gameInfo: gameInfo, playerId: uid),
-            PlayerListWidget(gameState: gameState, playerId: uid),
-            PlayerSettingWidget(
-              playerName: myInfo?.name ?? '',
-              avatarFileName: myInfo?.avatarFileName ?? AppAssets.avatar(0),
-              onUpdated: _onPlayerNameUpdated,
-              onTapAvatar: _onTapAvatar,
-              focusNode: _playerFocusNode,
-            ),
-            if (isMaster)
-              GameMasterWidget(
-                topic: gameConfig.topic,
-                onUpdated: _onTopicUpdated,
-                onStartPressed: _isStartButtonEnabled ? _onStartPressed : null,
-                focusNode: _topicFocusNode,
+          return BarrierContainer(
+            showBarrier: _busy,
+            child: BaseScaffold(
+              appBar: AppBar(
+                title: Text(l10n.matchingTitle),
+                leading: IconButton(onPressed: _onBackPressed, icon: Icon(Icons.arrow_back)),
               ),
-            if (!isMaster) GuestWidget(topic: gameConfig.topic),
-          ],
-        ),
+              body: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GameInfoWidget(gameInfo: gameInfo, playerId: uid, tooltipKey: _tooltipKeys[0]),
+                  PlayerListWidget(gameState: gameState, playerId: uid),
+                  PlayerSettingWidget(
+                    playerName: myInfo?.name ?? '',
+                    avatarFileName: myInfo?.avatarFileName ?? AppAssets.avatar(0),
+                    onUpdated: _onPlayerNameUpdated,
+                    onTapAvatar: _onTapAvatar,
+                    focusNode: _playerFocusNode,
+                  ),
+                  if (isMaster)
+                    GameMasterWidget(
+                      topic: gameConfig.topic,
+                      onUpdated: _onTopicUpdated,
+                      onStartPressed: _isStartButtonEnabled ? _onStartPressed : null,
+                      focusNode: _topicFocusNode,
+                    ),
+                  if (!isMaster) GuestWidget(topic: gameConfig.topic),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }

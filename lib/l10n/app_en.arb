@@ -19,6 +19,7 @@
   "sharePasswordInstruction": "Share the password with other players\nor copy and share the invitation URL",
   "urlCopiedMessage": "Invitation URL copied",
   "tapToCopyInviteUrl": "Tap to copy invitation URL",
+  "copyInviteTooltipDescription": "Tap here to copy the invitation URL and share it with other players.",
   "you": "You",
   "avatar": "Avatar",
   "selectAvatar": "Select Avatar",

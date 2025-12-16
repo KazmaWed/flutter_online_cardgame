@@ -19,6 +19,7 @@
   "sharePasswordInstruction": "他のプレイヤーにパスワードを伝えるか\n招待URLをコピーして共有してください",
   "urlCopiedMessage": "招待URLをコピーしました",
   "tapToCopyInviteUrl": "タップで招待URLをコピー",
+  "copyInviteTooltipDescription": "ここをタップすると招待URLをコピーしてほかのプレイヤーに共有できます。",
   "you": "あなた",
   "avatar": "アバター",
   "selectAvatar": "アバターを選択",
