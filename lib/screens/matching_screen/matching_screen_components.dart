@@ -18,7 +18,6 @@ import 'package:flutter_online_cardgame/model/game_state.dart';
 import 'package:flutter_online_cardgame/model/player_info.dart';
 import 'package:flutter_online_cardgame/model/topic_data.dart';
 import 'package:flutter_online_cardgame/screens/common/error_screen.dart';
-import 'package:showcaseview/showcaseview.dart';
 import 'package:flutter_online_cardgame/util/multi_byte_length_formatter.dart';
 import 'package:flutter_online_cardgame/util/string_util.dart';
 
@@ -26,11 +25,13 @@ class GameInfoWidget extends StatelessWidget {
   final GameInfo gameInfo;
   final String playerId;
   final GlobalKey? tooltipKey;
+  final void Function(GlobalKey key)? onShowcaseAdvance;
   const GameInfoWidget({
     super.key,
     required this.gameInfo,
     required this.playerId,
     this.tooltipKey,
+    this.onShowcaseAdvance,
   });
 
   @override
@@ -44,7 +45,7 @@ class GameInfoWidget extends StatelessWidget {
       await Clipboard.setData(ClipboardData(text: url));
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.urlCopiedMessage)));
-      ShowcaseView.get().next();
+      if (tooltipKey != null) onShowcaseAdvance?.call(tooltipKey!);
     }
 
     // Handle tap on tooltip target
@@ -103,7 +104,8 @@ class GameInfoWidget extends StatelessWidget {
               description: l10n.copyInviteTooltipDescription,
               onTargetClick: onTargetClick,
               onToolTipClick: onTargetClick,
-              onBarrierClick: () => ShowcaseView.get().next(),
+              onBarrierClick:
+                  tooltipKey != null ? () => onShowcaseAdvance?.call(tooltipKey!) : null,
               child: Container(
                 width: 210,
                 height: 100,
@@ -216,6 +218,8 @@ class PlayerSettingWidget extends StatefulWidget {
     required this.focusNode,
     required this.avaterTooltipKey,
     required this.nameTooltipKey,
+    required this.onShowcaseDismiss,
+    required this.onShowcaseAdvance,
   });
 
   final String playerName;
@@ -225,6 +229,8 @@ class PlayerSettingWidget extends StatefulWidget {
   final FocusNode focusNode;
   final GlobalKey avaterTooltipKey;
   final GlobalKey nameTooltipKey;
+  final void Function(GlobalKey key) onShowcaseDismiss;
+  final void Function(GlobalKey key) onShowcaseAdvance;
 
   @override
   State<PlayerSettingWidget> createState() => _PlayerSettingWidgetState();
@@ -263,12 +269,12 @@ class _PlayerSettingWidgetState extends State<PlayerSettingWidget> {
   }
 
   void _onTapAvatar() {
-    ShowcaseView.get().dismiss();
+    widget.onShowcaseDismiss(widget.avaterTooltipKey);
     widget.onTapAvatar();
   }
 
   void _onTapTextField() {
-    ShowcaseView.get().dismiss();
+    widget.onShowcaseDismiss(widget.nameTooltipKey);
     if (!widget.focusNode.hasFocus) widget.focusNode.requestFocus();
   }
 
@@ -294,7 +300,7 @@ class _PlayerSettingWidgetState extends State<PlayerSettingWidget> {
                   description: "Select your avatar",
                   onTargetClick: _onTapAvatar,
                   onToolTipClick: _onTapAvatar,
-                  onBarrierClick: () => ShowcaseView.get().next(),
+                  onBarrierClick: () => widget.onShowcaseAdvance(widget.avaterTooltipKey),
                   targetPadding: EdgeInsets.symmetric(vertical: AppDimentions.paddingSmall),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: AppDimentions.paddingSmall),
@@ -321,7 +327,7 @@ class _PlayerSettingWidgetState extends State<PlayerSettingWidget> {
                         description: "Enter your player name",
                         onTargetClick: _onTapTextField,
                         onToolTipClick: _onTapTextField,
-                        onBarrierClick: () => ShowcaseView.get().next(),
+                        onBarrierClick: () => widget.onShowcaseAdvance(widget.nameTooltipKey),
                         targetPadding: EdgeInsets.all(AppDimentions.paddingMedium),
                         child: Expanded(
                           child: TextField(
@@ -424,6 +430,8 @@ class GameMasterWidget extends StatefulWidget {
     required this.focusNode,
     required this.topicTooltipKey,
     required this.startButtonTooltipKey,
+    required this.onShowcaseAdvance,
+    required this.onShowcaseDismiss,
   });
 
   final String topic;
@@ -432,6 +440,8 @@ class GameMasterWidget extends StatefulWidget {
   final FocusNode focusNode;
   final GlobalKey topicTooltipKey;
   final GlobalKey startButtonTooltipKey;
+  final void Function(GlobalKey key) onShowcaseAdvance;
+  final void Function(GlobalKey key) onShowcaseDismiss;
 
   @override
   State<GameMasterWidget> createState() => _GameMasterWidgetState();
@@ -486,7 +496,7 @@ class _GameMasterWidgetState extends State<GameMasterWidget> {
   }
 
   void _onTapTopicField() {
-    ShowcaseView.get().dismiss();
+    widget.onShowcaseDismiss(widget.topicTooltipKey);
     if (!widget.focusNode.hasFocus) widget.focusNode.requestFocus();
   }
 
@@ -511,7 +521,7 @@ class _GameMasterWidgetState extends State<GameMasterWidget> {
                 description: l10n.setTopicInstruction,
                 onTargetClick: _onTapTopicField,
                 onToolTipClick: _onTapTopicField,
-                onBarrierClick: () => ShowcaseView.get().next(),
+                onBarrierClick: () => widget.onShowcaseAdvance(widget.topicTooltipKey),
                 targetPadding: EdgeInsets.all(AppDimentions.paddingMedium),
                 child: TextField(
                   maxLength: AppConstants.maxTopicLength,
@@ -549,9 +559,9 @@ class _GameMasterWidgetState extends State<GameMasterWidget> {
         AppShowcase(
           showcaseKey: widget.startButtonTooltipKey,
           description: l10n.startGame,
-          onTargetClick: () => ShowcaseView.get().next(),
-          onToolTipClick: () => ShowcaseView.get().next(),
-          onBarrierClick: () => ShowcaseView.get().next(),
+          onTargetClick: () => widget.onShowcaseAdvance(widget.startButtonTooltipKey),
+          onToolTipClick: () => widget.onShowcaseAdvance(widget.startButtonTooltipKey),
+          onBarrierClick: () => widget.onShowcaseAdvance(widget.startButtonTooltipKey),
           targetPadding: EdgeInsets.all(AppDimentions.paddingMedium),
           child: RectangularRowButton(onPressed: widget.onStartPressed, label: l10n.startGame),
         ),

@@ -13,6 +13,7 @@ import 'package:flutter_online_cardgame/repository/firebase_repository.dart';
 import 'package:flutter_online_cardgame/screens/common/game_screen_mixin.dart';
 import 'package:flutter_online_cardgame/screens/matching_screen/matching_screen_components.dart';
 import 'package:flutter_online_cardgame/screens/top_screen.dart';
+import 'package:flutter_online_cardgame/util/cookie_helper.dart';
 import 'package:flutter_online_cardgame/util/fade_page_route.dart';
 import 'package:flutter_online_cardgame/util/navigator_util.dart';
 
@@ -40,6 +41,9 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
   final _topicTooltipKey = GlobalKey();
   final _startButtonTooltipKey = GlobalKey();
   late List<GlobalKey> _tooltipKeys;
+
+  // Showcase control flags
+  bool _shouldShowShowcase = false;
 
   @override
   GameInfo get gameInfo => widget.gameInfo;
@@ -156,28 +160,64 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
     }
   }
 
-  // Resume showcase from the given key
-  void _resumeShowcase(GlobalKey after) {
-    final index = _tooltipKeys.indexOf(after);
-    if (index == -1 || index + 1 > _tooltipKeys.length) return;
-    final remainingKeys = _tooltipKeys.sublist(index + 1);
-    if (mounted) {
-      setState(() => _tooltipKeys = remainingKeys);
+  void _updateShowcaseSequence(List<GlobalKey> remaining) {
+    setState(() {
+      _tooltipKeys = remaining;
+      _shouldShowShowcase = remaining.isNotEmpty;
+    });
+    if (remaining.isEmpty) {
+      _markShowcaseAsShown();
     } else {
-      _tooltipKeys = remainingKeys;
+      ShowcaseView.get().startShowCase(remaining);
     }
-    if (remainingKeys.isEmpty) return;
-    ShowcaseView.get().startShowCase(remainingKeys);
+  }
+
+  void _resumeShowcase(GlobalKey completedKey) {
+    if (!_shouldShowShowcase) return;
+    final index = _tooltipKeys.indexOf(completedKey);
+    if (index == -1 || index + 1 > _tooltipKeys.length) return;
+    final remaining = _tooltipKeys.sublist(index + 1);
+    _updateShowcaseSequence(remaining);
+  }
+
+  void _dismissShowcase(GlobalKey key) {
+    if (!_shouldShowShowcase) return;
+    ShowcaseView.get().dismiss();
+  }
+
+  void _markShowcaseAsShown() {
+    if (isMaster) {
+      CookieHelper.markShowcasedMatchingScreenAsMaster();
+    } else {
+      CookieHelper.markShowcasedMatchingScreen();
+    }
+    _shouldShowShowcase = false;
   }
 
   @override
   void initState() {
-    _tooltipKeys = [_playerAvaterTooltipKey, _playerNameTooltipKey];
-    if (isMaster) {
-      // Show tooltips for master: Password, PlayerAvatar, PlayerName, Topic, StartButton
-      _tooltipKeys =
-          [_passwordTooltipKey] + _tooltipKeys + [_topicTooltipKey, _startButtonTooltipKey];
+    final hasShown = isMaster
+        ? CookieHelper.hasShowcasedMatchingScreenAsMaster()
+        : CookieHelper.hasShowcasedMatchingScreen();
+    _shouldShowShowcase = !hasShown;
+
+    if (!_shouldShowShowcase) {
+      _tooltipKeys = [];
+      _shouldShowShowcase = false;
+      super.initState();
+      return;
     }
+
+    _tooltipKeys = isMaster
+        ? [
+            _passwordTooltipKey,
+            _playerAvaterTooltipKey,
+            _playerNameTooltipKey,
+            _topicTooltipKey,
+            _startButtonTooltipKey,
+          ]
+        : [_playerAvaterTooltipKey, _playerNameTooltipKey];
+
     super.initState();
   }
 
@@ -191,7 +231,7 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
   @override
   Widget build(BuildContext context) {
     return ShowcaseWrapper(
-      showcaseKeys: _tooltipKeys,
+      showcaseKeys: _shouldShowShowcase ? _tooltipKeys : const [],
       child: Builder(
         builder: (context) {
           final l10n = AppLocalizations.of(context)!;
@@ -211,6 +251,7 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
                     gameInfo: gameInfo,
                     playerId: uid,
                     tooltipKey: isMaster ? _passwordTooltipKey : null,
+                    onShowcaseAdvance: isMaster ? (key) => _resumeShowcase(key) : null,
                   ),
                   PlayerListWidget(gameState: gameState, playerId: uid),
                   PlayerSettingWidget(
@@ -221,6 +262,8 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
                     focusNode: _playerFocusNode,
                     avaterTooltipKey: _playerAvaterTooltipKey,
                     nameTooltipKey: _playerNameTooltipKey,
+                    onShowcaseDismiss: (key) => _dismissShowcase(key),
+                    onShowcaseAdvance: (key) => _resumeShowcase(key),
                   ),
                   if (isMaster)
                     GameMasterWidget(
@@ -230,6 +273,8 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
                       focusNode: _topicFocusNode,
                       topicTooltipKey: _topicTooltipKey,
                       startButtonTooltipKey: _startButtonTooltipKey,
+                      onShowcaseAdvance: (key) => _resumeShowcase(key),
+                      onShowcaseDismiss: (key) => _dismissShowcase(key),
                     ),
                   if (!isMaster) GuestWidget(topic: gameConfig.topic),
                 ],
