@@ -24,13 +24,13 @@ import 'package:flutter_online_cardgame/util/string_util.dart';
 class GameInfoWidget extends StatelessWidget {
   final GameInfo gameInfo;
   final String playerId;
-  final GlobalKey? tooltipKey;
+  final GlobalKey? showcaseKey;
   final void Function(GlobalKey key)? onShowcaseAdvance;
   const GameInfoWidget({
     super.key,
     required this.gameInfo,
     required this.playerId,
-    this.tooltipKey,
+    this.showcaseKey,
     this.onShowcaseAdvance,
   });
 
@@ -45,7 +45,7 @@ class GameInfoWidget extends StatelessWidget {
       await Clipboard.setData(ClipboardData(text: url));
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.urlCopiedMessage)));
-      if (tooltipKey != null) onShowcaseAdvance?.call(tooltipKey!);
+      if (showcaseKey != null) onShowcaseAdvance?.call(showcaseKey!);
     }
 
     // Handle tap on tooltip target
@@ -100,12 +100,12 @@ class GameInfoWidget extends StatelessWidget {
             ),
             Text(l10n.sharePasswordInstruction),
             AppShowcase(
-              showcaseKey: tooltipKey ?? GlobalKey(),
-              description: l10n.copyInviteTooltipDescription,
+              showcaseKey: showcaseKey ?? GlobalKey(),
+              description: l10n.copyInviteShowcaseDescription,
               onTargetClick: onTargetClick,
               onToolTipClick: onTargetClick,
-              onBarrierClick: tooltipKey != null
-                  ? () => onShowcaseAdvance?.call(tooltipKey!)
+              onBarrierClick: showcaseKey != null
+                  ? () => onShowcaseAdvance?.call(showcaseKey!)
                   : null,
               child: Container(
                 width: 210,
@@ -217,8 +217,8 @@ class PlayerSettingWidget extends StatefulWidget {
     required this.onUpdated,
     required this.onTapAvatar,
     required this.focusNode,
-    required this.avaterTooltipKey,
-    required this.nameTooltipKey,
+    required this.avaterShowcaseKey,
+    required this.nameShowcaseKey,
     required this.onShowcaseDismiss,
     required this.onShowcaseAdvance,
   });
@@ -228,8 +228,8 @@ class PlayerSettingWidget extends StatefulWidget {
   final Function(String) onUpdated;
   final VoidCallback onTapAvatar;
   final FocusNode focusNode;
-  final GlobalKey avaterTooltipKey;
-  final GlobalKey nameTooltipKey;
+  final GlobalKey avaterShowcaseKey;
+  final GlobalKey nameShowcaseKey;
   final void Function(GlobalKey key) onShowcaseDismiss;
   final void Function(GlobalKey key) onShowcaseAdvance;
 
@@ -270,12 +270,12 @@ class _PlayerSettingWidgetState extends State<PlayerSettingWidget> {
   }
 
   void _onTapAvatar() {
-    widget.onShowcaseDismiss(widget.avaterTooltipKey);
+    widget.onShowcaseDismiss(widget.avaterShowcaseKey);
     widget.onTapAvatar();
   }
 
   void _onTapTextField() {
-    widget.onShowcaseDismiss(widget.nameTooltipKey);
+    widget.onShowcaseDismiss(widget.nameShowcaseKey);
     if (!widget.focusNode.hasFocus) widget.focusNode.requestFocus();
   }
 
@@ -297,11 +297,11 @@ class _PlayerSettingWidgetState extends State<PlayerSettingWidget> {
               children: [
                 Text(l10n.avatar),
                 AppShowcase(
-                  showcaseKey: widget.avaterTooltipKey,
-                  description: "Select your avatar",
+                  showcaseKey: widget.avaterShowcaseKey,
+                  description: l10n.selectAvatarShowcaseDescription,
                   onTargetClick: _onTapAvatar,
                   onToolTipClick: _onTapAvatar,
-                  onBarrierClick: () => widget.onShowcaseAdvance(widget.avaterTooltipKey),
+                  onBarrierClick: () => widget.onShowcaseAdvance(widget.avaterShowcaseKey),
                   targetPadding: EdgeInsets.symmetric(vertical: AppDimentions.paddingSmall),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: AppDimentions.paddingSmall),
@@ -324,11 +324,11 @@ class _PlayerSettingWidgetState extends State<PlayerSettingWidget> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       AppShowcase(
-                        showcaseKey: widget.nameTooltipKey,
-                        description: "Enter your player name",
+                        showcaseKey: widget.nameShowcaseKey,
+                        description: l10n.enterPlayerNameShowcaseDescription,
                         onTargetClick: _onTapTextField,
                         onToolTipClick: _onTapTextField,
-                        onBarrierClick: () => widget.onShowcaseAdvance(widget.nameTooltipKey),
+                        onBarrierClick: () => widget.onShowcaseAdvance(widget.nameShowcaseKey),
                         targetPadding: EdgeInsets.all(AppDimentions.paddingMedium),
                         child: Expanded(
                           child: TextField(
@@ -428,8 +428,8 @@ class GameMasterWidget extends StatefulWidget {
     required this.topic,
     required this.onUpdated,
     required this.onStartPressed,
-    required this.focusNode,
-    required this.topicTooltipKey,
+    required this.topicFocusNode,
+    required this.topicShowcaseKey,
     required this.onShowcaseAdvance,
     required this.onShowcaseDismiss,
   });
@@ -437,8 +437,8 @@ class GameMasterWidget extends StatefulWidget {
   final String topic;
   final Function(String) onUpdated;
   final VoidCallback? onStartPressed;
-  final FocusNode focusNode;
-  final GlobalKey topicTooltipKey;
+  final FocusNode topicFocusNode;
+  final GlobalKey topicShowcaseKey;
   final void Function(GlobalKey key) onShowcaseAdvance;
   final void Function(GlobalKey key) onShowcaseDismiss;
 
@@ -450,7 +450,7 @@ class _GameMasterWidgetState extends State<GameMasterWidget> {
   final TextEditingController _textController = TextEditingController();
 
   void _onFocusChange() {
-    if (!widget.focusNode.hasFocus) {
+    if (!widget.topicFocusNode.hasFocus) {
       widget.onUpdated(_textController.text);
     }
   }
@@ -472,31 +472,31 @@ class _GameMasterWidgetState extends State<GameMasterWidget> {
     }
   }
 
+  void _onTapTopicField() {
+    widget.onShowcaseDismiss(widget.topicShowcaseKey);
+    if (!widget.topicFocusNode.hasFocus) widget.topicFocusNode.requestFocus();
+  }
+
   @override
   void initState() {
     super.initState();
     _textController.text = widget.topic;
-    widget.focusNode.addListener(_onFocusChange);
+    widget.topicFocusNode.addListener(_onFocusChange);
   }
 
   @override
   void didUpdateWidget(GameMasterWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.topic != widget.topic && !widget.focusNode.hasFocus) {
+    if (oldWidget.topic != widget.topic && !widget.topicFocusNode.hasFocus) {
       _textController.text = widget.topic;
     }
   }
 
   @override
   void dispose() {
-    widget.focusNode.removeListener(_onFocusChange);
+    widget.topicFocusNode.removeListener(_onFocusChange);
     _textController.dispose();
     super.dispose();
-  }
-
-  void _onTapTopicField() {
-    widget.onShowcaseDismiss(widget.topicTooltipKey);
-    if (!widget.focusNode.hasFocus) widget.focusNode.requestFocus();
   }
 
   @override
@@ -516,16 +516,16 @@ class _GameMasterWidgetState extends State<GameMasterWidget> {
           children: [
             Expanded(
               child: AppShowcase(
-                showcaseKey: widget.topicTooltipKey,
-                description: l10n.setTopicInstruction,
+                showcaseKey: widget.topicShowcaseKey,
+                description: l10n.setTopicShowcaseDescription,
                 onTargetClick: _onTapTopicField,
                 onToolTipClick: _onTapTopicField,
-                onBarrierClick: () => widget.onShowcaseAdvance(widget.topicTooltipKey),
+                onBarrierClick: () => widget.onShowcaseAdvance(widget.topicShowcaseKey),
                 targetPadding: EdgeInsets.all(AppDimentions.paddingMedium),
                 child: TextField(
                   maxLength: AppConstants.maxTopicLength,
                   controller: _textController,
-                  focusNode: widget.focusNode,
+                  focusNode: widget.topicFocusNode,
                   inputFormatters: [MultiByteLengthFormatter(AppConstants.maxTopicLength)],
                   buildCounter: MultiByteLengthFormatter.createCounterBuilder(
                     _textController,

@@ -176,11 +176,11 @@ abstract class AppLocalizations {
   /// **'タップで招待URLをコピー'**
   String get tapToCopyInviteUrl;
 
-  /// No description provided for @copyInviteTooltipDescription.
+  /// No description provided for @copyInviteShowcaseDescription.
   ///
   /// In ja, this message translates to:
-  /// **'ここをタップすると招待URLをコピーしてほかのプレイヤーに共有できます。'**
-  String get copyInviteTooltipDescription;
+  /// **'タップで招待URLをコピーして、ほかのプレイヤーに共有しましょう'**
+  String get copyInviteShowcaseDescription;
 
   /// No description provided for @you.
   ///
@@ -200,11 +200,23 @@ abstract class AppLocalizations {
   /// **'アバターを選択'**
   String get selectAvatar;
 
+  /// No description provided for @selectAvatarShowcaseDescription.
+  ///
+  /// In ja, this message translates to:
+  /// **'アバターを選択してください'**
+  String get selectAvatarShowcaseDescription;
+
   /// No description provided for @enterPlayerNameInstruction.
   ///
   /// In ja, this message translates to:
   /// **'すてきなプレイヤー名を設定してください'**
   String get enterPlayerNameInstruction;
+
+  /// No description provided for @enterPlayerNameShowcaseDescription.
+  ///
+  /// In ja, this message translates to:
+  /// **'プレイヤー名を入力してください'**
+  String get enterPlayerNameShowcaseDescription;
 
   /// No description provided for @playerNameLabel.
   ///
@@ -233,8 +245,14 @@ abstract class AppLocalizations {
   /// No description provided for @setTopicInstruction.
   ///
   /// In ja, this message translates to:
-  /// **'みんなで話し合うトピックを設定してください'**
+  /// **'みんなで話し合うトピックを入力してください'**
   String get setTopicInstruction;
+
+  /// No description provided for @setTopicShowcaseDescription.
+  ///
+  /// In ja, this message translates to:
+  /// **'みんなで話し合うトピックを入力してください\nおすすめからも選べます'**
+  String get setTopicShowcaseDescription;
 
   /// No description provided for @topicLabel.
   ///
@@ -307,6 +325,24 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'です。'**
   String get desu;
+
+  /// No description provided for @playingTopicShowcaseDescription.
+  ///
+  /// In ja, this message translates to:
+  /// **'今回のお題です、他のプレイヤーにも見えています'**
+  String get playingTopicShowcaseDescription;
+
+  /// No description provided for @playingNumberShowcaseDescription.
+  ///
+  /// In ja, this message translates to:
+  /// **'あなたの数字です、他のプレイヤーには見えません'**
+  String get playingNumberShowcaseDescription;
+
+  /// No description provided for @playingHintShowcaseDescription.
+  ///
+  /// In ja, this message translates to:
+  /// **'数字の大きさを表す、トピックに沿ったヒントを入力してください'**
+  String get playingHintShowcaseDescription;
 
   /// No description provided for @viewResults.
   ///

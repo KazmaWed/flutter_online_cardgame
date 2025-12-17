@@ -35,11 +35,11 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
   String _playerName = '';
 
   // Tooltip keys
-  final _passwordTooltipKey = GlobalKey();
-  final _playerAvaterTooltipKey = GlobalKey();
-  final _playerNameTooltipKey = GlobalKey();
-  final _topicTooltipKey = GlobalKey();
-  late List<GlobalKey> _tooltipKeys;
+  final _passwordShowcaseKey = GlobalKey(debugLabel: 'matching_password');
+  final _playerAvaterShowcaseKey = GlobalKey(debugLabel: 'matching_player_avatar');
+  final _playerNameShowcaseKey = GlobalKey(debugLabel: 'matching_player_name');
+  final _topicShowcaseKey = GlobalKey(debugLabel: 'matching_topic');
+  List<GlobalKey> _showcaseKeys = [];
 
   // Showcase control flags
   bool _shouldShowShowcase = false;
@@ -71,7 +71,7 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
       await FirebaseRepository.updateAvatar(avatar: avatarIndex, gameId: gameInfo.gameId);
 
       // Show name tooltip if player name is not set
-      if (_playerName.isEmpty) _resumeShowcase(_playerAvaterTooltipKey);
+      if (_playerName.isEmpty) _resumeShowcase(_playerAvaterShowcaseKey);
     } catch (e) {
       handleApiError('update player avatar', e);
     } finally {
@@ -88,7 +88,7 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
       await FirebaseRepository.updateName(name: name, gameId: gameInfo.gameId);
 
       // Show tooltip if topic is not set
-      if (isMaster) _resumeShowcase(_playerNameTooltipKey);
+      if (isMaster) _resumeShowcase(_playerNameShowcaseKey);
     } catch (e) {
       handleApiError('update player name', e);
     } finally {
@@ -103,7 +103,7 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
       await FirebaseRepository.updateTopic(gameId: gameInfo.gameId, topic: topic);
 
       // Show tooltip for start button
-      if (isMaster) _resumeShowcase(_topicTooltipKey);
+      if (isMaster) _resumeShowcase(_topicShowcaseKey);
     } catch (e) {
       handleApiError('update topic', e);
     } finally {
@@ -161,13 +161,13 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
 
   void _resumeShowcase(GlobalKey completedKey) {
     if (!_shouldShowShowcase) return;
-    final index = _tooltipKeys.indexOf(completedKey);
+    final index = _showcaseKeys.indexOf(completedKey);
     if (index == -1) return;
 
     // Update remaining keys and show next tooltip
-    final remaining = _tooltipKeys.sublist(index + 1);
+    final remaining = _showcaseKeys.sublist(index + 1);
     setState(() {
-      _tooltipKeys = remaining;
+      _showcaseKeys = remaining;
       _shouldShowShowcase = remaining.isNotEmpty;
     });
     ShowcaseView.get().startShowCase(remaining);
@@ -176,10 +176,7 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
     if (remaining.length == 1) _markShowcaseAsShown();
   }
 
-  void _dismissShowcase(GlobalKey key) {
-    if (!_shouldShowShowcase) return;
-    ShowcaseView.get().dismiss();
-  }
+  void _dismissShowcase(GlobalKey key) => ShowcaseView.get().dismiss();
 
   void _markShowcaseAsShown() {
     if (isMaster) {
@@ -198,15 +195,13 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
     _shouldShowShowcase = !hasShown;
 
     if (!_shouldShowShowcase) {
-      _tooltipKeys = [];
       _shouldShowShowcase = false;
       super.initState();
       return;
     }
 
-    _tooltipKeys = isMaster
-        ? [_passwordTooltipKey, _playerAvaterTooltipKey, _playerNameTooltipKey, _topicTooltipKey]
-        : [_playerAvaterTooltipKey, _playerNameTooltipKey];
+    _showcaseKeys = [_playerAvaterShowcaseKey, _playerNameShowcaseKey];
+    if (isMaster) _showcaseKeys = [_passwordShowcaseKey] + _showcaseKeys + [_topicShowcaseKey];
 
     super.initState();
   }
@@ -221,7 +216,7 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
   @override
   Widget build(BuildContext context) {
     return ShowcaseWrapper(
-      showcaseKeys: _shouldShowShowcase ? _tooltipKeys : const [],
+      showcaseKeys: _shouldShowShowcase ? _showcaseKeys : const [],
       child: Builder(
         builder: (context) {
           final l10n = AppLocalizations.of(context)!;
@@ -240,7 +235,7 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
                   GameInfoWidget(
                     gameInfo: gameInfo,
                     playerId: uid,
-                    tooltipKey: isMaster ? _passwordTooltipKey : null,
+                    showcaseKey: isMaster ? _passwordShowcaseKey : null,
                     onShowcaseAdvance: isMaster ? (key) => _resumeShowcase(key) : null,
                   ),
                   PlayerListWidget(gameState: gameState, playerId: uid),
@@ -250,8 +245,8 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
                     onUpdated: _onPlayerNameUpdated,
                     onTapAvatar: _onTapAvatar,
                     focusNode: _playerFocusNode,
-                    avaterTooltipKey: _playerAvaterTooltipKey,
-                    nameTooltipKey: _playerNameTooltipKey,
+                    avaterShowcaseKey: _playerAvaterShowcaseKey,
+                    nameShowcaseKey: _playerNameShowcaseKey,
                     onShowcaseAdvance: (key) => _resumeShowcase(key),
                     onShowcaseDismiss: (key) => _dismissShowcase(key),
                   ),
@@ -260,8 +255,8 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
                       topic: gameConfig.topic,
                       onUpdated: _onTopicUpdated,
                       onStartPressed: _isStartButtonEnabled ? _onStartPressed : null,
-                      focusNode: _topicFocusNode,
-                      topicTooltipKey: _topicTooltipKey,
+                      topicFocusNode: _topicFocusNode,
+                      topicShowcaseKey: _topicShowcaseKey,
                       onShowcaseAdvance: (key) => _resumeShowcase(key),
                       onShowcaseDismiss: (key) => _dismissShowcase(key),
                     ),

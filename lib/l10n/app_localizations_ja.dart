@@ -39,8 +39,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get password => 'パスワード';
 
   @override
-  String get sharePasswordInstruction =>
-      '他のプレイヤーにパスワードを伝えるか\n招待URLをコピーして共有してください';
+  String get sharePasswordInstruction => '他のプレイヤーにパスワードを伝えるか\n招待URLをコピーして共有してください';
 
   @override
   String get urlCopiedMessage => '招待URLをコピーしました';
@@ -49,8 +48,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get tapToCopyInviteUrl => 'タップで招待URLをコピー';
 
   @override
-  String get copyInviteTooltipDescription =>
-      'ここをタップすると招待URLをコピーしてほかのプレイヤーに共有できます。';
+  String get copyInviteShowcaseDescription => 'タップで招待URLをコピーして、ほかのプレイヤーに共有しましょう';
 
   @override
   String get you => 'あなた';
@@ -62,7 +60,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get selectAvatar => 'アバターを選択';
 
   @override
+  String get selectAvatarShowcaseDescription => 'アバターを選択してください';
+
+  @override
   String get enterPlayerNameInstruction => 'すてきなプレイヤー名を設定してください';
+
+  @override
+  String get enterPlayerNameShowcaseDescription => 'プレイヤー名を入力してください';
 
   @override
   String get playerNameLabel => 'プレイヤー名';
@@ -77,7 +81,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get notSet => '未設定';
 
   @override
-  String get setTopicInstruction => 'みんなで話し合うトピックを設定してください';
+  String get setTopicInstruction => 'みんなで話し合うトピックを入力してください';
+
+  @override
+  String get setTopicShowcaseDescription => 'みんなで話し合うトピックを入力してください\nおすすめからも選べます';
 
   @override
   String get topicLabel => 'トピック';
@@ -114,6 +121,15 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get desu => 'です。';
+
+  @override
+  String get playingTopicShowcaseDescription => '今回のお題です、他のプレイヤーにも見えています';
+
+  @override
+  String get playingNumberShowcaseDescription => 'あなたの数字です、他のプレイヤーには見えません';
+
+  @override
+  String get playingHintShowcaseDescription => '数字の大きさを表す、トピックに沿ったヒントを入力してください';
 
   @override
   String get viewResults => '結果を見る';

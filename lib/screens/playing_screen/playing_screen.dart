@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 import 'package:flutter_online_cardgame/components/avatar_container.dart';
 import 'package:flutter_online_cardgame/components/barrier_container.dart';
 import 'package:flutter_online_cardgame/components/base_scaffold.dart';
+import 'package:flutter_online_cardgame/components/matching_tooltip_wrapper.dart';
 import 'package:flutter_online_cardgame/constants/app_dimentions.dart';
 import 'package:flutter_online_cardgame/l10n/app_localizations.dart';
 import 'package:flutter_online_cardgame/model/game_config.dart';
@@ -14,6 +16,7 @@ import 'package:flutter_online_cardgame/screens/common/game_screen_mixin.dart';
 import 'package:flutter_online_cardgame/screens/common/progress_screen.dart';
 import 'package:flutter_online_cardgame/screens/playing_screen/playing_screen_components.dart';
 import 'package:flutter_online_cardgame/screens/top_screen.dart';
+import 'package:flutter_online_cardgame/util/cookie_helper.dart';
 import 'package:flutter_online_cardgame/util/fade_page_route.dart';
 import 'package:flutter_online_cardgame/util/navigator_util.dart';
 import 'package:flutter_online_cardgame/util/string_util.dart';
@@ -32,6 +35,12 @@ class _PlayingScreenState extends State<PlayingScreen> with GameScreenMixin {
   final FocusNode _focusNode = FocusNode();
 
   late GameConfig _gameConfig;
+
+  final _topicKey = GlobalKey(debugLabel: 'playing_topic');
+  final _numberKey = GlobalKey(debugLabel: 'playing_number');
+  final _hintKey = GlobalKey(debugLabel: 'playing_hint');
+  List<GlobalKey> _showcaseKeys = [];
+  bool _shouldShowShowcase = false;
 
   @override
   GameInfo get gameInfo => widget.gameInfo;
@@ -62,7 +71,7 @@ class _PlayingScreenState extends State<PlayingScreen> with GameScreenMixin {
     if (l10n.localeName == 'ja') {
       return '$number番目に';
     }
-    
+
     // English ordinals
     if (number >= 11 && number <= 13) {
       return '${number}th';
@@ -98,7 +107,9 @@ class _PlayingScreenState extends State<PlayingScreen> with GameScreenMixin {
         content: Text(
           gameState.submittedPlayers.length + 1 == 1
               ? l10n.submitInstruction(1)
-              : l10n.submitInstructionWithOrdinal(_getOrdinal(gameState.submittedPlayers.length + 1, l10n))
+              : l10n.submitInstructionWithOrdinal(
+                  _getOrdinal(gameState.submittedPlayers.length + 1, l10n),
+                ),
         ),
         actions: [
           TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text(l10n.cancel)),
@@ -230,12 +241,41 @@ class _PlayingScreenState extends State<PlayingScreen> with GameScreenMixin {
     );
   }
 
+  void _resumeShowcase(GlobalKey completedKey) {
+    if (!_shouldShowShowcase) return;
+    final index = _showcaseKeys.indexOf(completedKey);
+    if (index == -1) return;
+
+    // Update remaining keys and show next tooltip
+    final remaining = _showcaseKeys.sublist(index + 1);
+    setState(() {
+      _showcaseKeys = remaining;
+      _shouldShowShowcase = remaining.isNotEmpty;
+    });
+    ShowcaseView.get().startShowCase(remaining);
+
+    // After the last showcase, mark showcase as shown
+    if (remaining.length == 1) _markShowcaseAsShown();
+  }
+
+  void _dismissShowcase(GlobalKey key) => ShowcaseView.get().dismiss();
+
+  void _markShowcaseAsShown() {
+    CookieHelper.markShowcasedGameScreen();
+    setState(() => _shouldShowShowcase = false);
+  }
+
   @override
   void initState() {
     super.initState();
     _loadGameConfig();
     _controller.text = gameState.playerState[uid]?.hint ?? '';
     _focusNode.addListener(_onFocusChanged);
+    final hasShown = CookieHelper.hasShowcasedGameScreen();
+    _shouldShowShowcase = !hasShown;
+    if (_shouldShowShowcase) {
+      _showcaseKeys = [_topicKey, _numberKey, _hintKey];
+    }
   }
 
   @override
@@ -274,7 +314,7 @@ class _PlayingScreenState extends State<PlayingScreen> with GameScreenMixin {
         ? l10n.submitInstruction(gameState.submittedPlayers.length + 1)
         : l10n.submitted(submittedOrder);
 
-    return BarrierContainer(
+    final screen = BarrierContainer(
       showBarrier: _busy,
       child: BaseScaffold(
         appBar: AppBar(
@@ -286,7 +326,11 @@ class _PlayingScreenState extends State<PlayingScreen> with GameScreenMixin {
             mainAxisAlignment: MainAxisAlignment.center,
             spacing: AppDimentions.paddingMicro,
             children: [
-              TopicCardWidget(topic: gameConfig.topic),
+              TopicCardWidget(
+                topic: gameConfig.topic,
+                showcaseKey: _topicKey,
+                onShowcaseAdvance: _resumeShowcase,
+              ),
               PlayerInfoWidget(
                 submittedPlayers: gameState.submittedPlayers,
                 pendingPlayers: gameState.pendingPlayers,
@@ -307,6 +351,10 @@ class _PlayingScreenState extends State<PlayingScreen> with GameScreenMixin {
                 onPressSubmit: _onPressSubmit,
                 onWithdraw: _onWithdraw,
                 onClear: () => _onFocusChanged(),
+                numberTooltipKey: _numberKey,
+                hintTooltipKey: _hintKey,
+                onShowcaseAdvance: _resumeShowcase,
+                onShowcaseDismiss: _dismissShowcase,
               ),
               if (isMaster)
                 GameMasterWidget(
@@ -318,6 +366,11 @@ class _PlayingScreenState extends State<PlayingScreen> with GameScreenMixin {
           ),
         ),
       ),
+    );
+
+    return ShowcaseWrapper(
+      showcaseKeys: _shouldShowShowcase ? _showcaseKeys : const [],
+      child: screen,
     );
   }
 }
