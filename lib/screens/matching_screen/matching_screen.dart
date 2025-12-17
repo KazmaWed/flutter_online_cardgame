@@ -39,7 +39,7 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
   final _playerNameTooltipKey = GlobalKey();
   final _topicTooltipKey = GlobalKey();
   final _startButtonTooltipKey = GlobalKey();
-  late final List<GlobalKey> _tooltipKeys;
+  late List<GlobalKey> _tooltipKeys;
 
   @override
   GameInfo get gameInfo => widget.gameInfo;
@@ -68,11 +68,7 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
       await FirebaseRepository.updateAvatar(avatar: avatarIndex, gameId: gameInfo.gameId);
 
       // Show name tooltip if player name is not set
-      if (_playerName.isEmpty) {
-        ShowcaseView.get().startShowCase(
-          _tooltipKeys.sublist(_tooltipKeys.indexOf(_playerAvaterTooltipKey) + 1),
-        );
-      }
+      if (_playerName.isEmpty) _resumeShowcase(_playerAvaterTooltipKey);
     } catch (e) {
       handleApiError('update player avatar', e);
     } finally {
@@ -89,11 +85,7 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
       await FirebaseRepository.updateName(name: name, gameId: gameInfo.gameId);
 
       // Show tooltip if topic is not set
-      if (gameConfig.topic.isEmpty && isMaster) {
-        ShowcaseView.get().startShowCase(
-          _tooltipKeys.sublist(_tooltipKeys.indexOf(_playerNameTooltipKey) + 1),
-        );
-      }
+      if (isMaster) _resumeShowcase(_playerNameTooltipKey);
     } catch (e) {
       handleApiError('update player name', e);
     } finally {
@@ -103,17 +95,12 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
 
   void _onTopicUpdated(String topic) async {
     if (_busy) return;
-    final trimmedTopic = topic.trim();
     try {
       setState(() => _busy = true);
       await FirebaseRepository.updateTopic(gameId: gameInfo.gameId, topic: topic);
 
       // Show tooltip for start button
-      if (isMaster && trimmedTopic.isNotEmpty) {
-        ShowcaseView.get().startShowCase(
-          _tooltipKeys.sublist(_tooltipKeys.indexOf(_topicTooltipKey) + 1),
-        );
-      }
+      if (isMaster) _resumeShowcase(_topicTooltipKey);
     } catch (e) {
       handleApiError('update topic', e);
     } finally {
@@ -169,20 +156,27 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
     }
   }
 
+  // Resume showcase from the given key
+  void _resumeShowcase(GlobalKey after) {
+    final index = _tooltipKeys.indexOf(after);
+    if (index == -1 || index + 1 > _tooltipKeys.length) return;
+    final remainingKeys = _tooltipKeys.sublist(index + 1);
+    if (mounted) {
+      setState(() => _tooltipKeys = remainingKeys);
+    } else {
+      _tooltipKeys = remainingKeys;
+    }
+    if (remainingKeys.isEmpty) return;
+    ShowcaseView.get().startShowCase(remainingKeys);
+  }
+
   @override
   void initState() {
+    _tooltipKeys = [_playerAvaterTooltipKey, _playerNameTooltipKey];
     if (isMaster) {
       // Show tooltips for master: Password, PlayerAvatar, PlayerName, Topic, StartButton
-      _tooltipKeys = [
-        _passwordTooltipKey,
-        _playerAvaterTooltipKey,
-        _playerNameTooltipKey,
-        _topicTooltipKey,
-        _startButtonTooltipKey,
-      ];
-    } else {
-      // Show tooltips for guest: PlayerAvatar, PlayerName
-      _tooltipKeys = [_playerAvaterTooltipKey, _playerNameTooltipKey];
+      _tooltipKeys =
+          [_passwordTooltipKey] + _tooltipKeys + [_topicTooltipKey, _startButtonTooltipKey];
     }
     super.initState();
   }
@@ -196,7 +190,7 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
 
   @override
   Widget build(BuildContext context) {
-    return TooltipWrapper(
+    return ShowcaseWrapper(
       showcaseKeys: _tooltipKeys,
       child: Builder(
         builder: (context) {

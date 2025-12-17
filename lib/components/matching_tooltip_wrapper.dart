@@ -1,18 +1,18 @@
 import 'package:flutter/widgets.dart';
 import 'package:showcaseview/showcaseview.dart';
 
-class TooltipWrapper extends StatefulWidget {
-  const TooltipWrapper({super.key, required this.child, required this.showcaseKeys});
+class ShowcaseWrapper extends StatefulWidget {
+  const ShowcaseWrapper({super.key, required this.child, required this.showcaseKeys});
 
   final Widget child;
   final List<GlobalKey> showcaseKeys;
 
   @override
-  State<TooltipWrapper> createState() => _TooltipWrapperState();
+  State<ShowcaseWrapper> createState() => _ShowcaseWrapperState();
 }
 
-class _TooltipWrapperState extends State<TooltipWrapper> {
-  late final String _scope = 'matching_screen_${identityHashCode(this)}';
+class _ShowcaseWrapperState extends State<ShowcaseWrapper> {
+  late final String _scope = 'showcase_${identityHashCode(this)}';
   bool _hasRegistered = false;
   bool _hasStarted = false;
 
@@ -35,7 +35,7 @@ class _TooltipWrapperState extends State<TooltipWrapper> {
   }
 
   @override
-  void didUpdateWidget(covariant TooltipWrapper oldWidget) {
+  void didUpdateWidget(covariant ShowcaseWrapper oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (!_hasStarted && widget.showcaseKeys.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {

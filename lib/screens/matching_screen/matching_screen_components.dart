@@ -50,6 +50,42 @@ class GameInfoWidget extends StatelessWidget {
     // Handle tap on tooltip target
     Future<void> onTargetClick() => copyInviteUrl();
 
+    Widget pinputView() => Stack(
+      children: [
+        Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            spacing: AppDimentions.paddingSmall,
+            children: [
+              Pinput(
+                controller: pinController,
+                length: 4,
+                enabled: false,
+                defaultPinTheme: PinTheme(
+                  width: 40,
+                  height: 50,
+                  textStyle: const TextStyle(fontSize: 20),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Theme.of(context).colorScheme.primary),
+                    borderRadius: BorderRadius.circular(4),
+                    color: Theme.of(context).colorScheme.surfaceContainerLowest,
+                  ),
+                ),
+              ),
+              Text(
+                l10n.tapToCopyInviteUrl,
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+        InkWell(borderRadius: BorderRadius.circular(8), onTap: copyInviteUrl),
+      ],
+    );
+
     return RowCard(
       children: [
         Column(
@@ -73,41 +109,7 @@ class GameInfoWidget extends StatelessWidget {
                 height: 100,
                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
                 clipBehavior: Clip.antiAlias,
-                child: Stack(
-                  children: [
-                    Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        spacing: AppDimentions.paddingSmall,
-                        children: [
-                          Pinput(
-                            controller: pinController,
-                            length: 4,
-                            enabled: false,
-                            defaultPinTheme: PinTheme(
-                              width: 40,
-                              height: 50,
-                              textStyle: const TextStyle(fontSize: 20),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Theme.of(context).colorScheme.primary),
-                                borderRadius: BorderRadius.circular(4),
-                                color: Theme.of(context).colorScheme.surfaceContainerLowest,
-                              ),
-                            ),
-                          ),
-                          Text(
-                            l10n.tapToCopyInviteUrl,
-                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              color: Theme.of(context).colorScheme.primary,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    InkWell(borderRadius: BorderRadius.circular(8), onTap: copyInviteUrl),
-                  ],
-                ),
+                child: pinputView(),
               ),
             ),
           ],
@@ -320,7 +322,7 @@ class _PlayerSettingWidgetState extends State<PlayerSettingWidget> {
                         onTargetClick: _onTapTextField,
                         onToolTipClick: _onTapTextField,
                         onBarrierClick: () => ShowcaseView.get().next(),
-                        targetPadding: EdgeInsets.symmetric(vertical: AppDimentions.paddingSmall),
+                        targetPadding: EdgeInsets.all(AppDimentions.paddingMedium),
                         child: Expanded(
                           child: TextField(
                             maxLength: AppConstants.maxPlayerNameLength,
@@ -510,6 +512,7 @@ class _GameMasterWidgetState extends State<GameMasterWidget> {
                 onTargetClick: _onTapTopicField,
                 onToolTipClick: _onTapTopicField,
                 onBarrierClick: () => ShowcaseView.get().next(),
+                targetPadding: EdgeInsets.all(AppDimentions.paddingMedium),
                 child: TextField(
                   maxLength: AppConstants.maxTopicLength,
                   controller: _textController,
@@ -549,6 +552,7 @@ class _GameMasterWidgetState extends State<GameMasterWidget> {
           onTargetClick: () => ShowcaseView.get().next(),
           onToolTipClick: () => ShowcaseView.get().next(),
           onBarrierClick: () => ShowcaseView.get().next(),
+          targetPadding: EdgeInsets.all(AppDimentions.paddingMedium),
           child: RectangularRowButton(onPressed: widget.onStartPressed, label: l10n.startGame),
         ),
       ],
