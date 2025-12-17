@@ -39,7 +39,6 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
   final _playerAvaterTooltipKey = GlobalKey();
   final _playerNameTooltipKey = GlobalKey();
   final _topicTooltipKey = GlobalKey();
-  final _startButtonTooltipKey = GlobalKey();
   late List<GlobalKey> _tooltipKeys;
 
   // Showcase control flags
@@ -160,24 +159,21 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
     }
   }
 
-  void _updateShowcaseSequence(List<GlobalKey> remaining) {
+  void _resumeShowcase(GlobalKey completedKey) {
+    if (!_shouldShowShowcase) return;
+    final index = _tooltipKeys.indexOf(completedKey);
+    if (index == -1) return;
+
+    // Update remaining keys and show next tooltip
+    final remaining = _tooltipKeys.sublist(index + 1);
     setState(() {
       _tooltipKeys = remaining;
       _shouldShowShowcase = remaining.isNotEmpty;
     });
-    if (remaining.isEmpty) {
-      _markShowcaseAsShown();
-    } else {
-      ShowcaseView.get().startShowCase(remaining);
-    }
-  }
+    ShowcaseView.get().startShowCase(remaining);
 
-  void _resumeShowcase(GlobalKey completedKey) {
-    if (!_shouldShowShowcase) return;
-    final index = _tooltipKeys.indexOf(completedKey);
-    if (index == -1 || index + 1 > _tooltipKeys.length) return;
-    final remaining = _tooltipKeys.sublist(index + 1);
-    _updateShowcaseSequence(remaining);
+    // After the last showcase, mark showcase as shown
+    if (remaining.length == 1) _markShowcaseAsShown();
   }
 
   void _dismissShowcase(GlobalKey key) {
@@ -209,13 +205,7 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
     }
 
     _tooltipKeys = isMaster
-        ? [
-            _passwordTooltipKey,
-            _playerAvaterTooltipKey,
-            _playerNameTooltipKey,
-            _topicTooltipKey,
-            _startButtonTooltipKey,
-          ]
+        ? [_passwordTooltipKey, _playerAvaterTooltipKey, _playerNameTooltipKey, _topicTooltipKey]
         : [_playerAvaterTooltipKey, _playerNameTooltipKey];
 
     super.initState();
@@ -262,8 +252,8 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
                     focusNode: _playerFocusNode,
                     avaterTooltipKey: _playerAvaterTooltipKey,
                     nameTooltipKey: _playerNameTooltipKey,
-                    onShowcaseDismiss: (key) => _dismissShowcase(key),
                     onShowcaseAdvance: (key) => _resumeShowcase(key),
+                    onShowcaseDismiss: (key) => _dismissShowcase(key),
                   ),
                   if (isMaster)
                     GameMasterWidget(
@@ -272,7 +262,6 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
                       onStartPressed: _isStartButtonEnabled ? _onStartPressed : null,
                       focusNode: _topicFocusNode,
                       topicTooltipKey: _topicTooltipKey,
-                      startButtonTooltipKey: _startButtonTooltipKey,
                       onShowcaseAdvance: (key) => _resumeShowcase(key),
                       onShowcaseDismiss: (key) => _dismissShowcase(key),
                     ),

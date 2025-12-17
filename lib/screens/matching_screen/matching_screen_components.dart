@@ -104,8 +104,9 @@ class GameInfoWidget extends StatelessWidget {
               description: l10n.copyInviteTooltipDescription,
               onTargetClick: onTargetClick,
               onToolTipClick: onTargetClick,
-              onBarrierClick:
-                  tooltipKey != null ? () => onShowcaseAdvance?.call(tooltipKey!) : null,
+              onBarrierClick: tooltipKey != null
+                  ? () => onShowcaseAdvance?.call(tooltipKey!)
+                  : null,
               child: Container(
                 width: 210,
                 height: 100,
@@ -429,7 +430,6 @@ class GameMasterWidget extends StatefulWidget {
     required this.onStartPressed,
     required this.focusNode,
     required this.topicTooltipKey,
-    required this.startButtonTooltipKey,
     required this.onShowcaseAdvance,
     required this.onShowcaseDismiss,
   });
@@ -439,7 +439,6 @@ class GameMasterWidget extends StatefulWidget {
   final VoidCallback? onStartPressed;
   final FocusNode focusNode;
   final GlobalKey topicTooltipKey;
-  final GlobalKey startButtonTooltipKey;
   final void Function(GlobalKey key) onShowcaseAdvance;
   final void Function(GlobalKey key) onShowcaseDismiss;
 
@@ -556,15 +555,7 @@ class _GameMasterWidgetState extends State<GameMasterWidget> {
             ),
           ],
         ),
-        AppShowcase(
-          showcaseKey: widget.startButtonTooltipKey,
-          description: l10n.startGame,
-          onTargetClick: () => widget.onShowcaseAdvance(widget.startButtonTooltipKey),
-          onToolTipClick: () => widget.onShowcaseAdvance(widget.startButtonTooltipKey),
-          onBarrierClick: () => widget.onShowcaseAdvance(widget.startButtonTooltipKey),
-          targetPadding: EdgeInsets.all(AppDimentions.paddingMedium),
-          child: RectangularRowButton(onPressed: widget.onStartPressed, label: l10n.startGame),
-        ),
+        RectangularRowButton(onPressed: widget.onStartPressed, label: l10n.startGame),
       ],
     );
   }
