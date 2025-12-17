@@ -30,8 +30,8 @@
   "participants": "参加者",
   "recommendedTopics": "おすすめトピック",
   "notSet": "未設定",
-  "setTopicInstruction": "みんなで話し合うトピックを設定してください",
-  "setTopicShowcaseDescription": "トピックを設定してみましょう",
+  "setTopicInstruction": "みんなで話し合うトピックを入力してください",
+  "setTopicShowcaseDescription": "みんなで話し合うトピックを入力してください\nおすすめからも選べます",
   "topicLabel": "トピック",
   "startGame": "ゲーム開始",
   
@@ -46,9 +46,9 @@
   "everyonesAnswers": "みんなの答え",
   "yourNumberIs": "あなたの数字は",
   "desu": "です。",
-  "playingTopicShowcaseDescription": "お題を確認してからヒントを書き始めましょう。",
-  "playingNumberShowcaseDescription": "割り当てられた番号を覚えておきましょう。",
-  "playingHintShowcaseDescription": "ここにヒントを入力し、準備ができたら送信してください。",
+  "playingTopicShowcaseDescription": "今回のお題です、他のプレイヤーにも見えています",
+  "playingNumberShowcaseDescription": "あなたの数字です、他のプレイヤーには見えていません",
+  "playingHintShowcaseDescription": "数字の大きさを表す、トピックに沿ったヒントを入力してください",
   "viewResults": "結果を見る",
   "submissionStatus": "{sent}人中{total}人送信済み",
   "@submissionStatus": {

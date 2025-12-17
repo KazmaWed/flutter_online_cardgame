@@ -126,7 +126,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get playingTopicShowcaseDescription => '今回のお題です、他のプレイヤーにも見えています';
 
   @override
-  String get playingNumberShowcaseDescription => 'あなたの数字です、他のプレイヤーには見えません';
+  String get playingNumberShowcaseDescription => 'あなたの数字です、他のプレイヤーには見えていません';
 
   @override
   String get playingHintShowcaseDescription => '数字の大きさを表す、トピックに沿ったヒントを入力してください';

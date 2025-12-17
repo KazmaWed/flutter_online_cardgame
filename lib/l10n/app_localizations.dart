@@ -330,7 +330,7 @@ abstract class AppLocalizations {
   /// No description provided for @playingNumberShowcaseDescription.
   ///
   /// In ja, this message translates to:
-  /// **'あなたの数字です、他のプレイヤーには見えません'**
+  /// **'あなたの数字です、他のプレイヤーには見えていません'**
   String get playingNumberShowcaseDescription;
 
   /// No description provided for @playingHintShowcaseDescription.
