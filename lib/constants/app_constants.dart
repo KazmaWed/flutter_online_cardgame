@@ -8,4 +8,5 @@ class AppConstants {
   static const int maxPlayerNameLength = 12; // プレイヤー名の最大文字数（非ASCII文字は2文字でカウント）
   static const int maxPlayerHintLength = 30; // プレイヤーのヒントの最大文字数（非ASCII文字は2文字でカウント）
   static const int maxTopicLength = 40; // 最大トピック数（非ASCII文字は2文字でカウント）
+  static const double showcaseBarrierOpacity = 0.3; // ShowcaseViewのバリアパディング
 }

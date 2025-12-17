@@ -6,6 +6,7 @@ import 'package:pinput/pinput.dart';
 import 'package:web/web.dart' as web;
 
 import 'package:flutter_online_cardgame/components/avatar_container.dart';
+import 'package:flutter_online_cardgame/components/app_showcase.dart';
 import 'package:flutter_online_cardgame/components/rectangler_button.dart';
 import 'package:flutter_online_cardgame/components/row_card.dart';
 import 'package:flutter_online_cardgame/constants/app_constants.dart';
@@ -23,12 +24,68 @@ import 'package:flutter_online_cardgame/util/string_util.dart';
 class GameInfoWidget extends StatelessWidget {
   final GameInfo gameInfo;
   final String playerId;
-  const GameInfoWidget({super.key, required this.gameInfo, required this.playerId});
+  final GlobalKey? showcaseKey;
+  final void Function(GlobalKey key)? onShowcaseAdvance;
+  const GameInfoWidget({
+    super.key,
+    required this.gameInfo,
+    required this.playerId,
+    this.showcaseKey,
+    this.onShowcaseAdvance,
+  });
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final pinController = TextEditingController(text: gameInfo.password);
+
+    // Copy invite URL to clipboard
+    Future<void> copyInviteUrl() async {
+      final url = web.window.location.href.withPin(pinController.text);
+      await Clipboard.setData(ClipboardData(text: url));
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.urlCopiedMessage)));
+      if (showcaseKey != null) onShowcaseAdvance?.call(showcaseKey!);
+    }
+
+    // Handle tap on tooltip target
+    Future<void> onTargetClick() => copyInviteUrl();
+
+    Widget pinputView() => Stack(
+      children: [
+        Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            spacing: AppDimentions.paddingSmall,
+            children: [
+              Pinput(
+                controller: pinController,
+                length: 4,
+                enabled: false,
+                defaultPinTheme: PinTheme(
+                  width: 40,
+                  height: 50,
+                  textStyle: const TextStyle(fontSize: 20),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Theme.of(context).colorScheme.primary),
+                    borderRadius: BorderRadius.circular(4),
+                    color: Theme.of(context).colorScheme.surfaceContainerLowest,
+                  ),
+                ),
+              ),
+              Text(
+                l10n.tapToCopyInviteUrl,
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+        InkWell(borderRadius: BorderRadius.circular(8), onTap: copyInviteUrl),
+      ],
+    );
 
     return RowCard(
       children: [
@@ -42,56 +99,20 @@ class GameInfoWidget extends StatelessWidget {
               style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             Text(l10n.sharePasswordInstruction),
-            Container(
-              width: 210,
-              height: 100,
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
-              clipBehavior: Clip.antiAlias,
-              child: Stack(
-                children: [
-                  Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      spacing: AppDimentions.paddingSmall,
-                      children: [
-                        Pinput(
-                          controller: pinController,
-                          length: 4,
-                          enabled: false,
-                          defaultPinTheme: PinTheme(
-                            width: 40,
-                            height: 50,
-                            textStyle: const TextStyle(fontSize: 20),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Theme.of(context).colorScheme.primary),
-                              borderRadius: BorderRadius.circular(4),
-                              color: Theme.of(context).colorScheme.surfaceContainerLowest,
-                            ),
-                          ),
-                        ),
-
-                        Text(
-                          l10n.tapToCopyInviteUrl,
-                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  InkWell(
-                    borderRadius: BorderRadius.circular(8),
-                    onTap: () async {
-                      final url = web.window.location.href.withPin(pinController.text);
-                      await Clipboard.setData(ClipboardData(text: url));
-                      if (!context.mounted) return;
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(l10n.urlCopiedMessage)));
-                    },
-                  ),
-                ],
+            AppShowcase(
+              showcaseKey: showcaseKey ?? GlobalKey(),
+              description: l10n.copyInviteShowcaseDescription,
+              onTargetClick: onTargetClick,
+              onToolTipClick: onTargetClick,
+              onBarrierClick: showcaseKey != null
+                  ? () => onShowcaseAdvance?.call(showcaseKey!)
+                  : null,
+              child: Container(
+                width: 210,
+                height: 100,
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+                clipBehavior: Clip.antiAlias,
+                child: pinputView(),
               ),
             ),
           ],
@@ -196,6 +217,10 @@ class PlayerSettingWidget extends StatefulWidget {
     required this.onUpdated,
     required this.onTapAvatar,
     required this.focusNode,
+    required this.avaterShowcaseKey,
+    required this.nameShowcaseKey,
+    required this.onShowcaseDismiss,
+    required this.onShowcaseAdvance,
   });
 
   final String playerName;
@@ -203,6 +228,10 @@ class PlayerSettingWidget extends StatefulWidget {
   final Function(String) onUpdated;
   final VoidCallback onTapAvatar;
   final FocusNode focusNode;
+  final GlobalKey avaterShowcaseKey;
+  final GlobalKey nameShowcaseKey;
+  final void Function(GlobalKey key) onShowcaseDismiss;
+  final void Function(GlobalKey key) onShowcaseAdvance;
 
   @override
   State<PlayerSettingWidget> createState() => _PlayerSettingWidgetState();
@@ -222,9 +251,9 @@ class _PlayerSettingWidgetState extends State<PlayerSettingWidget> {
   void didUpdateWidget(PlayerSettingWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     // プレイヤー名が変更された時のみテキストを更新（入力中でない場合）
-    if (oldWidget.playerName != widget.playerName && !widget.focusNode.hasFocus) {
-      _textController.text = widget.playerName;
-    }
+    final onPlayerNameUpdated =
+        oldWidget.playerName != widget.playerName && !widget.focusNode.hasFocus;
+    if (onPlayerNameUpdated) _textController.text = widget.playerName;
   }
 
   @override
@@ -240,6 +269,16 @@ class _PlayerSettingWidgetState extends State<PlayerSettingWidget> {
     }
   }
 
+  void _onTapAvatar() {
+    widget.onShowcaseDismiss(widget.avaterShowcaseKey);
+    widget.onTapAvatar();
+  }
+
+  void _onTapTextField() {
+    widget.onShowcaseDismiss(widget.nameShowcaseKey);
+    if (!widget.focusNode.hasFocus) widget.focusNode.requestFocus();
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -252,20 +291,30 @@ class _PlayerSettingWidgetState extends State<PlayerSettingWidget> {
         Row(
           spacing: AppDimentions.paddingLarge,
           children: [
+            // Avatar selection
             Column(
               spacing: AppDimentions.paddingSmall,
               children: [
                 Text(l10n.avatar),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppDimentions.paddingSmall),
-                  child: AvatarButtonContainer(
-                    size: AppDimentions.avatarSizeL,
-                    fileName: widget.avatarFileName,
-                    onTap: widget.onTapAvatar,
+                AppShowcase(
+                  showcaseKey: widget.avaterShowcaseKey,
+                  description: l10n.selectAvatarShowcaseDescription,
+                  onTargetClick: _onTapAvatar,
+                  onToolTipClick: _onTapAvatar,
+                  onBarrierClick: () => widget.onShowcaseAdvance(widget.avaterShowcaseKey),
+                  targetPadding: EdgeInsets.symmetric(vertical: AppDimentions.paddingSmall),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: AppDimentions.paddingSmall),
+                    child: AvatarButtonContainer(
+                      size: AppDimentions.avatarSizeL,
+                      fileName: widget.avatarFileName,
+                      onTap: _onTapAvatar,
+                    ),
                   ),
                 ),
               ],
             ),
+            // Player name input
             Expanded(
               child: Column(
                 spacing: 30,
@@ -274,23 +323,36 @@ class _PlayerSettingWidgetState extends State<PlayerSettingWidget> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Expanded(
-                        child: TextField(
-                          maxLength: AppConstants.maxPlayerNameLength,
-                          controller: _textController,
-                          focusNode: widget.focusNode,
-                          inputFormatters: [MultiByteLengthFormatter(AppConstants.maxPlayerNameLength)],
-                          buildCounter: MultiByteLengthFormatter.createCounterBuilder(_textController, AppConstants.maxPlayerNameLength),
-                          decoration: InputDecoration(
-                            labelText: l10n.playerNameLabel,
-                            border: const OutlineInputBorder(),
-                            filled: true,
-                            fillColor: Theme.of(context).colorScheme.surfaceContainerLowest,
-                            suffixIcon: IconButton(
-                              icon: const Icon(Icons.clear_rounded),
-                              onPressed: () {
-                                setState(() => _textController.clear());
-                              },
+                      AppShowcase(
+                        showcaseKey: widget.nameShowcaseKey,
+                        description: l10n.enterPlayerNameShowcaseDescription,
+                        onTargetClick: _onTapTextField,
+                        onToolTipClick: _onTapTextField,
+                        onBarrierClick: () => widget.onShowcaseAdvance(widget.nameShowcaseKey),
+                        targetPadding: EdgeInsets.all(AppDimentions.paddingMedium),
+                        child: Expanded(
+                          child: TextField(
+                            maxLength: AppConstants.maxPlayerNameLength,
+                            controller: _textController,
+                            focusNode: widget.focusNode,
+                            inputFormatters: [
+                              MultiByteLengthFormatter(AppConstants.maxPlayerNameLength),
+                            ],
+                            buildCounter: MultiByteLengthFormatter.createCounterBuilder(
+                              _textController,
+                              AppConstants.maxPlayerNameLength,
+                            ),
+                            decoration: InputDecoration(
+                              labelText: l10n.playerNameLabel,
+                              border: const OutlineInputBorder(),
+                              filled: true,
+                              fillColor: Theme.of(context).colorScheme.surfaceContainerLowest,
+                              suffixIcon: IconButton(
+                                icon: const Icon(Icons.clear_rounded),
+                                onPressed: () {
+                                  setState(() => _textController.clear());
+                                },
+                              ),
                             ),
                           ),
                         ),
@@ -314,10 +376,8 @@ class AvatarSelectDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final avatarList = List.generate(
-      12,
-      (i) => AppAssets.avatar(i),
-    );
+    final avatarList = List.generate(12, (i) => AppAssets.avatar(i));
+
     return Dialog(
       backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
       child: Padding(
@@ -368,12 +428,19 @@ class GameMasterWidget extends StatefulWidget {
     required this.topic,
     required this.onUpdated,
     required this.onStartPressed,
-    required this.focusNode,
+    required this.topicFocusNode,
+    required this.topicShowcaseKey,
+    required this.onShowcaseAdvance,
+    required this.onShowcaseDismiss,
   });
+
   final String topic;
   final Function(String) onUpdated;
   final VoidCallback? onStartPressed;
-  final FocusNode focusNode;
+  final FocusNode topicFocusNode;
+  final GlobalKey topicShowcaseKey;
+  final void Function(GlobalKey key) onShowcaseAdvance;
+  final void Function(GlobalKey key) onShowcaseDismiss;
 
   @override
   State<GameMasterWidget> createState() => _GameMasterWidgetState();
@@ -383,7 +450,7 @@ class _GameMasterWidgetState extends State<GameMasterWidget> {
   final TextEditingController _textController = TextEditingController();
 
   void _onFocusChange() {
-    if (!widget.focusNode.hasFocus) {
+    if (!widget.topicFocusNode.hasFocus) {
       widget.onUpdated(_textController.text);
     }
   }
@@ -405,24 +472,29 @@ class _GameMasterWidgetState extends State<GameMasterWidget> {
     }
   }
 
+  void _onTapTopicField() {
+    widget.onShowcaseDismiss(widget.topicShowcaseKey);
+    if (!widget.topicFocusNode.hasFocus) widget.topicFocusNode.requestFocus();
+  }
+
   @override
   void initState() {
     super.initState();
     _textController.text = widget.topic;
-    widget.focusNode.addListener(_onFocusChange);
+    widget.topicFocusNode.addListener(_onFocusChange);
   }
 
   @override
   void didUpdateWidget(GameMasterWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.topic != widget.topic && !widget.focusNode.hasFocus) {
+    if (oldWidget.topic != widget.topic && !widget.topicFocusNode.hasFocus) {
       _textController.text = widget.topic;
     }
   }
 
   @override
   void dispose() {
-    widget.focusNode.removeListener(_onFocusChange);
+    widget.topicFocusNode.removeListener(_onFocusChange);
     _textController.dispose();
     super.dispose();
   }
@@ -430,6 +502,7 @@ class _GameMasterWidgetState extends State<GameMasterWidget> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+
     return RowCard(
       children: [
         Text(
@@ -442,29 +515,43 @@ class _GameMasterWidgetState extends State<GameMasterWidget> {
           spacing: AppDimentions.paddingSmall,
           children: [
             Expanded(
-              child: TextField(
-                maxLength: AppConstants.maxTopicLength,
-                controller: _textController,
-                focusNode: widget.focusNode,
-                inputFormatters: [MultiByteLengthFormatter(AppConstants.maxTopicLength)],
-                buildCounter: MultiByteLengthFormatter.createCounterBuilder(_textController, AppConstants.maxTopicLength),
-                decoration: InputDecoration(
-                  labelText: l10n.topicLabel,
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  fillColor: Theme.of(context).colorScheme.surfaceContainerLowest,
-                  suffixIcon: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(icon: const Icon(Icons.clear_rounded), onPressed: _onClear),
-                    ],
+              child: AppShowcase(
+                showcaseKey: widget.topicShowcaseKey,
+                description: l10n.setTopicShowcaseDescription,
+                onTargetClick: _onTapTopicField,
+                onToolTipClick: _onTapTopicField,
+                onBarrierClick: () => widget.onShowcaseAdvance(widget.topicShowcaseKey),
+                targetPadding: EdgeInsets.all(AppDimentions.paddingMedium),
+                child: TextField(
+                  maxLength: AppConstants.maxTopicLength,
+                  controller: _textController,
+                  focusNode: widget.topicFocusNode,
+                  inputFormatters: [MultiByteLengthFormatter(AppConstants.maxTopicLength)],
+                  buildCounter: MultiByteLengthFormatter.createCounterBuilder(
+                    _textController,
+                    AppConstants.maxTopicLength,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: l10n.topicLabel,
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    fillColor: Theme.of(context).colorScheme.surfaceContainerLowest,
+                    suffixIcon: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(icon: const Icon(Icons.clear_rounded), onPressed: _onClear),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
             SizedBox(
               width: 120,
-              child: RectangularTextButton(label: AppLocalizations.of(context)!.chooseFromRecommendations, onPressed: _onTapRecommendation),
+              child: RectangularTextButton(
+                label: AppLocalizations.of(context)!.chooseFromRecommendations,
+                onPressed: _onTapRecommendation,
+              ),
             ),
           ],
         ),
@@ -502,7 +589,7 @@ class _TopicRecommendationDialogState extends State<TopicRecommendationDialog> {
     try {
       String topicsFile = AppAssets.topicsJson(context);
       debugPrint('Loading topics from: $topicsFile');
-      
+
       String jsonString;
       try {
         jsonString = await rootBundle.loadString(topicsFile);

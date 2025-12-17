@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_online_cardgame/components/animation_wrap.dart';
 import 'package:flutter_online_cardgame/components/avatar_container.dart';
+import 'package:flutter_online_cardgame/components/app_showcase.dart';
 import 'package:flutter_online_cardgame/components/rectangler_button.dart';
 import 'package:flutter_online_cardgame/components/row_card.dart';
 import 'package:flutter_online_cardgame/constants/app_constants.dart';
@@ -15,7 +16,9 @@ import 'package:flutter_online_cardgame/util/string_util.dart';
 
 class TopicCardWidget extends StatelessWidget {
   final String topic;
-  const TopicCardWidget({super.key, required this.topic});
+  final GlobalKey? showcaseKey;
+  final void Function(GlobalKey key)? onShowcaseAdvance;
+  const TopicCardWidget({super.key, required this.topic, this.showcaseKey, this.onShowcaseAdvance});
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +32,30 @@ class TopicCardWidget extends StatelessWidget {
       color: Theme.of(context).colorScheme.primary,
     );
 
-    return RowCard(
+    final content = RowCard(
       children: [
         Text(l10n.topic, style: headerStyle),
         Text(topic, style: topicStyle),
       ],
+    );
+
+    if (showcaseKey == null) return content;
+
+    void advance() => onShowcaseAdvance?.call(showcaseKey!);
+
+    return AppShowcase(
+      showcaseKey: showcaseKey!,
+      description: l10n.playingTopicShowcaseDescription,
+      onTargetClick: advance,
+      onToolTipClick: advance,
+      onBarrierClick: advance,
+      targetPadding: EdgeInsets.all(AppDimentions.paddingSmall),
+      child: RowCard(
+        children: [
+          Text(l10n.topic, style: headerStyle),
+          Text(topic, style: topicStyle),
+        ],
+      ),
     );
   }
 }
@@ -150,6 +172,10 @@ class SubmitWidget extends StatelessWidget {
   final VoidCallback onPressSubmit;
   final VoidCallback onWithdraw;
   final VoidCallback onClear;
+  final GlobalKey? numberTooltipKey;
+  final GlobalKey? hintTooltipKey;
+  final void Function(GlobalKey key)? onShowcaseAdvance;
+  final void Function(GlobalKey key)? onShowcaseDismiss;
 
   const SubmitWidget({
     super.key,
@@ -166,6 +192,10 @@ class SubmitWidget extends StatelessWidget {
     required this.onPressSubmit,
     required this.onWithdraw,
     required this.onClear,
+    this.numberTooltipKey,
+    this.hintTooltipKey,
+    this.onShowcaseAdvance,
+    this.onShowcaseDismiss,
   });
 
   @override
@@ -178,49 +208,89 @@ class SubmitWidget extends StatelessWidget {
     );
     final descriptionStyle = Theme.of(context).textTheme.bodyLarge;
 
+    Widget numberSection = Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        spacing: AppDimentions.paddingMicro,
+        children: [
+          Text(l10n.yourNumberIs, style: baseStyle),
+          Text(value.toString(), style: boldStyle),
+          Text(l10n.desu, style: baseStyle),
+        ],
+      ),
+    );
+
+    if (numberTooltipKey != null) {
+      void advanceNumber() => onShowcaseAdvance?.call(numberTooltipKey!);
+      numberSection = AppShowcase(
+        showcaseKey: numberTooltipKey!,
+        description: l10n.playingNumberShowcaseDescription,
+        onTargetClick: advanceNumber,
+        onToolTipClick: advanceNumber,
+        onBarrierClick: advanceNumber,
+        targetPadding: EdgeInsets.symmetric(vertical: AppDimentions.paddingSmall),
+        child: numberSection,
+      );
+    }
+
+    Widget hintField = TextField(
+      maxLength: AppConstants.maxPlayerHintLength,
+      controller: controller,
+      readOnly: submittedOrder != null,
+      focusNode: focusNode,
+      enabled: submittedOrder == null,
+      inputFormatters: [MultiByteLengthFormatter(AppConstants.maxPlayerHintLength)],
+      buildCounter: MultiByteLengthFormatter.createCounterBuilder(
+        controller,
+        AppConstants.maxPlayerHintLength,
+      ),
+      onTap: () {
+        if (hintTooltipKey != null) onShowcaseDismiss?.call(hintTooltipKey!);
+      },
+      decoration: InputDecoration(
+        labelText: l10n.hint,
+        border: OutlineInputBorder(),
+        filled: true,
+        fillColor: Theme.of(context).colorScheme.surfaceContainerLowest,
+        suffixIcon: (submittedOrder == null && controller.text.isNotEmpty)
+            ? IconButton(
+                icon: Icon(Icons.clear_rounded),
+                onPressed: () {
+                  controller.clear();
+                  onClear();
+                },
+              )
+            : null,
+      ),
+    );
+
+    if (hintTooltipKey != null) {
+      void dismissHint() => onShowcaseDismiss?.call(hintTooltipKey!);
+      void advanceHint() => onShowcaseAdvance?.call(hintTooltipKey!);
+      hintField = AppShowcase(
+        showcaseKey: hintTooltipKey!,
+        description: l10n.playingHintShowcaseDescription,
+        onTargetClick: () {
+          dismissHint();
+          if (!focusNode.hasFocus) focusNode.requestFocus();
+        },
+        onToolTipClick: () {
+          dismissHint();
+          if (!focusNode.hasFocus) focusNode.requestFocus();
+        },
+        onBarrierClick: advanceHint,
+        targetPadding: EdgeInsets.all(AppDimentions.paddingMedium),
+        child: hintField,
+      );
+    }
+
     return RowCard(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            spacing: AppDimentions.paddingMicro,
-            children: [
-              Text(l10n.yourNumberIs, style: baseStyle),
-              Text(value.toString(), style: boldStyle),
-              Text(l10n.desu, style: baseStyle),
-            ],
-          ),
-        ),
+        numberSection,
         Text(instruction, style: descriptionStyle),
-        TextField(
-          maxLength: AppConstants.maxPlayerHintLength,
-          controller: controller,
-          readOnly: submittedOrder != null,
-          focusNode: focusNode,
-          enabled: submittedOrder == null,
-          inputFormatters: [MultiByteLengthFormatter(AppConstants.maxPlayerHintLength)],
-          buildCounter: MultiByteLengthFormatter.createCounterBuilder(
-            controller,
-            AppConstants.maxPlayerHintLength,
-          ),
-          decoration: InputDecoration(
-            labelText: l10n.hint,
-            border: OutlineInputBorder(),
-            filled: true,
-            fillColor: Theme.of(context).colorScheme.surfaceContainerLowest,
-            suffixIcon: (submittedOrder == null && controller.text.isNotEmpty)
-                ? IconButton(
-                    icon: Icon(Icons.clear_rounded),
-                    onPressed: () {
-                      controller.clear();
-                      onClear();
-                    },
-                  )
-                : null,
-          ),
-        ),
+        hintField,
         Row(
           spacing: AppDimentions.paddingSmall,
           crossAxisAlignment: CrossAxisAlignment.start,
