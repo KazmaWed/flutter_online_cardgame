@@ -261,7 +261,7 @@ class _PlayingScreenState extends State<PlayingScreen> with GameScreenMixin {
   void _dismissShowcase(GlobalKey key) => ShowcaseView.get().dismiss();
 
   void _markShowcaseAsShown() {
-    CookieHelper.markShowcasedGameScreen();
+    CookieHelper.markShowcasedGameScreen(uid);
     setState(() => _shouldShowShowcase = false);
   }
 
@@ -271,7 +271,7 @@ class _PlayingScreenState extends State<PlayingScreen> with GameScreenMixin {
     _loadGameConfig();
     _controller.text = gameState.playerState[uid]?.hint ?? '';
     _focusNode.addListener(_onFocusChanged);
-    final hasShown = CookieHelper.hasShowcasedGameScreen();
+    final hasShown = CookieHelper.hasShowcasedGameScreen(uid);
     _shouldShowShowcase = !hasShown;
     if (_shouldShowShowcase) {
       _showcaseKeys = [_topicKey, _numberKey, _hintKey];

@@ -8,27 +8,27 @@ class CookieHelper {
   static const _showcasedMatchingScreenAsMaster = 'showcasedMatchingScreenAsMaster';
   static const _showcasedGameScreen = 'showcasedGameScreen';
 
-  /// Returns true if the player showcase has already been displayed.
-  static bool hasShowcasedMatchingScreen() =>
-      CookieRepository.read(_showcasedMatchingScreen)?.toLowerCase() == 'true';
+  /// Returns true if the player showcase has already been displayed for the provided uid.
+  static bool hasShowcasedMatchingScreen(String uid) =>
+      CookieRepository.read(_showcasedMatchingScreen) == uid;
 
-  /// Returns true if the master showcase has already been displayed.
-  static bool hasShowcasedMatchingScreenAsMaster() =>
-      CookieRepository.read(_showcasedMatchingScreenAsMaster)?.toLowerCase() == 'true';
+  /// Returns true if the master showcase has already been displayed for the provided uid.
+  static bool hasShowcasedMatchingScreenAsMaster(String uid) =>
+      CookieRepository.read(_showcasedMatchingScreenAsMaster) == uid;
 
-  /// Returns true if the player showcase on the game screen has already been displayed.
-  static bool hasShowcasedGameScreen() =>
-      CookieRepository.read(_showcasedGameScreen)?.toLowerCase() == 'true';
+  /// Returns true if the player showcase on the game screen has already been displayed for the provided uid.
+  static bool hasShowcasedGameScreen(String uid) =>
+      CookieRepository.read(_showcasedGameScreen) == uid;
 
-  /// Marks the player showcase as shown.
-  static void markShowcasedMatchingScreen() =>
-      CookieRepository.save(key: _showcasedMatchingScreen, value: 'true');
+  /// Marks the player showcase as shown for the provided uid.
+  static void markShowcasedMatchingScreen(String uid) =>
+      CookieRepository.save(key: _showcasedMatchingScreen, value: uid);
 
-  /// Marks the master showcase as shown.
-  static void markShowcasedMatchingScreenAsMaster() =>
-      CookieRepository.save(key: _showcasedMatchingScreenAsMaster, value: 'true');
+  /// Marks the master showcase as shown for the provided uid.
+  static void markShowcasedMatchingScreenAsMaster(String uid) =>
+      CookieRepository.save(key: _showcasedMatchingScreenAsMaster, value: uid);
 
-  /// Marks the player game screen showcase as shown.
-  static void markShowcasedGameScreen() =>
-      CookieRepository.save(key: _showcasedGameScreen, value: 'true');
+  /// Marks the player game screen showcase as shown for the provided uid.
+  static void markShowcasedGameScreen(String uid) =>
+      CookieRepository.save(key: _showcasedGameScreen, value: uid);
 }

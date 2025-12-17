@@ -180,9 +180,9 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
 
   void _markShowcaseAsShown() {
     if (isMaster) {
-      CookieHelper.markShowcasedMatchingScreenAsMaster();
+      CookieHelper.markShowcasedMatchingScreenAsMaster(uid);
     } else {
-      CookieHelper.markShowcasedMatchingScreen();
+      CookieHelper.markShowcasedMatchingScreen(uid);
     }
     _shouldShowShowcase = false;
   }
@@ -190,8 +190,8 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
   @override
   void initState() {
     final hasShown = isMaster
-        ? CookieHelper.hasShowcasedMatchingScreenAsMaster()
-        : CookieHelper.hasShowcasedMatchingScreen();
+        ? CookieHelper.hasShowcasedMatchingScreenAsMaster(uid)
+        : CookieHelper.hasShowcasedMatchingScreen(uid);
     _shouldShowShowcase = !hasShown;
 
     if (!_shouldShowShowcase) {
