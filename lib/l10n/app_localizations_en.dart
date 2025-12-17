@@ -49,6 +49,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tapToCopyInviteUrl => 'Tap to copy invitation URL';
 
   @override
+  String get copyInviteShowcaseDescription =>
+      'Tap here to copy the invitation URL and share it with other players.';
+
+  @override
   String get you => 'You';
 
   @override
@@ -58,7 +62,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectAvatar => 'Select Avatar';
 
   @override
+  String get selectAvatarShowcaseDescription => 'Select your avatar';
+
+  @override
   String get enterPlayerNameInstruction => 'Please set a nice player name';
+
+  @override
+  String get enterPlayerNameShowcaseDescription => 'Enter your player name';
 
   @override
   String get playerNameLabel => 'Player Name';
@@ -73,7 +83,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notSet => 'Not Set';
 
   @override
-  String get setTopicInstruction => 'Set a topic to discuss';
+  String get setTopicInstruction => 'Enter a topic for everyone to discuss';
+
+  @override
+  String get setTopicShowcaseDescription =>
+      'Enter a topic for everyone to discuss\nYou can also pick from the presets';
 
   @override
   String get topicLabel => 'Topic';
@@ -91,7 +105,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get kick => 'Kick';
 
   @override
-  String get chooseFromRecommendations => 'Choose from\nRecommendations';
+  String get chooseFromPresets => 'Choose from\npresets';
 
   @override
   String get cancel => 'Cancel';
@@ -110,6 +124,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get desu => '.';
+
+  @override
+  String get playingTopicShowcaseDescription =>
+      'This is the current topic, and every player can see it.';
+
+  @override
+  String get playingNumberShowcaseDescription =>
+      'This is your number, and other players cannot see it.';
+
+  @override
+  String get playingHintShowcaseDescription =>
+      'Enter a hint that reflects your number\'s size and matches the topic.';
 
   @override
   String get viewResults => 'View Results';
@@ -216,8 +242,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirmExitGameTitle => 'Exit game?';
 
   @override
-  String get confirmExitGameMessage =>
-      'The game will continue even if you leave';
+  String get confirmExitGameMessage => 'The game will continue even if you leave';
 
   @override
   String get exitGame => 'Exit';

@@ -62,8 +62,7 @@ import 'app_localizations_ja.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale)
-    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -71,8 +70,7 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate =
-      _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -93,10 +91,7 @@ abstract class AppLocalizations {
       ];
 
   /// A list of this localizations delegate's supported locales.
-  static const List<Locale> supportedLocales = <Locale>[
-    Locale('en'),
-    Locale('ja'),
-  ];
+  static const List<Locale> supportedLocales = <Locale>[Locale('en'), Locale('ja')];
 
   /// No description provided for @appTitle.
   ///
@@ -176,6 +171,12 @@ abstract class AppLocalizations {
   /// **'タップで招待URLをコピー'**
   String get tapToCopyInviteUrl;
 
+  /// No description provided for @copyInviteShowcaseDescription.
+  ///
+  /// In ja, this message translates to:
+  /// **'タップで招待URLをコピーして、ほかのプレイヤーに共有しましょう'**
+  String get copyInviteShowcaseDescription;
+
   /// No description provided for @you.
   ///
   /// In ja, this message translates to:
@@ -194,11 +195,23 @@ abstract class AppLocalizations {
   /// **'アバターを選択'**
   String get selectAvatar;
 
+  /// No description provided for @selectAvatarShowcaseDescription.
+  ///
+  /// In ja, this message translates to:
+  /// **'アバターを選択してください'**
+  String get selectAvatarShowcaseDescription;
+
   /// No description provided for @enterPlayerNameInstruction.
   ///
   /// In ja, this message translates to:
   /// **'すてきなプレイヤー名を設定してください'**
   String get enterPlayerNameInstruction;
+
+  /// No description provided for @enterPlayerNameShowcaseDescription.
+  ///
+  /// In ja, this message translates to:
+  /// **'プレイヤー名を入力してください'**
+  String get enterPlayerNameShowcaseDescription;
 
   /// No description provided for @playerNameLabel.
   ///
@@ -227,8 +240,14 @@ abstract class AppLocalizations {
   /// No description provided for @setTopicInstruction.
   ///
   /// In ja, this message translates to:
-  /// **'みんなで話し合うトピックを設定してください'**
+  /// **'みんなで話し合うトピックを入力してください'**
   String get setTopicInstruction;
+
+  /// No description provided for @setTopicShowcaseDescription.
+  ///
+  /// In ja, this message translates to:
+  /// **'みんなで話し合うトピックを入力してください\nおすすめからも選べます'**
+  String get setTopicShowcaseDescription;
 
   /// No description provided for @topicLabel.
   ///
@@ -260,11 +279,11 @@ abstract class AppLocalizations {
   /// **'キック'**
   String get kick;
 
-  /// No description provided for @chooseFromRecommendations.
+  /// No description provided for @chooseFromPresets.
   ///
   /// In ja, this message translates to:
   /// **'おすすめ\nから選ぶ'**
-  String get chooseFromRecommendations;
+  String get chooseFromPresets;
 
   /// No description provided for @cancel.
   ///
@@ -301,6 +320,24 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'です。'**
   String get desu;
+
+  /// No description provided for @playingTopicShowcaseDescription.
+  ///
+  /// In ja, this message translates to:
+  /// **'今回のお題です、他のプレイヤーにも見えています'**
+  String get playingTopicShowcaseDescription;
+
+  /// No description provided for @playingNumberShowcaseDescription.
+  ///
+  /// In ja, this message translates to:
+  /// **'あなたの数字です、他のプレイヤーには見えません'**
+  String get playingNumberShowcaseDescription;
+
+  /// No description provided for @playingHintShowcaseDescription.
+  ///
+  /// In ja, this message translates to:
+  /// **'数字の大きさを表す、トピックに沿ったヒントを入力してください'**
+  String get playingHintShowcaseDescription;
 
   /// No description provided for @viewResults.
   ///
@@ -579,8 +616,7 @@ abstract class AppLocalizations {
   String gameWatchError(String error);
 }
 
-class _AppLocalizationsDelegate
-    extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -589,8 +625,7 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['en', 'ja'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['en', 'ja'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
