@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pinput/pinput.dart';
-import 'package:showcaseview/showcaseview.dart';
 import 'package:web/web.dart' as web;
 
 import 'package:flutter_online_cardgame/components/avatar_container.dart';
+import 'package:flutter_online_cardgame/components/app_showcase.dart';
 import 'package:flutter_online_cardgame/components/rectangler_button.dart';
 import 'package:flutter_online_cardgame/components/row_card.dart';
 import 'package:flutter_online_cardgame/constants/app_constants.dart';
@@ -18,18 +18,19 @@ import 'package:flutter_online_cardgame/model/game_state.dart';
 import 'package:flutter_online_cardgame/model/player_info.dart';
 import 'package:flutter_online_cardgame/model/topic_data.dart';
 import 'package:flutter_online_cardgame/screens/common/error_screen.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:flutter_online_cardgame/util/multi_byte_length_formatter.dart';
 import 'package:flutter_online_cardgame/util/string_util.dart';
 
 class GameInfoWidget extends StatelessWidget {
   final GameInfo gameInfo;
   final String playerId;
-  final GlobalKey tooltipKey;
+  final GlobalKey? tooltipKey;
   const GameInfoWidget({
     super.key,
     required this.gameInfo,
     required this.playerId,
-    this.tooltipKey = const GlobalObjectKey('GameInfoWidgetTooltipKey'),
+    this.tooltipKey,
   });
 
   @override
@@ -46,6 +47,9 @@ class GameInfoWidget extends StatelessWidget {
       ShowcaseView.get().next();
     }
 
+    // Handle tap on tooltip target
+    Future<void> onTargetClick() => copyInviteUrl();
+
     return RowCard(
       children: [
         Column(
@@ -58,13 +62,11 @@ class GameInfoWidget extends StatelessWidget {
               style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             Text(l10n.sharePasswordInstruction),
-            Showcase(
-              key: tooltipKey,
+            AppShowcase(
+              showcaseKey: tooltipKey ?? GlobalKey(),
               description: l10n.copyInviteTooltipDescription,
-              overlayOpacity: 0.3,
-              disposeOnTap: true,
-              onTargetClick: copyInviteUrl,
-              onToolTipClick: copyInviteUrl,
+              onTargetClick: onTargetClick,
+              onToolTipClick: onTargetClick,
               onBarrierClick: () => ShowcaseView.get().next(),
               child: Container(
                 width: 210,
@@ -210,6 +212,8 @@ class PlayerSettingWidget extends StatefulWidget {
     required this.onUpdated,
     required this.onTapAvatar,
     required this.focusNode,
+    required this.avaterTooltipKey,
+    required this.nameTooltipKey,
   });
 
   final String playerName;
@@ -217,6 +221,8 @@ class PlayerSettingWidget extends StatefulWidget {
   final Function(String) onUpdated;
   final VoidCallback onTapAvatar;
   final FocusNode focusNode;
+  final GlobalKey avaterTooltipKey;
+  final GlobalKey nameTooltipKey;
 
   @override
   State<PlayerSettingWidget> createState() => _PlayerSettingWidgetState();
@@ -236,9 +242,9 @@ class _PlayerSettingWidgetState extends State<PlayerSettingWidget> {
   void didUpdateWidget(PlayerSettingWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     // プレイヤー名が変更された時のみテキストを更新（入力中でない場合）
-    if (oldWidget.playerName != widget.playerName && !widget.focusNode.hasFocus) {
-      _textController.text = widget.playerName;
-    }
+    final onPlayerNameUpdated =
+        oldWidget.playerName != widget.playerName && !widget.focusNode.hasFocus;
+    if (onPlayerNameUpdated) _textController.text = widget.playerName;
   }
 
   @override
@@ -254,6 +260,16 @@ class _PlayerSettingWidgetState extends State<PlayerSettingWidget> {
     }
   }
 
+  void _onTapAvatar() {
+    ShowcaseView.get().dismiss();
+    widget.onTapAvatar();
+  }
+
+  void _onTapTextField() {
+    ShowcaseView.get().dismiss();
+    if (!widget.focusNode.hasFocus) widget.focusNode.requestFocus();
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -266,20 +282,30 @@ class _PlayerSettingWidgetState extends State<PlayerSettingWidget> {
         Row(
           spacing: AppDimentions.paddingLarge,
           children: [
+            // Avatar selection
             Column(
               spacing: AppDimentions.paddingSmall,
               children: [
                 Text(l10n.avatar),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppDimentions.paddingSmall),
-                  child: AvatarButtonContainer(
-                    size: AppDimentions.avatarSizeL,
-                    fileName: widget.avatarFileName,
-                    onTap: widget.onTapAvatar,
+                AppShowcase(
+                  showcaseKey: widget.avaterTooltipKey,
+                  description: "Select your avatar",
+                  onTargetClick: _onTapAvatar,
+                  onToolTipClick: _onTapAvatar,
+                  onBarrierClick: () => ShowcaseView.get().next(),
+                  targetPadding: EdgeInsets.symmetric(vertical: AppDimentions.paddingSmall),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: AppDimentions.paddingSmall),
+                    child: AvatarButtonContainer(
+                      size: AppDimentions.avatarSizeL,
+                      fileName: widget.avatarFileName,
+                      onTap: _onTapAvatar,
+                    ),
                   ),
                 ),
               ],
             ),
+            // Player name input
             Expanded(
               child: Column(
                 spacing: 30,
@@ -288,28 +314,36 @@ class _PlayerSettingWidgetState extends State<PlayerSettingWidget> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Expanded(
-                        child: TextField(
-                          maxLength: AppConstants.maxPlayerNameLength,
-                          controller: _textController,
-                          focusNode: widget.focusNode,
-                          inputFormatters: [
-                            MultiByteLengthFormatter(AppConstants.maxPlayerNameLength),
-                          ],
-                          buildCounter: MultiByteLengthFormatter.createCounterBuilder(
-                            _textController,
-                            AppConstants.maxPlayerNameLength,
-                          ),
-                          decoration: InputDecoration(
-                            labelText: l10n.playerNameLabel,
-                            border: const OutlineInputBorder(),
-                            filled: true,
-                            fillColor: Theme.of(context).colorScheme.surfaceContainerLowest,
-                            suffixIcon: IconButton(
-                              icon: const Icon(Icons.clear_rounded),
-                              onPressed: () {
-                                setState(() => _textController.clear());
-                              },
+                      AppShowcase(
+                        showcaseKey: widget.nameTooltipKey,
+                        description: "Enter your player name",
+                        onTargetClick: _onTapTextField,
+                        onToolTipClick: _onTapTextField,
+                        onBarrierClick: () => ShowcaseView.get().next(),
+                        targetPadding: EdgeInsets.symmetric(vertical: AppDimentions.paddingSmall),
+                        child: Expanded(
+                          child: TextField(
+                            maxLength: AppConstants.maxPlayerNameLength,
+                            controller: _textController,
+                            focusNode: widget.focusNode,
+                            inputFormatters: [
+                              MultiByteLengthFormatter(AppConstants.maxPlayerNameLength),
+                            ],
+                            buildCounter: MultiByteLengthFormatter.createCounterBuilder(
+                              _textController,
+                              AppConstants.maxPlayerNameLength,
+                            ),
+                            decoration: InputDecoration(
+                              labelText: l10n.playerNameLabel,
+                              border: const OutlineInputBorder(),
+                              filled: true,
+                              fillColor: Theme.of(context).colorScheme.surfaceContainerLowest,
+                              suffixIcon: IconButton(
+                                icon: const Icon(Icons.clear_rounded),
+                                onPressed: () {
+                                  setState(() => _textController.clear());
+                                },
+                              ),
                             ),
                           ),
                         ),
@@ -334,6 +368,7 @@ class AvatarSelectDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final avatarList = List.generate(12, (i) => AppAssets.avatar(i));
+
     return Dialog(
       backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
       child: Padding(
@@ -385,11 +420,16 @@ class GameMasterWidget extends StatefulWidget {
     required this.onUpdated,
     required this.onStartPressed,
     required this.focusNode,
+    required this.topicTooltipKey,
+    required this.startButtonTooltipKey,
   });
+
   final String topic;
   final Function(String) onUpdated;
   final VoidCallback? onStartPressed;
   final FocusNode focusNode;
+  final GlobalKey topicTooltipKey;
+  final GlobalKey startButtonTooltipKey;
 
   @override
   State<GameMasterWidget> createState() => _GameMasterWidgetState();
@@ -443,9 +483,15 @@ class _GameMasterWidgetState extends State<GameMasterWidget> {
     super.dispose();
   }
 
+  void _onTapTopicField() {
+    ShowcaseView.get().dismiss();
+    if (!widget.focusNode.hasFocus) widget.focusNode.requestFocus();
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+
     return RowCard(
       children: [
         Text(
@@ -458,25 +504,32 @@ class _GameMasterWidgetState extends State<GameMasterWidget> {
           spacing: AppDimentions.paddingSmall,
           children: [
             Expanded(
-              child: TextField(
-                maxLength: AppConstants.maxTopicLength,
-                controller: _textController,
-                focusNode: widget.focusNode,
-                inputFormatters: [MultiByteLengthFormatter(AppConstants.maxTopicLength)],
-                buildCounter: MultiByteLengthFormatter.createCounterBuilder(
-                  _textController,
-                  AppConstants.maxTopicLength,
-                ),
-                decoration: InputDecoration(
-                  labelText: l10n.topicLabel,
-                  border: OutlineInputBorder(),
-                  filled: true,
-                  fillColor: Theme.of(context).colorScheme.surfaceContainerLowest,
-                  suffixIcon: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(icon: const Icon(Icons.clear_rounded), onPressed: _onClear),
-                    ],
+              child: AppShowcase(
+                showcaseKey: widget.topicTooltipKey,
+                description: l10n.setTopicInstruction,
+                onTargetClick: _onTapTopicField,
+                onToolTipClick: _onTapTopicField,
+                onBarrierClick: () => ShowcaseView.get().next(),
+                child: TextField(
+                  maxLength: AppConstants.maxTopicLength,
+                  controller: _textController,
+                  focusNode: widget.focusNode,
+                  inputFormatters: [MultiByteLengthFormatter(AppConstants.maxTopicLength)],
+                  buildCounter: MultiByteLengthFormatter.createCounterBuilder(
+                    _textController,
+                    AppConstants.maxTopicLength,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: l10n.topicLabel,
+                    border: OutlineInputBorder(),
+                    filled: true,
+                    fillColor: Theme.of(context).colorScheme.surfaceContainerLowest,
+                    suffixIcon: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(icon: const Icon(Icons.clear_rounded), onPressed: _onClear),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -490,7 +543,14 @@ class _GameMasterWidgetState extends State<GameMasterWidget> {
             ),
           ],
         ),
-        RectangularRowButton(onPressed: widget.onStartPressed, label: l10n.startGame),
+        AppShowcase(
+          showcaseKey: widget.startButtonTooltipKey,
+          description: l10n.startGame,
+          onTargetClick: () => ShowcaseView.get().next(),
+          onToolTipClick: () => ShowcaseView.get().next(),
+          onBarrierClick: () => ShowcaseView.get().next(),
+          child: RectangularRowButton(onPressed: widget.onStartPressed, label: l10n.startGame),
+        ),
       ],
     );
   }

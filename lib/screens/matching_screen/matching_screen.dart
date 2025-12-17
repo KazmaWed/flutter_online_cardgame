@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:showcaseview/showcaseview.dart';
+
 import 'package:flutter_online_cardgame/components/barrier_container.dart';
 import 'package:flutter_online_cardgame/components/base_scaffold.dart';
 import 'package:flutter_online_cardgame/components/matching_tooltip_wrapper.dart';
@@ -29,7 +31,15 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
   final FocusNode _topicFocusNode = FocusNode();
 
   bool _busy = false;
-  final List<GlobalKey> _tooltipKeys = [GlobalKey(), GlobalKey(), GlobalKey()];
+  String _playerName = '';
+
+  // Tooltip keys
+  final _passwordTooltipKey = GlobalKey();
+  final _playerAvaterTooltipKey = GlobalKey();
+  final _playerNameTooltipKey = GlobalKey();
+  final _topicTooltipKey = GlobalKey();
+  final _startButtonTooltipKey = GlobalKey();
+  late final List<GlobalKey> _tooltipKeys;
 
   @override
   GameInfo get gameInfo => widget.gameInfo;
@@ -41,21 +51,10 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
   bool get _isStartButtonEnabled =>
       activePlayers.length >= 2 && isMaster && gameConfig.topic.isNotEmpty;
 
-  void _onPlayerNameUpdated(String name) async {
-    if (_busy) return;
-    try {
-      setState(() => _busy = true);
-      await FirebaseRepository.updateName(name: name, gameId: gameInfo.gameId);
-    } catch (e) {
-      handleApiError('update player name', e);
-    } finally {
-      if (mounted) setState(() => _busy = false);
-    }
-  }
-
   void _onTapAvatar() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) => AvatarSelectDialog(onAvatarSelected: _onAvatarSelected),
     );
   }
@@ -67,6 +66,13 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
       final match = RegExp(r'avatar(\d{2})\.jpg$').firstMatch(avatarFileName);
       final avatarIndex = match != null ? int.parse(match.group(1)!) : 0;
       await FirebaseRepository.updateAvatar(avatar: avatarIndex, gameId: gameInfo.gameId);
+
+      // Show name tooltip if player name is not set
+      if (_playerName.isEmpty) {
+        ShowcaseView.get().startShowCase(
+          _tooltipKeys.sublist(_tooltipKeys.indexOf(_playerAvaterTooltipKey) + 1),
+        );
+      }
     } catch (e) {
       handleApiError('update player avatar', e);
     } finally {
@@ -74,11 +80,40 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
     }
   }
 
+  void _onPlayerNameUpdated(String name) async {
+    if (_busy) return;
+    _playerName = name;
+
+    try {
+      setState(() => _busy = true);
+      await FirebaseRepository.updateName(name: name, gameId: gameInfo.gameId);
+
+      // Show tooltip if topic is not set
+      if (gameConfig.topic.isEmpty && isMaster) {
+        ShowcaseView.get().startShowCase(
+          _tooltipKeys.sublist(_tooltipKeys.indexOf(_playerNameTooltipKey) + 1),
+        );
+      }
+    } catch (e) {
+      handleApiError('update player name', e);
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
   void _onTopicUpdated(String topic) async {
     if (_busy) return;
+    final trimmedTopic = topic.trim();
     try {
       setState(() => _busy = true);
       await FirebaseRepository.updateTopic(gameId: gameInfo.gameId, topic: topic);
+
+      // Show tooltip for start button
+      if (isMaster && trimmedTopic.isNotEmpty) {
+        ShowcaseView.get().startShowCase(
+          _tooltipKeys.sublist(_tooltipKeys.indexOf(_topicTooltipKey) + 1),
+        );
+      }
     } catch (e) {
       handleApiError('update topic', e);
     } finally {
@@ -135,6 +170,24 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
   }
 
   @override
+  void initState() {
+    if (isMaster) {
+      // Show tooltips for master: Password, PlayerAvatar, PlayerName, Topic, StartButton
+      _tooltipKeys = [
+        _passwordTooltipKey,
+        _playerAvaterTooltipKey,
+        _playerNameTooltipKey,
+        _topicTooltipKey,
+        _startButtonTooltipKey,
+      ];
+    } else {
+      // Show tooltips for guest: PlayerAvatar, PlayerName
+      _tooltipKeys = [_playerAvaterTooltipKey, _playerNameTooltipKey];
+    }
+    super.initState();
+  }
+
+  @override
   void dispose() {
     _playerFocusNode.dispose();
     _topicFocusNode.dispose();
@@ -144,7 +197,7 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
   @override
   Widget build(BuildContext context) {
     return TooltipWrapper(
-      showcaseKeys: [_tooltipKeys[0]],
+      showcaseKeys: _tooltipKeys,
       child: Builder(
         builder: (context) {
           final l10n = AppLocalizations.of(context)!;
@@ -160,7 +213,11 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  GameInfoWidget(gameInfo: gameInfo, playerId: uid, tooltipKey: _tooltipKeys[0]),
+                  GameInfoWidget(
+                    gameInfo: gameInfo,
+                    playerId: uid,
+                    tooltipKey: isMaster ? _passwordTooltipKey : null,
+                  ),
                   PlayerListWidget(gameState: gameState, playerId: uid),
                   PlayerSettingWidget(
                     playerName: myInfo?.name ?? '',
@@ -168,6 +225,8 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
                     onUpdated: _onPlayerNameUpdated,
                     onTapAvatar: _onTapAvatar,
                     focusNode: _playerFocusNode,
+                    avaterTooltipKey: _playerAvaterTooltipKey,
+                    nameTooltipKey: _playerNameTooltipKey,
                   ),
                   if (isMaster)
                     GameMasterWidget(
@@ -175,6 +234,8 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
                       onUpdated: _onTopicUpdated,
                       onStartPressed: _isStartButtonEnabled ? _onStartPressed : null,
                       focusNode: _topicFocusNode,
+                      topicTooltipKey: _topicTooltipKey,
+                      startButtonTooltipKey: _startButtonTooltipKey,
                     ),
                   if (!isMaster) GuestWidget(topic: gameConfig.topic),
                 ],
