@@ -549,7 +549,7 @@ class _GameMasterWidgetState extends State<GameMasterWidget> {
             SizedBox(
               width: 120,
               child: RectangularTextButton(
-                label: AppLocalizations.of(context)!.chooseFromRecommendations,
+                label: AppLocalizations.of(context)!.chooseFromPresets,
                 onPressed: _onTapRecommendation,
               ),
             ),

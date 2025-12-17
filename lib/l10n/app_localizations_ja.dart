@@ -102,7 +102,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get kick => 'キック';
 
   @override
-  String get chooseFromRecommendations => 'おすすめ\nから選ぶ';
+  String get chooseFromPresets => 'おすすめ\nから選ぶ';
 
   @override
   String get cancel => '取消';

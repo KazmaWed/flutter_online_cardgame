@@ -39,7 +39,7 @@
   "kickPlayerTitle": "プレイヤーをキックする",
   "noPlayersMessage": "参加中のプレイヤーがいません",
   "kick": "キック",
-  "chooseFromRecommendations": "おすすめ\nから選ぶ",
+  "chooseFromPresets": "おすすめ\nから選ぶ",
   "cancel": "取消",
   "submit": "送信",
   "topic": "トピック",

@@ -62,8 +62,7 @@ import 'app_localizations_ja.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale)
-    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -71,8 +70,7 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate =
-      _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -93,10 +91,7 @@ abstract class AppLocalizations {
       ];
 
   /// A list of this localizations delegate's supported locales.
-  static const List<Locale> supportedLocales = <Locale>[
-    Locale('en'),
-    Locale('ja'),
-  ];
+  static const List<Locale> supportedLocales = <Locale>[Locale('en'), Locale('ja')];
 
   /// No description provided for @appTitle.
   ///
@@ -284,11 +279,11 @@ abstract class AppLocalizations {
   /// **'キック'**
   String get kick;
 
-  /// No description provided for @chooseFromRecommendations.
+  /// No description provided for @chooseFromPresets.
   ///
   /// In ja, this message translates to:
   /// **'おすすめ\nから選ぶ'**
-  String get chooseFromRecommendations;
+  String get chooseFromPresets;
 
   /// No description provided for @cancel.
   ///
@@ -621,8 +616,7 @@ abstract class AppLocalizations {
   String gameWatchError(String error);
 }
 
-class _AppLocalizationsDelegate
-    extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -631,8 +625,7 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['en', 'ja'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['en', 'ja'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
