@@ -1,10 +1,9 @@
-import 'package:web/web.dart' as web;
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pinput/pinput.dart';
+import 'package:web/web.dart' as web;
 
 import 'package:flutter_online_cardgame/components/barrier_container.dart';
 import 'package:flutter_online_cardgame/constants/app_constants.dart';
@@ -15,6 +14,7 @@ import 'package:flutter_online_cardgame/l10n/app_localizations.dart';
 import 'package:flutter_online_cardgame/model/game_info.dart';
 import 'package:flutter_online_cardgame/repository/firebase_repository.dart';
 import 'package:flutter_online_cardgame/screens/game_screen/game_initialize_screen.dart';
+import 'package:flutter_online_cardgame/util/string_util.dart';
 import 'package:flutter_online_cardgame/util/fade_page_route.dart';
 import 'package:flutter_online_cardgame/util/full_width_digit_formatter.dart';
 import 'package:flutter_online_cardgame/util/navigator_util.dart';
@@ -83,14 +83,10 @@ class _JoinGameScreenState extends State<JoinGameScreen> {
   }
 
   void _resetUrl() {
-    final uri = Uri.base;
-    if (uri.queryParameters.isNotEmpty) {
-      final newUri = uri
-          .replace(queryParameters: {})
-          .toString()
-          .substring(0, uri.toString().lastIndexOf('?'));
-      web.window.history.replaceState(null, '', newUri.toString());
-    }
+    final current = Uri.base.toString();
+    final updated = current.removePin();
+    if (current == updated) return;
+    web.window.history.replaceState(null, '', updated);
   }
 
   @override
