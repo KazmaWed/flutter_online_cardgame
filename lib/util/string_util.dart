@@ -23,13 +23,26 @@ extension StringExtension on String {
     // Parse the current URL
     final uri = Uri.parse(this);
 
+    // Preserve existing query parameters (e.g., campaign codes) and append the new pin
+    final queryParameters = Map<String, String>.from(uri.queryParameters);
+    queryParameters['pin'] = pinStr;
+
     // Create a new URI with only the scheme, port, and host (no path, no hash)
     final baseUri = Uri(scheme: uri.scheme, host: uri.host, port: uri.port);
 
     // Add the pin query parameter
-    final newUri = baseUri.replace(queryParameters: {'pin': pinStr});
+    final newUri = baseUri.replace(queryParameters: queryParameters);
 
     return newUri.toString();
+  }
+
+  String removePin() {
+    final uri = Uri.parse(this);
+    if (!uri.queryParameters.containsKey('pin')) return toString();
+
+    final params = Map<String, String>.from(uri.queryParameters)..remove('pin');
+    final updated = uri.replace(queryParameters: params.isEmpty ? {} : params).toString();
+    return updated.endsWith('?') ? updated.substring(0, updated.length - 1) : updated;
   }
 }
 
@@ -40,7 +53,7 @@ extension IntExtension on int {
     if (this >= 11 && this <= 13) {
       return 'th';
     }
-    
+
     // Handle regular cases based on last digit
     switch (this % 10) {
       case 1:
@@ -53,7 +66,7 @@ extension IntExtension on int {
         return 'th';
     }
   }
-  
+
   /// Returns the number with ordinal suffix (1st, 2nd, 3rd, etc.)
   String get ordinal => '$this$ordinalSuffix';
 }
