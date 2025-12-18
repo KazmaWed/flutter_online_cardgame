@@ -1,32 +1,58 @@
 {
-    "Standard": [
-        "Big things",
+    "Icebreaker": [
+        "Something big",
         "Cute animals",
-        "Admired heroes/heroines",
-        "Food you want to eat at celebrations",
+        "Strong animals",
+        "A happy space or moment",
+        "A place you want to visit someday",
+        "A dish you'd like for a celebration",
+        "A celebrity or character you admire",
+        "A celebrity or character you want to be friends with",
+        "Something that is essential in your daily life",
+        "Something you often buy at convenience stores",
+        "Something that smells great",
+        "Something you keep forgetting",
+        "Something you always procrastinate"
+    ],
+    "Casual": [
+        "Something that gets you hyped",
+        "Popular sports",
+        "Classic childhood dreams",
+        "Things that scare you",
         "What you'd do if you won the lottery",
-        "Essential items for daily life",
-        "Things you often buy at 7-Eleven",
-        "Places you want to visit someday",
-        "Beautiful things"
+        "Things that feel outdated",
+        "A superpower you'd like to have",
+        "A phrase a super motivated person would say",
+        "An animal you'd like to be if you were reborn",
+        "Something that relieves your stress",
+        "Things that make you sleepy",
+        "Nostalgic games or toys"
     ],
     "Romance": [
-        "Where you want to go on a first date",
-        "Traits of people who seem popular",
-        "Words you'd love to hear from your crush",
-        "Pleasant surprises from your partner",
-        "Signs that make you suspect cheating",
-        "Moments when love grows cold"
+        "A place you'd like to go on a first date",
+        "Traits of someone who seems really attractive",
+        "Words you'd love to hear from someone you like",
+        "A surprise from your partner that would make you happy",
+        "Behavior that makes you suspect your partner is cheating",
+        "The moment when your feelings cool off",
+        "Your ideal love confession scenario",
+        "Your ideal date plan",
+        "Something you hate when your partner does it",
+        "A plot twist you often see in romance dramas",
+        "A moment you realize your love is one-sided"
     ],
     "Funny": [
-        "Smelly things",
-        "People you can't look away from",
-        "Unbelievable stories",
-        "Events that make you panic",
-        "Pranks that aren't funny",
-        "Times you can't concentrate at all",
-        "Things you desperately want",
-        "Weird things found at friend's house",
-        "Your personal quirks"
+        "Words elementary school kids love to say",
+        "What you'd do if you could use magic",
+        "Someone you can't take your eyes off",
+        "An unbelievable story",
+        "Something that makes you panic",
+        "A situation where you can't focus at all",
+        "A remark that's likely to cause a scandal",
+        "An incident that make me think, \"I'm gonna quit!\"",
+        "A prank that's not funny",
+        "Something you want more than anything",
+        "Something crazy you saw at a friend's house",
+        "A personal obsession no one else understands"
     ]
 }
