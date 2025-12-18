@@ -7,6 +7,7 @@ class RowCard extends StatelessWidget {
   final List<Widget> children;
   final double padding;
   final double spacing;
+  final double cornerRadius = 4.0;
 
   const RowCard({
     super.key,
@@ -19,6 +20,7 @@ class RowCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(cornerRadius)),
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.all(padding),

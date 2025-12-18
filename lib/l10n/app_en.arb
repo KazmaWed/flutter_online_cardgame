@@ -31,7 +31,7 @@
   "recommendedTopics": "Recommended Topics",
   "notSet": "Not Set",
   "setTopicInstruction": "Enter a topic for everyone to discuss",
-  "setTopicShowcaseDescription": "Enter a topic for everyone to discuss\nYou can also pick from the recommendations",
+  "setTopicShowcaseDescription": "Enter a topic for everyone to discuss\nYou can also pick from the presets",
   "topicLabel": "Topic",
   "startGame": "Start Game",
   

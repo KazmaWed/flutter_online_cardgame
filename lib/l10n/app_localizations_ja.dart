@@ -39,7 +39,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get password => 'パスワード';
 
   @override
-  String get sharePasswordInstruction => '他のプレイヤーにパスワードを伝えるか\n招待URLをコピーして共有してください';
+  String get sharePasswordInstruction =>
+      '他のプレイヤーにパスワードを伝えるか\n招待URLをコピーして共有してください';
 
   @override
   String get urlCopiedMessage => '招待URLをコピーしました';
@@ -48,7 +49,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get tapToCopyInviteUrl => 'タップで招待URLをコピー';
 
   @override
-  String get copyInviteShowcaseDescription => 'タップで招待URLをコピーして、ほかのプレイヤーに共有しましょう';
+  String get copyInviteShowcaseDescription =>
+      'タップで招待URLをコピーして、ほかのプレイヤーに共有しましょう';
 
   @override
   String get you => 'あなた';
@@ -84,7 +86,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get setTopicInstruction => 'みんなで話し合うトピックを入力してください';
 
   @override
-  String get setTopicShowcaseDescription => 'みんなで話し合うトピックを入力してください\nおすすめからも選べます';
+  String get setTopicShowcaseDescription =>
+      'みんなで話し合うトピックを入力してください\nおすすめからも選べます';
 
   @override
   String get topicLabel => 'トピック';
