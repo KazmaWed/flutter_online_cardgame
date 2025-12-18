@@ -50,13 +50,15 @@ flutter:
     - assets/
     - assets/images/
   fonts:
-    - family: MochiyPopPOne
-      fonts:
-        - asset: assets/fonts/MochiyPopPOne-Regular.ttf
-          weight: 400
     - family: ZenMaruGothic
       fonts:
         - asset: assets/fonts/ZenMaruGothic-Regular.ttf
           weight: 400
         - asset: assets/fonts/ZenMaruGothic-Bold.ttf
+          weight: 700
+    - family: NotoSansJP
+      fonts:
+        - asset: assets/fonts/NotoSansJP-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/NotoSansJP-Black.ttf
           weight: 700

@@ -68,7 +68,7 @@ class _ScoreWidgetState extends State<ScoreWidget> with SingleTickerProviderStat
       context,
     ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold);
     final topicStyle = Theme.of(context).textTheme.titleLarge?.copyWith(
-      fontFamily: AppFonts.modhyPopPOne,
+      fontFamily: AppFonts.notoSansJP,
       fontWeight: FontWeight.bold,
       color: Theme.of(context).colorScheme.primary,
     );

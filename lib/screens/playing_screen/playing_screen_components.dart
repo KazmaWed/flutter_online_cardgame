@@ -27,7 +27,7 @@ class TopicCardWidget extends StatelessWidget {
       context,
     ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold);
     final topicStyle = Theme.of(context).textTheme.headlineMedium?.copyWith(
-      fontFamily: AppFonts.modhyPopPOne,
+      fontFamily: AppFonts.notoSansJP,
       fontWeight: FontWeight.bold,
       color: Theme.of(context).colorScheme.primary,
     );
@@ -203,7 +203,8 @@ class SubmitWidget extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final baseStyle = Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold);
     final boldStyle = Theme.of(context).textTheme.titleLarge?.copyWith(
-      fontFamily: AppFonts.modhyPopPOne,
+      fontFamily: AppFonts.notoSansJP,
+      fontWeight: FontWeight.bold,
       color: Theme.of(context).colorScheme.primary,
     );
     final descriptionStyle = Theme.of(context).textTheme.bodyLarge;
