@@ -395,8 +395,6 @@ class PlayerResultHeader extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final isNarrow = screenWidth < AppDimentions.screenWidthNarrow;
 
-    final text = isNarrow ? "${l10n.hintHeader}/${l10n.playerHeader}" : l10n.hintHeader;
-
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: AppDimentions.paddingSmall,
@@ -411,7 +409,7 @@ class PlayerResultHeader extends StatelessWidget {
               width: nameColumnWidth,
               child: Text(l10n.playerHeader, style: style),
             ),
-          Expanded(flex: 3, child: Text(text, style: style)),
+          Expanded(flex: 3, child: Text(l10n.hintHeader, style: style)),
           Container(
             alignment: Alignment.center,
             width: AppDimentions.resultColumnValue,

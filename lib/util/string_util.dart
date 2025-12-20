@@ -44,6 +44,13 @@ extension StringExtension on String {
     final updated = uri.replace(queryParameters: params.isEmpty ? {} : params).toString();
     return updated.endsWith('?') ? updated.substring(0, updated.length - 1) : updated;
   }
+
+  /// Converts avatar filename (e.g., "avatar01.jpg") to zero-based index (0).
+  /// Returns 0 if the filename doesn't match the expected pattern.
+  int toAvatarIndex() {
+    final match = RegExp(r'avatar(\d{2})\.jpg$').firstMatch(this);
+    return match == null ? 0 : int.parse(match.group(1)!) - 1;
+  }
 }
 
 extension IntExtension on int {

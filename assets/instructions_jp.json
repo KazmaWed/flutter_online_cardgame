@@ -1,22 +1,22 @@
 [
     {
         "title": "このゲームについて",
-        "image": "assets/images/instruction00_jp.png",
+        "image": "assets/images/instruction01_jp.png",
         "description": "どんぐりの背比べゲームは、プレイヤー同士で話し合いをしながらクリアを目指す「協力型」のゲームです。\n参加者は一人一台ずつ端末を用意して、全員が通話や会話ができる環境でお楽しみ下さい。\n推奨人数は4人以上で、最大12人まで参加可能です。"
     },
     {
         "title": "遊び方１",
-        "image": "assets/images/instruction01_jp.png",
+        "image": "assets/images/instruction02_jp.png",
         "description": "ゲーム開始前に「トピック」が発表されます。ゲームが開始したら、参加者にはそれぞれの「数字」が配られます。ゲーム中は自分の数字を口に出してはいけません。\n配られる数字は1〜100です。"
     },
     {
         "title": "遊び方２",
-        "image": "assets/images/instruction02_jp.png",
+        "image": "assets/images/instruction03_jp.png",
         "description": "ここからがゲームの本番です。\n参加者はそれぞれ、「トピック」に沿った表現で、自分の数字にふさわしい「ヒント」を出し合います。\n例えばトピックが「大きいもの」で、あなたの数字が100なら、「宇宙」など思いつく限り大きなものをヒントにしましょう。"
     },
     {
         "title": "遊び方３",
-        "image": "assets/images/instruction03_jp.png",
+        "image": "assets/images/instruction04_jp.png",
         "description": "ヒントが出揃ったら、話し合いのスタートです。\n自分の数字が小さいと思う人から順番に「送信」してください。全員が順番に送信をし終えたら終了です。\n送信した順番が実際の数字の順番と合っていたらゲームクリアです！"
     }
 ]
