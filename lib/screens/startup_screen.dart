@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:web/web.dart' as web;
 
+import 'package:flutter_online_cardgame/constants/app_constants.dart';
 import 'package:flutter_online_cardgame/model/functions_responses/init_player_response.dart';
 import 'package:flutter_online_cardgame/repository/firebase_repository.dart';
 import 'package:flutter_online_cardgame/screens/common/progress_screen.dart';
@@ -83,7 +84,7 @@ class _StartupScreenState extends State<StartupScreen> {
     });
   }
 
-  final pin = Uri.base.queryParameters['pin'];
+  final pin = Uri.base.queryParameters[AppConstants.queryParamPin];
 
   @override
   Widget build(BuildContext context) {

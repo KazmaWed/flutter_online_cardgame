@@ -5,6 +5,7 @@ import 'package:flutter_online_cardgame/components/avatar_container.dart';
 import 'package:flutter_online_cardgame/components/barrier_container.dart';
 import 'package:flutter_online_cardgame/components/base_scaffold.dart';
 import 'package:flutter_online_cardgame/components/matching_tooltip_wrapper.dart';
+import 'package:flutter_online_cardgame/constants/app_constants.dart';
 import 'package:flutter_online_cardgame/constants/app_dimentions.dart';
 import 'package:flutter_online_cardgame/l10n/app_localizations.dart';
 import 'package:flutter_online_cardgame/model/game_config.dart';
@@ -68,7 +69,7 @@ class _PlayingScreenState extends State<PlayingScreen> with GameScreenMixin {
   }
 
   String _getOrdinal(int number, AppLocalizations l10n) {
-    if (l10n.localeName == 'ja') {
+    if (l10n.localeName == AppConstants.japaneseCode) {
       return '$number番目に';
     }
 

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
+import 'package:flutter_online_cardgame/constants/app_constants.dart';
 
 extension StringExtension on String {
   /// Returns a substring of the string, or the entire string if the length is less than or equal to [length].
@@ -25,21 +26,31 @@ extension StringExtension on String {
 
     // Extract language from path or query parameter
     String? langCode;
+
+    // Check path segments first
     if (uri.pathSegments.isNotEmpty) {
       final firstSegment = uri.pathSegments.first.toLowerCase();
-      if (firstSegment == 'jp' || firstSegment == 'ja') {
-        langCode = 'ja';
-      } else {
-        langCode = 'en';
+      if (AppConstants.japaneseCodes.contains(firstSegment)) {
+        langCode = AppConstants.japaneseCode;
+      } else if (firstSegment == AppConstants.englishCode) {
+        langCode = AppConstants.englishCode;
       }
     }
+
     // Fallback to query parameter if no path language
-    langCode ??= uri.queryParameters['lang'];
+    if (langCode == null) {
+      final langParam = uri.queryParameters[AppConstants.queryParamLang]?.toLowerCase();
+      if (AppConstants.japaneseCodes.contains(langParam)) {
+        langCode = AppConstants.japaneseCode;
+      } else if (langParam == AppConstants.englishCode) {
+        langCode = AppConstants.englishCode;
+      }
+    }
 
     // Preserve existing query parameters (e.g., campaign codes) but remove 'lang'
     final queryParameters = Map<String, String>.from(uri.queryParameters);
-    queryParameters.remove('lang');
-    queryParameters['pin'] = pinStr;
+    queryParameters.remove(AppConstants.queryParamLang);
+    queryParameters[AppConstants.queryParamPin] = pinStr;
 
     // Build path with language code if present
     final pathSegments = langCode != null ? [langCode] : <String>[];
@@ -58,9 +69,9 @@ extension StringExtension on String {
 
   String removePin() {
     final uri = Uri.parse(this);
-    if (!uri.queryParameters.containsKey('pin')) return toString();
+    if (!uri.queryParameters.containsKey(AppConstants.queryParamPin)) return toString();
 
-    final params = Map<String, String>.from(uri.queryParameters)..remove('pin');
+    final params = Map<String, String>.from(uri.queryParameters)..remove(AppConstants.queryParamPin);
     final updated = uri.replace(queryParameters: params.isEmpty ? {} : params).toString();
     return updated.endsWith('?') ? updated.substring(0, updated.length - 1) : updated;
   }
@@ -76,26 +87,40 @@ extension StringExtension on String {
   /// Returns normalized URL string
   String normalizeLanguagePath(String localeCode) {
     final uri = Uri.parse(this);
+    final queryParameters = Map<String, String>.from(uri.queryParameters);
 
     // Extract language from path or query parameter
     String? langCode;
+
+    // Check path segments
     if (uri.pathSegments.isNotEmpty) {
       final firstSegment = uri.pathSegments.first.toLowerCase();
-      if (firstSegment == 'jp' || firstSegment == 'ja') {
-        langCode = 'ja';
-      } else {
-        langCode = 'en';
+      if (AppConstants.japaneseCodes.contains(firstSegment)) {
+        langCode = AppConstants.japaneseCode;
+      } else if (firstSegment == AppConstants.englishCode) {
+        langCode = AppConstants.englishCode;
       }
     }
-    langCode ??= uri.queryParameters['lang'];
-    langCode ??= localeCode == 'en' ? 'en' : 'ja';
+
+    // Fallback to query parameter
+    if (langCode == null) {
+      final langParam = queryParameters[AppConstants.queryParamLang]?.toLowerCase();
+      if (AppConstants.japaneseCodes.contains(langParam)) {
+        langCode = AppConstants.japaneseCode;
+      } else if (langParam == AppConstants.englishCode) {
+        langCode = AppConstants.englishCode;
+      }
+    }
+
+    // Use provided locale code as final fallback
+    final normalizedLocale = localeCode.toLowerCase();
+    langCode ??= (AppConstants.japaneseCodes.contains(normalizedLocale) ? AppConstants.japaneseCode : AppConstants.englishCode);
 
     // Create normalized URI
     final pathSegments = [langCode];
 
     // Preserve existing query parameters
-    final queryParameters = Map<String, String>.from(uri.queryParameters);
-    queryParameters.remove('lang');
+    queryParameters.remove(AppConstants.queryParamLang);
 
     final newUri = Uri(
       scheme: uri.scheme,

@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_online_cardgame/constants/app_constants.dart';
 
 class LocaleNotifier extends StateNotifier<Locale> {
   LocaleNotifier() : super(_getInitialLocale()) {
@@ -12,12 +13,16 @@ class LocaleNotifier extends StateNotifier<Locale> {
     // Get browser locale as default
     if (kIsWeb) {
       final browserLocale = ui.PlatformDispatcher.instance.locale;
-      if (browserLocale.languageCode == 'en') {
-        return const Locale('en');
+      // Japanese if locale is ja or jp, otherwise English
+      final langCode = browserLocale.languageCode.toLowerCase();
+      if (AppConstants.japaneseCodes.contains(langCode)) {
+        return const Locale(AppConstants.japaneseCode);
+      } else {
+        return const Locale(AppConstants.englishCode);
       }
     }
-    // Default to Japanese for all other cases
-    return const Locale('ja');
+    // Default to Japanese for non-web platforms
+    return const Locale(AppConstants.japaneseCode);
   }
 
   void _initializeLocale() {
@@ -29,24 +34,30 @@ class LocaleNotifier extends StateNotifier<Locale> {
       String? langFromPath;
       if (pathSegments.isNotEmpty) {
         final firstSegment = pathSegments.first.toLowerCase();
-        if (firstSegment == 'jp' || firstSegment == 'ja') {
-          langFromPath = 'ja';
-        } else if (firstSegment == 'en') {
-          langFromPath = 'en';
+        if (AppConstants.japaneseCodes.contains(firstSegment)) {
+          langFromPath = AppConstants.japaneseCode;
+        } else if (firstSegment == AppConstants.englishCode) {
+          langFromPath = AppConstants.englishCode;
         }
       }
-      // Check query parameters (e.g., ?lang=ja, ?lang=en)
-      final langParam = uri.queryParameters['lang'];
+      // Check query parameters (e.g., ?lang=ja, ?lang=jp, ?lang=en)
+      String? langFromQuery;
+      final langParam = uri.queryParameters[AppConstants.queryParamLang]?.toLowerCase();
+      if (AppConstants.japaneseCodes.contains(langParam)) {
+        langFromQuery = AppConstants.japaneseCode;
+      } else if (langParam == AppConstants.englishCode) {
+        langFromQuery = AppConstants.englishCode;
+      }
 
-      final languageCode = langFromPath ?? langParam;
+      final languageCode = langFromPath ?? langFromQuery;
       if (languageCode != null) {
         // URL parameter takes precedence
         switch (languageCode.toLowerCase()) {
-          case 'ja':
-            state = const Locale('ja');
+          case AppConstants.japaneseCode:
+            state = const Locale(AppConstants.japaneseCode);
             break;
-          case 'en':
-            state = const Locale('en');
+          case AppConstants.englishCode:
+            state = const Locale(AppConstants.englishCode);
             break;
           default:
             break;
@@ -54,9 +65,11 @@ class LocaleNotifier extends StateNotifier<Locale> {
       } else {
         // No URL parameter, use browser locale detection
         final browserLocale = ui.PlatformDispatcher.instance.locale;
-        if (browserLocale.languageCode == 'ja') {
+        final langCode = browserLocale.languageCode.toLowerCase();
+        if (AppConstants.japaneseCodes.contains(langCode)) {
+          // Keep default ja
         } else {
-          state = const Locale('en');
+          state = const Locale(AppConstants.englishCode);
         }
       }
     }
@@ -67,10 +80,10 @@ class LocaleNotifier extends StateNotifier<Locale> {
   }
 
   void toggleLanguage() {
-    if (state.languageCode == 'ja') {
-      state = const Locale('en');
+    if (state.languageCode == AppConstants.japaneseCode) {
+      state = const Locale(AppConstants.englishCode);
     } else {
-      state = const Locale('ja');
+      state = const Locale(AppConstants.japaneseCode);
     }
   }
 }

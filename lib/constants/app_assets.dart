@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_online_cardgame/constants/app_constants.dart';
 
 class AppAssets {
   // Avatar Images
@@ -9,30 +10,34 @@ class AppAssets {
 
   static String logoForLocale(BuildContext context) {
     final locale = Localizations.localeOf(context);
-    final localeCode = locale.languageCode;
-    return localeCode == 'ja' ? 'assets/images/logo_jp.png' : 'assets/images/logo_en.png';
+    final localeCode = locale.languageCode.toLowerCase();
+    return AppConstants.japaneseCodes.contains(localeCode)
+        ? 'assets/images/logo_jp.png'
+        : 'assets/images/logo_en.png';
   }
 
   // Instruction Images
   static String instructionImage(int index, BuildContext context) {
     final locale = Localizations.localeOf(context);
-    final localeCode = locale.languageCode;
-    final suffix = localeCode == 'ja' ? '_jp' : '_en';
+    final localeCode = locale.languageCode.toLowerCase();
+    final suffix = AppConstants.japaneseCodes.contains(localeCode) ? '_jp' : '_en';
     return 'assets/images/instruction${(index + 1).toString().padLeft(2, '0')}$suffix.png';
   }
 
   // Instruction JSON Files
   static String instructionJson(BuildContext context) {
     final locale = Localizations.localeOf(context);
-    final localeCode = locale.languageCode;
-    return localeCode == 'ja' ? 'assets/instructions_jp.json' : 'assets/instructions_en.json';
+    final localeCode = locale.languageCode.toLowerCase();
+    return AppConstants.japaneseCodes.contains(localeCode)
+        ? 'assets/instructions_jp.json'
+        : 'assets/instructions_en.json';
   }
 
   // Topics JSON Files
   static String topicsJson(BuildContext context) {
     final locale = Localizations.localeOf(context);
-    final localeCode = locale.languageCode;
-    return localeCode == 'ja'
+    final localeCode = locale.languageCode.toLowerCase();
+    return AppConstants.japaneseCodes.contains(localeCode)
         ? 'assets/topics_jp.json'
         : 'assets/topics_en.json';
   }
