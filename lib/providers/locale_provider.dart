@@ -23,33 +23,41 @@ class LocaleNotifier extends StateNotifier<Locale> {
   void _initializeLocale() {
     if (kIsWeb) {
       final uri = Uri.base;
+
+      // Check path segments (e.g., /jp, /en)
+      final pathSegments = uri.pathSegments;
+      String? langFromPath;
+      if (pathSegments.isNotEmpty) {
+        final firstSegment = pathSegments.first.toLowerCase();
+        if (firstSegment == 'jp' || firstSegment == 'ja') {
+          langFromPath = 'ja';
+        } else if (firstSegment == 'en') {
+          langFromPath = 'en';
+        }
+      }
+      // Check query parameters (e.g., ?lang=ja, ?lang=en)
       final langParam = uri.queryParameters['lang'];
-      
-      if (langParam != null) {
+
+      final languageCode = langFromPath ?? langParam;
+      if (languageCode != null) {
         // URL parameter takes precedence
-        switch (langParam.toLowerCase()) {
-          case 'en':
-          case 'english':
-            state = const Locale('en');
-            break;
+        switch (languageCode.toLowerCase()) {
           case 'ja':
-          case 'japanese':
-          case 'jp':
             state = const Locale('ja');
             break;
+          case 'en':
+            state = const Locale('en');
+            break;
           default:
-            // Keep current state (browser detected or default)
             break;
         }
       } else {
         // No URL parameter, use browser locale detection
         final browserLocale = ui.PlatformDispatcher.instance.locale;
-        if (browserLocale.languageCode == 'en') {
+        if (browserLocale.languageCode == 'ja') {
+        } else {
           state = const Locale('en');
-        } else if (browserLocale.languageCode == 'ja') {
-          state = const Locale('ja');
         }
-        // For other languages, keep default Japanese locale
       }
     }
   }

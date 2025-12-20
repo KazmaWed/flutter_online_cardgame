@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:web/web.dart' as web;
 
 import 'package:flutter_online_cardgame/model/functions_responses/init_player_response.dart';
 import 'package:flutter_online_cardgame/repository/firebase_repository.dart';
@@ -9,6 +11,7 @@ import 'package:flutter_online_cardgame/screens/join_game_screen.dart';
 import 'package:flutter_online_cardgame/screens/top_screen.dart';
 import 'package:flutter_online_cardgame/services/image_preloader_service.dart';
 import 'package:flutter_online_cardgame/util/fade_page_route.dart';
+import 'package:flutter_online_cardgame/util/string_util.dart';
 
 class StartupScreen extends StatefulWidget {
   const StartupScreen({super.key});
@@ -18,6 +21,29 @@ class StartupScreen extends StatefulWidget {
 }
 
 class _StartupScreenState extends State<StartupScreen> {
+  bool _urlNormalized = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_urlNormalized) {
+      _normalizeUrl();
+      _urlNormalized = true;
+    }
+  }
+
+  void _normalizeUrl() {
+    if (kIsWeb) {
+      final currentUrl = web.window.location.href;
+      final locale = Localizations.localeOf(context).languageCode;
+      final normalizedUrl = currentUrl.normalizeLanguagePath(locale);
+
+      if (currentUrl != normalizedUrl) {
+        web.window.history.replaceState(null, '', normalizedUrl);
+      }
+    }
+  }
+
   Future<InitPlayerResponse> _initPlayer() async {
     return FirebaseRepository.initPlayer();
   }
