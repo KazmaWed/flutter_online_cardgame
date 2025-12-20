@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
+import 'package:flutter_online_cardgame/constants/app_constants.dart';
 
 class LanguageUtil {
   /// Updates the URL with the specified language parameter
@@ -7,8 +8,8 @@ class LanguageUtil {
     if (kIsWeb) {
       final uri = Uri.base;
       final newParams = Map<String, String>.from(uri.queryParameters);
-      newParams['lang'] = languageCode;
-      
+      newParams[AppConstants.queryParamLang] = languageCode;
+
       final newUri = uri.replace(queryParameters: newParams);
       // Note: In a real app, you might want to use browser history management
       // This is a basic implementation
@@ -17,11 +18,11 @@ class LanguageUtil {
       }
     }
   }
-  
+
   /// Gets the current language from URL parameters
   static String? getLanguageFromUrl() {
     if (kIsWeb) {
-      return Uri.base.queryParameters['lang'];
+      return Uri.base.queryParameters[AppConstants.queryParamLang];
     }
     return null;
   }
@@ -32,15 +33,15 @@ class LanguageUtil {
       final browserLocale = ui.PlatformDispatcher.instance.locale;
       return browserLocale.languageCode;
     }
-    return 'ja'; // Default fallback
+    return AppConstants.japaneseCode; // Default fallback
   }
-  
+
   /// Gets the display name for a language code
   static String getLanguageDisplayName(String languageCode) {
     switch (languageCode) {
-      case 'en':
+      case AppConstants.englishCode:
         return 'English';
-      case 'ja':
+      case AppConstants.japaneseCode:
         return '日本語';
       default:
         return languageCode;

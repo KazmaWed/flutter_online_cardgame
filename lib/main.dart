@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:flutter_online_cardgame/constants/app_constants.dart';
 import 'package:flutter_online_cardgame/constants/app_fonts.dart';
 import 'package:flutter_online_cardgame/firebase_options.dart';
 import 'package:flutter_online_cardgame/l10n/app_localizations.dart';
@@ -63,8 +64,8 @@ class MyApp extends ConsumerWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [
-        Locale('ja'),
-        Locale('en'),
+        Locale(AppConstants.japaneseCode),
+        Locale(AppConstants.englishCode),
       ],
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.brown).copyWith(surface: Colors.white),
