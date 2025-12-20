@@ -4,7 +4,7 @@ class AppDimentions {
 
   static const double screenWidth = 720.0; // 例: デフォルトの画面幅
   static const double screenWidthThin = 540.0; // 例: スリムな画面幅
-  static const double screenWidthNarrow = 600.0; // 例: ナロウな画面幅
+  static const double screenWidthNarrow = 640.0; // 例: ナロウな画面幅
   static const double screenWidthExtraThin = 360.0; // 例: エクストラスリムな画面幅
   static const double imageSize = 480.0; // 例: デフォルトの画面高さ
 

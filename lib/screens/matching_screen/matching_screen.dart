@@ -16,6 +16,7 @@ import 'package:flutter_online_cardgame/screens/top_screen.dart';
 import 'package:flutter_online_cardgame/util/cookie_helper.dart';
 import 'package:flutter_online_cardgame/util/fade_page_route.dart';
 import 'package:flutter_online_cardgame/util/navigator_util.dart';
+import 'package:flutter_online_cardgame/util/string_util.dart';
 
 class MatchingScreen extends StatefulWidget {
   const MatchingScreen({super.key, required this.gameInfo, required this.gameState});
@@ -66,8 +67,7 @@ class _MatchingScreenState extends State<MatchingScreen> with GameScreenMixin {
     if (_busy) return;
     try {
       setState(() => _busy = true);
-      final match = RegExp(r'avatar(\d{2})\.jpg$').firstMatch(avatarFileName);
-      final avatarIndex = match != null ? int.parse(match.group(1)!) : 0;
+      final avatarIndex = avatarFileName.toAvatarIndex();
       await FirebaseRepository.updateAvatar(avatar: avatarIndex, gameId: gameInfo.gameId);
 
       // Show name tooltip if player name is not set

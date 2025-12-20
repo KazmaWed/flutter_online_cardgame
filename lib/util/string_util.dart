@@ -23,15 +23,35 @@ extension StringExtension on String {
     // Parse the current URL
     final uri = Uri.parse(this);
 
-    // Preserve existing query parameters (e.g., campaign codes) and append the new pin
+    // Extract language from path or query parameter
+    String? langCode;
+    if (uri.pathSegments.isNotEmpty) {
+      final firstSegment = uri.pathSegments.first.toLowerCase();
+      if (firstSegment == 'jp' || firstSegment == 'ja') {
+        langCode = 'ja';
+      } else {
+        langCode = 'en';
+      }
+    }
+    // Fallback to query parameter if no path language
+    langCode ??= uri.queryParameters['lang'];
+
+    // Preserve existing query parameters (e.g., campaign codes) but remove 'lang'
     final queryParameters = Map<String, String>.from(uri.queryParameters);
+    queryParameters.remove('lang');
     queryParameters['pin'] = pinStr;
 
-    // Create a new URI with only the scheme, port, and host (no path, no hash)
-    final baseUri = Uri(scheme: uri.scheme, host: uri.host, port: uri.port);
+    // Build path with language code if present
+    final pathSegments = langCode != null ? [langCode] : <String>[];
 
-    // Add the pin query parameter
-    final newUri = baseUri.replace(queryParameters: queryParameters);
+    // Create a new URI with language in path
+    final newUri = Uri(
+      scheme: uri.scheme,
+      host: uri.host,
+      port: uri.port,
+      pathSegments: pathSegments,
+      queryParameters: queryParameters.isEmpty ? null : queryParameters,
+    );
 
     return newUri.toString();
   }
@@ -43,6 +63,49 @@ extension StringExtension on String {
     final params = Map<String, String>.from(uri.queryParameters)..remove('pin');
     final updated = uri.replace(queryParameters: params.isEmpty ? {} : params).toString();
     return updated.endsWith('?') ? updated.substring(0, updated.length - 1) : updated;
+  }
+
+  /// Converts avatar filename (e.g., "avatar01.jpg") to zero-based index (0).
+  /// Returns 0 if the filename doesn't match the expected pattern.
+  int toAvatarIndex() {
+    final match = RegExp(r'avatar(\d{2})\.jpg$').firstMatch(this);
+    return match == null ? 0 : int.parse(match.group(1)!) - 1;
+  }
+
+  /// Normalizes URL to have language code in path (e.g., /ja or /en)
+  /// Returns normalized URL string
+  String normalizeLanguagePath(String localeCode) {
+    final uri = Uri.parse(this);
+
+    // Extract language from path or query parameter
+    String? langCode;
+    if (uri.pathSegments.isNotEmpty) {
+      final firstSegment = uri.pathSegments.first.toLowerCase();
+      if (firstSegment == 'jp' || firstSegment == 'ja') {
+        langCode = 'ja';
+      } else {
+        langCode = 'en';
+      }
+    }
+    langCode ??= uri.queryParameters['lang'];
+    langCode ??= localeCode == 'en' ? 'en' : 'ja';
+
+    // Create normalized URI
+    final pathSegments = [langCode];
+
+    // Preserve existing query parameters
+    final queryParameters = Map<String, String>.from(uri.queryParameters);
+    queryParameters.remove('lang');
+
+    final newUri = Uri(
+      scheme: uri.scheme,
+      host: uri.host,
+      port: uri.port,
+      pathSegments: pathSegments,
+      queryParameters: queryParameters.isEmpty ? null : queryParameters,
+    );
+
+    return newUri.toString();
   }
 }
 

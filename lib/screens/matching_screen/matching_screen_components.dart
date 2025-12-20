@@ -388,12 +388,12 @@ class AvatarSelectDialog extends StatelessWidget {
             Text(l10n.selectAvatar, style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             SizedBox(
-              width: 480,
+              width: 360,
               child: GridView.builder(
                 shrinkWrap: true,
                 itemCount: avatarList.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
+                  crossAxisCount: 3,
                   mainAxisSpacing: AppDimentions.paddingSmall,
                   crossAxisSpacing: AppDimentions.paddingSmall,
                   childAspectRatio: 1,
