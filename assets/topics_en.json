@@ -2,7 +2,7 @@
     "Icebreaker": [
         "Something big",
         "Cute animals",
-        "Strong animals",
+        "Popular animals found in zoos",
         "A happy space or moment",
         "A place you want to visit someday",
         "A dish you'd like for a celebration",
@@ -11,10 +11,11 @@
         "Something that is essential in your daily life",
         "Something you often buy at convenience stores",
         "Something that smells great",
-        "Something you keep forgetting",
         "Something you always procrastinate"
     ],
     "Casual": [
+        "Words a teacher would often say",
+        "Actions that would get you scolded by a teacher",
         "Something that gets you hyped",
         "Popular sports",
         "Classic childhood dreams",
@@ -29,8 +30,8 @@
         "Nostalgic games or toys"
     ],
     "Romance": [
+        "Something you only do for someone you like",
         "A place you'd like to go on a first date",
-        "Traits of someone who seems really attractive",
         "Words you'd love to hear from someone you like",
         "A surprise from your partner that would make you happy",
         "Behavior that makes you suspect your partner is cheating",
@@ -43,6 +44,7 @@
     ],
     "Funny": [
         "Words elementary school kids love to say",
+        "Words a 5-year-old kid wouldn't say",
         "What you'd do if you could use magic",
         "Someone you can't take your eyes off",
         "An unbelievable story",
