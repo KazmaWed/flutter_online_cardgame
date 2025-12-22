@@ -105,7 +105,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get kick => 'Kick';
 
   @override
-  String get chooseFromPresets => 'Choose from\npresets';
+  String get chooseFromPresets => 'Presets';
 
   @override
   String get cancel => 'Cancel';

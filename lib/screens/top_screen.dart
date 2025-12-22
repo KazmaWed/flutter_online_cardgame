@@ -25,6 +25,9 @@ class TopScreen extends StatefulWidget {
 class _TopScreenState extends State<TopScreen> {
   final TextEditingController _controller = TextEditingController();
 
+  final _blue = Colors.blueGrey;
+  final _githubUrl = 'https://github.com/KazmaWed/flutter_online_cardgame';
+
   bool _isLoggedIn = FirebaseRepository.isLoggedIn;
   bool _busy = false;
 
@@ -86,10 +89,10 @@ class _TopScreenState extends State<TopScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    final linkTextStyle = Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.blue);
+    final linkTextStyle = Theme.of(context).textTheme.bodyLarge!.copyWith(color: _blue);
 
     final linkButtonStyle = TextButton.styleFrom(
-      overlayColor: Colors.blue,
+      overlayColor: _blue,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppDimentions.paddingSmall),
       ),
@@ -99,7 +102,7 @@ class _TopScreenState extends State<TopScreen> {
 
     final githubButton = TextButton(
       onPressed: () async {
-        final uri = Uri.parse('https://github.com/KazmaWed/flutter_online_cardgame');
+        final uri = Uri.parse(_githubUrl);
         if (await canLaunchUrl(uri)) {
           await launchUrl(uri);
         }
@@ -138,7 +141,10 @@ class _TopScreenState extends State<TopScreen> {
                           onHowToPlay: _instruction,
                         )
                       : Center(
-                          child: RectangularTextButton(label: AppLocalizations.of(context)!.start, onPressed: _signin),
+                          child: RectangularTextButton(
+                            label: AppLocalizations.of(context)!.start,
+                            onPressed: _signin,
+                          ),
                         ),
                 ),
               ],
