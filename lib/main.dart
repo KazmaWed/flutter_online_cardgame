@@ -49,10 +49,13 @@ Future<void> main() async {
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
+  final _surfaceColor = Colors.white;
+  final _seedColor = Colors.pink;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = ref.watch(localeProvider);
-    
+
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
       debugShowCheckedModeBanner: false,
@@ -63,12 +66,9 @@ class MyApp extends ConsumerWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [
-        Locale(AppConstants.japaneseCode),
-        Locale(AppConstants.englishCode),
-      ],
+      supportedLocales: const [Locale(AppConstants.japaneseCode), Locale(AppConstants.englishCode)],
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.brown).copyWith(surface: Colors.white),
+        colorScheme: ColorScheme.fromSeed(seedColor: _seedColor).copyWith(surface: _surfaceColor),
         fontFamily: AppFonts.zenMaruGothic,
       ),
       home: const StartupScreen(),
